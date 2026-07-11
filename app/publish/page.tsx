@@ -15,8 +15,7 @@ export default function PublishPage() {
           <p className="eyebrow">Verified creator flow · frontend prototype</p>
           <h1 className="page-title">Publish a case</h1>
           <p className="page-description">
-            Build a draft with media rights, a decision, and structured reasoning. Stored in this
-            browser only.
+            Add the incident, the decision question, and answer choices. Stored in this browser only.
           </p>
         </div>
         <span className="status-badge status-badge--pending">Local demo only</span>

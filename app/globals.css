@@ -2959,6 +2959,11 @@ svg {
   list-style: none;
 }
 
+.publish-progress ol.publish-progress--compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 360px;
+}
+
 .publish-progress li {
   min-width: 0;
 }
@@ -3671,6 +3676,11 @@ svg {
   .publish-progress ol {
     grid-template-columns: repeat(5, minmax(64px, 1fr));
     overflow-x: auto;
+  }
+
+  .publish-progress ol.publish-progress--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
   }
 
   .publish-progress button {
