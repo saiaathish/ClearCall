@@ -2,15 +2,15 @@ import Link from "next/link";
 
 export function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
-    <Link className="brand" href="/" aria-label="ClearCall feed">
-      <span className="brand__mark" aria-hidden="true">
+    <Link className="brand" href="/" aria-label="Open ClearCall feed">
+      <span className="brand-mark" aria-hidden="true">
         <span />
         <span />
       </span>
       {!compact && (
-        <span className="brand__copy">
+        <span className="brand-copy">
           <strong>ClearCall</strong>
-          <small>Make the Call</small>
+          <span>Referee decisions, explained.</span>
         </span>
       )}
     </Link>

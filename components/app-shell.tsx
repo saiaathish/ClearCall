@@ -2,28 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Bookmark,
-  GitCompareArrows,
-  Home,
-  Info,
-  Plus,
-  UserRound,
-  type LucideIcon,
-} from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 
 interface NavItem {
   href: string;
   label: string;
-  icon: LucideIcon;
 }
 
 const primaryItems: NavItem[] = [
-  { href: "/", label: "Feed", icon: Home },
-  { href: "/compare", label: "Compare", icon: GitCompareArrows },
-  { href: "/saved", label: "Saved", icon: Bookmark },
-  { href: "/profile", label: "Profile", icon: UserRound },
+  { href: "/", label: "Feed" },
+  { href: "/compare", label: "Compare" },
+  { href: "/saved", label: "Saved" },
+  { href: "/publish", label: "Publish" },
+  { href: "/profile", label: "Profile" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -32,12 +23,10 @@ function isActive(pathname: string, href: string) {
 }
 
 function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
-  const Icon = item.icon;
   const active = isActive(pathname, item.href);
   return (
-    <Link className="nav-link" data-active={active || undefined} href={item.href}>
-      <Icon aria-hidden="true" size={19} strokeWidth={1.9} />
-      <span>{item.label}</span>
+    <Link className="nav-link" aria-current={active ? "page" : undefined} href={item.href}>
+      {item.label}
     </Link>
   );
 }
@@ -50,51 +39,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <header className="mobile-topbar">
+      <header className="app-header">
         <BrandMark />
-        <Link className="icon-button" href="/about" aria-label="About ClearCall">
-          <Info aria-hidden="true" size={19} />
+        <nav className="desktop-nav" aria-label="Open navigation">
+          {primaryItems.map((item) => <NavLink item={item} pathname={pathname} key={item.href} />)}
+        </nav>
+        <Link className="profile-control" href="/profile" aria-label="Open learner profile">
+          <span className="profile-avatar" aria-hidden="true">JL</span>
+          <span><strong>Jordan Lee</strong><small>64.9% calibrated</small></span>
         </Link>
       </header>
-      <aside className="desktop-sidebar" aria-label="Primary navigation">
-        <BrandMark />
-        <nav className="desktop-nav">
-          {primaryItems.map((item) => (
-            <NavLink item={item} pathname={pathname} key={item.href} />
-          ))}
-          <NavLink item={{ href: "/publish", label: "Publish", icon: Plus }} pathname={pathname} />
-        </nav>
-        <div className="sidebar-footer">
-          <Link className="sidebar-user" href="/profile">
-            <span className="avatar avatar--lime" aria-hidden="true">JL</span>
-            <span>
-              <strong>Jordan Lee</strong>
-              <small>Referee learner</small>
-            </span>
-          </Link>
-          <Link className="about-link" href="/about">
-            <Info aria-hidden="true" size={16} /> About & trust
-          </Link>
-        </div>
-      </aside>
       <main id="main-content" className="main-content" tabIndex={-1}>
         {children}
       </main>
-      <nav className="mobile-bottom-nav" aria-label="Primary navigation">
-        {primaryItems.slice(0, 2).map((item) => (
-          <NavLink item={item} pathname={pathname} key={item.href} />
-        ))}
-        <Link
-          className="mobile-publish"
-          data-active={isActive(pathname, "/publish") || undefined}
-          href="/publish"
-          aria-label="Publish a case"
-        >
-          <Plus aria-hidden="true" size={24} />
-          <span>Publish</span>
-        </Link>
-        {primaryItems.slice(2).map((item) => (
-          <NavLink item={item} pathname={pathname} key={item.href} />
+      <nav className="mobile-nav" aria-label="Open navigation">
+        {primaryItems.map((item) => (
+          item.href === "/publish" ? (
+            <Link className="mobile-publish" aria-current={isActive(pathname, item.href) ? "page" : undefined} href={item.href} key={item.href}>
+              <span className="publish-mark" aria-hidden="true">+</span>{item.label}
+            </Link>
+          ) : <NavLink item={item} pathname={pathname} key={item.href} />
         ))}
       </nav>
     </div>
