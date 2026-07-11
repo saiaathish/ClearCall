@@ -1,0 +1,218 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  CircleAlert,
+  Search,
+} from "lucide-react";
+import { cases } from "@/data/cases";
+import { calculateSimilarity, findTeachingContrast } from "@/lib/algorithms";
+import type { ComparisonValue, OfficiatingCase } from "@/lib/types";
+import { useToast } from "@/components/toast-provider";
+import { CaseVideo } from "@/components/case-video";
+import { StatusBadge } from "@/components/status-badge";
+
+function optionLabel(scenario: OfficiatingCase, optionId: string) {
+  return scenario.answerOptions.find((option) => option.id === optionId)?.label ?? optionId;
+}
+
+function factorMap(scenario: OfficiatingCase) {
+  return new Map(scenario.factors.map((factor) => [factor.key, factor] as const));
+}
+
+function sharesTeachingFamily(a: OfficiatingCase, b: OfficiatingCase) {
+  return a.sport === b.sport && a.category === b.category;
+}
+
+const comparableCases = cases.filter((candidate) =>
+  cases.some((other) => other.id !== candidate.id && sharesTeachingFamily(candidate, other)),
+);
+
+function makeDifferenceReason(a: OfficiatingCase, b: OfficiatingCase, differences: readonly string[]) {
+  if (!sharesTeachingFamily(a, b)) {
+    return "These cases belong to different incident families, so their factor rows are context rather than a teaching-pair claim.";
+  }
+  if (differences.length > 0) {
+    return `These cases share the same broad incident family, but ${differences.slice(0, 2).join(" and ").toLowerCase()} change the teaching outcome.`;
+  }
+  return `Both cases follow a closely related factor pattern. Compare the rule path and competition context before deciding whether the same outcome applies.`;
+}
+
+export function CompareView({ initialA, initialB }: { initialA?: string; initialB?: string }) {
+  const first = comparableCases.find((item) => item.id === initialA) ?? comparableCases[0];
+  const initialContrast = findTeachingContrast(first, cases.filter((item) => item.id !== first.id));
+  const requestedSecond = cases.find(
+    (item) => item.id === initialB && item.id !== first.id && sharesTeachingFamily(first, item),
+  );
+  const second =
+    requestedSecond ??
+    initialContrast?.case ??
+    comparableCases.find((item) => item.id !== first.id && sharesTeachingFamily(first, item)) ??
+    comparableCases[1];
+  const [caseAId, setCaseAId] = useState(first.id);
+  const [caseBId, setCaseBId] = useState(second.id);
+  const { showToast } = useToast();
+
+  const caseA = comparableCases.find((item) => item.id === caseAId) ?? comparableCases[0];
+  const eligibleCases = comparableCases.filter(
+    (item) => item.id !== caseA.id && sharesTeachingFamily(caseA, item),
+  );
+  const caseB = eligibleCases.find((item) => item.id === caseBId) ?? eligibleCases[0];
+  const similarity = calculateSimilarity(caseA, caseB);
+  const automaticContrast = findTeachingContrast(
+    caseA,
+    cases.filter((item) => item.id !== caseA.id),
+  );
+
+  const mapA = factorMap(caseA);
+  const mapB = factorMap(caseB);
+  const factorKeys = [...new Set([...mapA.keys(), ...mapB.keys()])];
+  const differenceLabels = factorKeys
+    .filter((key) => mapA.get(key)?.value !== mapB.get(key)?.value)
+    .map((key) => mapA.get(key)?.label ?? mapB.get(key)?.label ?? key);
+  const decisionsDiffer = caseA.recommendedDecision !== caseB.recommendedDecision;
+  const comparisonValue: ComparisonValue =
+    decisionsDiffer && similarity.score >= 60
+      ? "High teaching contrast"
+      : decisionsDiffer
+        ? "Useful teaching contrast"
+        : "Similar outcome review";
+  const reason =
+    automaticContrast?.case.id === caseB.id
+      ? automaticContrast.reason
+      : makeDifferenceReason(caseA, caseB, differenceLabels);
+
+  const findContrast = () => {
+    const contrast = findTeachingContrast(caseA, cases.filter((item) => item.id !== caseA.id));
+    if (!contrast) {
+      showToast("No eligible teaching contrast is available for this case.");
+      return;
+    }
+    setCaseBId(contrast.case.id);
+    showToast(`Selected ${contrast.case.title} as the strongest teaching contrast.`, "success");
+  };
+
+  return (
+    <div className="page-shell">
+      <header className="page-header">
+        <div className="page-header__copy">
+          <p className="eyebrow">Teaching contrast</p>
+          <h1 className="page-title">Similar picture. Different weight.</h1>
+          <p className="page-description">
+            Compare structured factors side by side to understand why visually similar incidents can support different calls.
+          </p>
+        </div>
+      </header>
+
+      <section className="compare-controls" aria-label="Choose cases to compare">
+        <div>
+          <label className="field-label" htmlFor="case-a">Case A</label>
+          <select className="select" id="case-a" value={caseA.id} onChange={(event) => {
+            const nextCase = comparableCases.find((item) => item.id === event.target.value) ?? comparableCases[0];
+            const nextContrast = findTeachingContrast(
+              nextCase,
+              cases.filter((item) => item.id !== nextCase.id),
+            );
+            const nextEligible = comparableCases.find(
+              (item) => item.id !== nextCase.id && sharesTeachingFamily(nextCase, item),
+            );
+            setCaseAId(nextCase.id);
+            setCaseBId(nextContrast?.case.id ?? nextEligible?.id ?? comparableCases[1].id);
+          }}>
+            {comparableCases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+          </select>
+        </div>
+        <span className="compare-vs" aria-hidden="true">VS</span>
+        <div>
+          <label className="field-label" htmlFor="case-b">Case B</label>
+          <select className="select" id="case-b" value={caseB.id} onChange={(event) => setCaseBId(event.target.value)}>
+            {eligibleCases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+          </select>
+        </div>
+        <button className="button" type="button" onClick={findContrast}>
+          <Search aria-hidden="true" size={16} /> Find teaching contrast
+        </button>
+      </section>
+
+      <div className="compare-grid">
+        <CompareCase scenario={caseA} label="Case A" />
+        <CompareCase scenario={caseB} label="Case B" />
+      </div>
+
+      <section className="comparison-insight" aria-labelledby="comparison-insight-heading">
+        <div>
+          <p className="eyebrow">{comparisonValue}</p>
+          <h2 id="comparison-insight-heading">{reason}</h2>
+          <p>
+            The similarity score uses factor overlap, rule-path overlap, competition context, difficulty proximity, and disagreement similarity. A differing-outcome bonus affects selection—not the displayed similarity.
+          </p>
+        </div>
+        <div className="similarity-score" aria-label={`${similarity.score} percent structural similarity`}>
+          <span><strong>{similarity.score}%</strong><span>Similarity</span></span>
+        </div>
+      </section>
+
+      <section aria-labelledby="factor-comparison-heading">
+        <div className="content-section__header">
+          <div>
+            <h2 className="section-title" id="factor-comparison-heading">Factor comparison</h2>
+            <p className="section-description">Critical rows are the strongest teaching distinctions in the authored data.</p>
+          </div>
+        </div>
+        <div className="factor-table-wrap">
+          <table className="factor-table">
+            <thead><tr><th scope="col">Factor</th><th scope="col">Case A</th><th scope="col">Case B</th></tr></thead>
+            <tbody>
+              {factorKeys.map((key) => {
+                const factorA = mapA.get(key);
+                const factorB = mapB.get(key);
+                const critical = key === caseA.criticalFactor || key === caseB.criticalFactor;
+                return (
+                  <tr data-critical={critical || undefined} key={key}>
+                    <th scope="row">{factorA?.label ?? factorB?.label ?? key}</th>
+                    <td>{factorA?.value ?? "Not recorded"}</td>
+                    <td>{factorB?.value ?? "Not recorded"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div className="difference-callout">
+        <CircleAlert aria-hidden="true" size={18} />
+        <div>
+          <strong>Critical distinction</strong>
+          <p>{makeDifferenceReason(caseA, caseB, differenceLabels)}</p>
+        </div>
+      </div>
+
+      <div className="demo-notice" style={{ marginTop: 16 }}>
+        <CircleAlert aria-hidden="true" size={15} />
+        <span>Comparison explanations and recommended decisions are authored demonstration material requiring qualified soccer-officiating review.</span>
+      </div>
+    </div>
+  );
+}
+
+function CompareCase({ scenario, label }: { scenario: OfficiatingCase; label: string }) {
+  return (
+    <article className="compare-case">
+      <CaseVideo scenario={scenario} />
+      <div className="compare-case__body">
+        <div className="compare-case__label"><span>{label}</span><StatusBadge status={scenario.scenarioStatus} /></div>
+        <h2>{scenario.title}</h2>
+        <div className="meta-row"><span className="meta-chip">{scenario.category}</span><span className="meta-chip">{scenario.difficulty}</span></div>
+        <div className="compare-decision">
+          <span>Demo recommendation<strong>{optionLabel(scenario, scenario.recommendedDecision)}</strong></span>
+          <span>Rule reference<strong>{scenario.ruleReference}</strong></span>
+          <span>Rule path<strong>{scenario.rulePath.at(-1)}</strong></span>
+        </div>
+        <Link className="text-link" href={`/case/${scenario.id}`}>Open full case <ArrowRight aria-hidden="true" size={14} /></Link>
+      </div>
+    </article>
+  );
+}
