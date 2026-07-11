@@ -303,3 +303,21 @@ export interface ProfileDerivationOptions {
   savedCaseIds?: readonly string[];
   currentStreak?: number;
 }
+
+export type ReportReason =
+  | "copyright"
+  | "inaccurate"
+  | "inappropriate"
+  | "spam"
+  | "other";
+
+export type ReportStatus = "open" | "removed";
+
+export interface CaseReport {
+  id: string;
+  caseId: string;
+  reason: ReportReason;
+  details: string;
+  reportedAt: string;
+  status: ReportStatus;
+}

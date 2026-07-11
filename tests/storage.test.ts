@@ -262,4 +262,77 @@ describe("demo storage", () => {
       mediaAlt: validDraft.posterFrameLabel,
     });
   });
+
+  it("hydrates only complete case reports and removed case ids", () => {
+    const storage = installWindow();
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({
+        version: 1,
+        state: {
+          reports: [
+            {
+              id: "report-a",
+              caseId: "case-a",
+              reason: "copyright",
+              details: "Suspected unauthorized broadcast clip.",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "open",
+            },
+            {
+              id: "bad-reason",
+              caseId: "case-b",
+              reason: "not-a-reason",
+              details: "",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "open",
+            },
+            {
+              id: "bad-status",
+              caseId: "case-c",
+              reason: "spam",
+              details: "",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "pending",
+            },
+          ],
+          removedCaseIds: ["case-a", 42, null],
+        },
+      }),
+    );
+
+    expect(readDemoState().reports).toEqual([
+      {
+        id: "report-a",
+        caseId: "case-a",
+        reason: "copyright",
+        details: "Suspected unauthorized broadcast clip.",
+        reportedAt: "2026-07-11T12:00:00.000Z",
+        status: "open",
+      },
+    ]);
+    expect(readDemoState().removedCaseIds).toEqual(["case-a"]);
+  });
+
+  it("defaults missing report fields for older envelopes", () => {
+    const storage = installWindow();
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({
+        version: 1,
+        state: {
+          answers: {},
+          savedCaseIds: [],
+          currentStreak: 0,
+          temporaryComments: {},
+          publishedDrafts: [],
+          onboardingComplete: true,
+        },
+      }),
+    );
+    const state = readDemoState();
+    expect(state.reports).toEqual([]);
+    expect(state.removedCaseIds).toEqual([]);
+    expect(state.onboardingComplete).toBe(true);
+  });
 });

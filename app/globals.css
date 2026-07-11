@@ -488,6 +488,11 @@ svg {
   color: var(--text-primary);
 }
 
+.icon-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .icon-button[data-active] {
   border-color: rgb(199 248 61 / 0.35);
   background: rgb(199 248 61 / 0.1);
@@ -3294,6 +3299,105 @@ svg {
 .permission-notice svg {
   flex: 0 0 auto;
   color: var(--warning);
+}
+
+.report-dialog {
+  width: min(440px, calc(100vw - 32px));
+  margin: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  padding: 0;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+}
+
+.report-dialog::backdrop {
+  background: rgb(6 8 8 / 0.72);
+}
+
+.report-dialog__form {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.report-dialog__header h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+
+.report-dialog__header p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.report-dialog .field {
+  display: grid;
+  gap: 6px;
+}
+
+.report-dialog .field > span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.report-dialog select,
+.report-dialog textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgb(16 20 20 / 0.9);
+  color: var(--text-primary);
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.report-dialog textarea {
+  resize: vertical;
+  min-height: 84px;
+}
+
+.moderation-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.moderation-list li {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgb(16 20 20 / 0.55);
+  padding: 12px;
+}
+
+.moderation-list strong {
+  display: block;
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+.moderation-list span,
+.moderation-list em {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.moderation-list em {
+  color: var(--text-muted, var(--text-secondary));
 }
 
 .success-state {

@@ -9,7 +9,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DiscussionResponse, PublishedCaseDraft, UserAnswer } from "@/lib/types";
+import type {
+  CaseReport,
+  DiscussionResponse,
+  PublishedCaseDraft,
+  ReportReason,
+  UserAnswer,
+} from "@/lib/types";
 import {
   clearDemoState,
   initialDemoState,
@@ -24,6 +30,13 @@ interface DemoContextValue extends DemoState {
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
   publishDraft: (draft: PublishedCaseDraft) => void;
+  reportCase: (input: {
+    caseId: string;
+    reason: ReportReason;
+    details?: string;
+  }) => CaseReport | null;
+  removeFlaggedCase: (caseId: string) => void;
+  restoreFlaggedCase: (caseId: string) => void;
   completeOnboarding: () => void;
   resetDemo: () => void;
 }
@@ -100,6 +113,60 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [update],
   );
 
+  const reportCase = useCallback(
+    (input: { caseId: string; reason: ReportReason; details?: string }) => {
+      if (state.removedCaseIds.includes(input.caseId)) return null;
+      const alreadyOpen = state.reports.some(
+        (report) => report.caseId === input.caseId && report.status === "open",
+      );
+      if (alreadyOpen) return null;
+
+      const report: CaseReport = {
+        id: `report-${input.caseId}-${Date.now()}`,
+        caseId: input.caseId,
+        reason: input.reason,
+        details: (input.details ?? "").trim().slice(0, 500),
+        reportedAt: new Date().toISOString(),
+        status: "open",
+      };
+
+      update((current) => ({
+        ...current,
+        reports: [report, ...current.reports],
+      }));
+      return report;
+    },
+    [state.removedCaseIds, state.reports, update],
+  );
+
+  const removeFlaggedCase = useCallback(
+    (caseId: string) => {
+      update((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.includes(caseId)
+          ? current.removedCaseIds
+          : [...current.removedCaseIds, caseId],
+        reports: current.reports.map((report) =>
+          report.caseId === caseId && report.status === "open"
+            ? { ...report, status: "removed" as const }
+            : report,
+        ),
+        savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [update],
+  );
+
+  const restoreFlaggedCase = useCallback(
+    (caseId: string) => {
+      update((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [update],
+  );
+
   const resetDemo = useCallback(() => {
     clearDemoState();
     setState(initialDemoState);
@@ -117,10 +184,25 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       toggleSaved,
       addComment,
       publishDraft,
+      reportCase,
+      removeFlaggedCase,
+      restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
     }),
-    [state, hydrated, submitAnswer, toggleSaved, addComment, publishDraft, completeOnboarding, resetDemo],
+    [
+      state,
+      hydrated,
+      submitAnswer,
+      toggleSaved,
+      addComment,
+      publishDraft,
+      reportCase,
+      removeFlaggedCase,
+      restoreFlaggedCase,
+      completeOnboarding,
+      resetDemo,
+    ],
   );
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;

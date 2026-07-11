@@ -69,7 +69,7 @@ The comparison and recommendation functions live in `lib/algorithms.ts`:
 
 ## Local persistence
 
-A versioned `localStorage` envelope stores answers, confidence, selected factors, saves, comments, streak, onboarding completion, and locally submitted case drafts. Reads use defensive validation and recover to the seeded Jordan Lee baseline when data is absent or malformed.
+A versioned `localStorage` envelope stores answers, confidence, selected factors, saves, comments, streak, onboarding completion, locally submitted case drafts, case reports, and locally removed case IDs. Reads use defensive validation and recover to the seeded Jordan Lee baseline when data is absent or malformed.
 
 The publishing flow never stores a `File`, file contents, or an object URL. It persists only serializable file metadata and form fields; a selected clip must be chosen again after refresh. “Reset demo data” restores the seeded baseline.
 
@@ -91,14 +91,15 @@ Working locally:
 - Temporary local discussion comments and factor reactions
 - Publishing validation, preview, and pending-review draft creation
 - Share-link clipboard handling and notifications
+- Browser-local case reporting, copyright warning, and flagged-content removal
 
 Explicitly mocked or not implemented:
 
 - Public publishing and a shared comment backend
-- Authentication, credentials, expert verification, moderation, or takedowns
+- Authentication, credentials, expert verification, or live moderation takedowns
 - Collected community/learner/verified-referee distributions
 - Official rulings, governing-body approval, or production recommendations
-- Video upload storage, external embeds, copyright verification, or automatic foul detection
+- Video upload storage, external embeds, automated copyright verification, or automatic foul detection
 
 ## Suggested backend seams
 
