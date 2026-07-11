@@ -9,9 +9,12 @@ import {
   type DragEvent,
   type FormEvent,
   type ReactNode,
+  type Ref,
 } from "react";
 import {
   AlertCircle,
+  ArrowLeft,
+  ArrowRight,
   Check,
   CheckCircle2,
   FileImage,
@@ -310,6 +313,96 @@ function validateForm(
   return errors;
 }
 
+const PUBLISH_STEPS = [
+  {
+    number: "01",
+    title: "Post format and rights",
+    shortTitle: "Media",
+    description: "Choose text, image, or video, then document any source material.",
+  },
+  {
+    number: "02",
+    title: "Case context",
+    shortTitle: "Context",
+    description: "Give reviewers enough match and rules context to assess the decision.",
+  },
+  {
+    number: "03",
+    title: "Decision",
+    shortTitle: "Decision",
+    description: "Write one clear question and three to five mutually distinct calls.",
+  },
+  {
+    number: "04",
+    title: "Structured reasoning",
+    shortTitle: "Reasoning",
+    description: "Make the decision path inspectable instead of relying on a free-form verdict.",
+  },
+  {
+    number: "05",
+    title: "Review and submit",
+    shortTitle: "Review",
+    description: "Resolve every blocking issue, then add the draft to this browser's demo state.",
+  },
+] as const;
+
+function fieldStep(fieldId: string): number {
+  if (
+    fieldId === "clip-file" ||
+    fieldId === "media-alt" ||
+    fieldId === "clip-start-time" ||
+    fieldId === "clip-end-time" ||
+    fieldId === "poster-frame-label" ||
+    fieldId === "source-attribution" ||
+    fieldId === "permission-confirmed"
+  ) {
+    return 0;
+  }
+  if (
+    fieldId === "case-title" ||
+    fieldId === "case-description" ||
+    fieldId === "competition-level" ||
+    fieldId === "ruleset" ||
+    fieldId === "ruleset-version" ||
+    fieldId === "original-decision"
+  ) {
+    return 1;
+  }
+  if (
+    fieldId === "case-prompt" ||
+    fieldId === "answer-options" ||
+    fieldId.startsWith("answer-label-") ||
+    fieldId === "recommended-answer"
+  ) {
+    return 2;
+  }
+  if (
+    fieldId === "reasoning-factors" ||
+    fieldId.startsWith("factor-") ||
+    fieldId === "critical-factor" ||
+    fieldId.startsWith("rule-path-") ||
+    fieldId === "rule-reference" ||
+    fieldId === "expert-explanation"
+  ) {
+    return 3;
+  }
+  return 4;
+}
+
+function filterErrorsForStep(errors: ValidationErrors, step: number): ValidationErrors {
+  return Object.fromEntries(
+    Object.entries(errors).filter(([fieldId]) => fieldStep(fieldId) === step),
+  );
+}
+
+function firstStepWithErrors(errors: ValidationErrors): number {
+  let earliest = PUBLISH_STEPS.length - 1;
+  for (const fieldId of Object.keys(errors)) {
+    earliest = Math.min(earliest, fieldStep(fieldId));
+  }
+  return earliest;
+}
+
 function FieldError({ fieldId, message }: { fieldId: string; message?: string }) {
   if (!message) return null;
   return (
@@ -351,14 +444,21 @@ function FormSection({
   title,
   description,
   children,
+  ref,
 }: {
   number: string;
   title: string;
   description: string;
   children: ReactNode;
+  ref?: Ref<HTMLElement>;
 }) {
   return (
-    <section className="form-section" aria-labelledby={`publish-section-${number}`}>
+    <section
+      className="form-section"
+      aria-labelledby={`publish-section-${number}`}
+      ref={ref}
+      tabIndex={-1}
+    >
       <div id={`publish-section-${number}`}>
         <SectionHeader number={number} title={title} description={description} />
       </div>
@@ -530,6 +630,9 @@ export function PublisherForm() {
   const [dragging, setDragging] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [submissionAttempted, setSubmissionAttempted] = useState(false);
+  const [stepValidationActive, setStepValidationActive] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [highestStepReached, setHighestStepReached] = useState(0);
   const [submittedDraft, setSubmittedDraft] = useState<PublishedCaseDraft | null>(null);
   const answerSequence = useRef(4);
   const factorSequence = useRef(2);
@@ -538,6 +641,7 @@ export function PublisherForm() {
   const previewUrlRef = useRef<string | null>(null);
   const validationSummaryRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLElement>(null);
+  const stepPanelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     return () => {
@@ -545,9 +649,23 @@ export function PublisherForm() {
     };
   }, []);
 
-  function revalidate(nextForm: PublisherFormState, nextFile = selectedFile, nextFileError = fileError) {
+  function revalidate(
+    nextForm: PublisherFormState,
+    nextFile = selectedFile,
+    nextFileError = fileError,
+    step = currentStep,
+  ) {
     if (submissionAttempted) {
       setErrors(validateForm(nextForm, nextFile, clipDuration, nextFileError));
+      return;
+    }
+    if (stepValidationActive) {
+      setErrors(
+        filterErrorsForStep(
+          validateForm(nextForm, nextFile, clipDuration, nextFileError),
+          step,
+        ),
+      );
     }
   }
 
@@ -720,18 +838,67 @@ export function PublisherForm() {
 
   function handleValidationLink(event: React.MouseEvent<HTMLAnchorElement>, fieldId: string) {
     event.preventDefault();
-    const target = document.getElementById(fieldId);
-    target?.scrollIntoView({ behavior: "smooth", block: "center" });
-    target?.focus({ preventScroll: true });
+    const step = fieldStep(fieldId);
+    setCurrentStep(step);
+    setHighestStepReached((reached) => Math.max(reached, step));
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(fieldId);
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      target?.focus({ preventScroll: true });
+    });
+  }
+
+  function goToStep(step: number) {
+    if (step < 0 || step >= PUBLISH_STEPS.length || step > highestStepReached) return;
+    setCurrentStep(step);
+    window.requestAnimationFrame(() => {
+      stepPanelRef.current?.focus({ preventScroll: true });
+      stepPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function goBack() {
+    if (currentStep <= 0) return;
+    goToStep(currentStep - 1);
+  }
+
+  function goContinue() {
+    const allErrors = validateForm(form, selectedFile, clipDuration, fileError);
+    const stepErrors = filterErrorsForStep(allErrors, currentStep);
+    setStepValidationActive(true);
+    setErrors(stepErrors);
+    if (Object.keys(stepErrors).length > 0) {
+      window.requestAnimationFrame(() => {
+        const firstId = Object.keys(stepErrors)[0];
+        const target = document.getElementById(firstId);
+        target?.scrollIntoView({ behavior: "smooth", block: "center" });
+        target?.focus({ preventScroll: true });
+      });
+      return;
+    }
+
+    const nextStep = Math.min(currentStep + 1, PUBLISH_STEPS.length - 1);
+    setStepValidationActive(false);
+    setErrors({});
+    setCurrentStep(nextStep);
+    setHighestStepReached((reached) => Math.max(reached, nextStep));
+    window.requestAnimationFrame(() => {
+      stepPanelRef.current?.focus({ preventScroll: true });
+      stepPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmissionAttempted(true);
+    setStepValidationActive(false);
     const nextErrors = validateForm(form, selectedFile, clipDuration, fileError);
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0 || (form.mediaKind !== "text" && !selectedFile)) {
+      const step = firstStepWithErrors(nextErrors);
+      setCurrentStep(step);
+      setHighestStepReached((reached) => Math.max(reached, step));
       window.requestAnimationFrame(() => validationSummaryRef.current?.focus());
       return;
     }
@@ -811,6 +978,9 @@ export function PublisherForm() {
     setForm(createInitialForm());
     setErrors({});
     setSubmissionAttempted(false);
+    setStepValidationActive(false);
+    setCurrentStep(0);
+    setHighestStepReached(0);
     setSubmittedDraft(null);
     window.setTimeout(() => fileInputRef.current?.focus(), 0);
   }
@@ -857,14 +1027,65 @@ export function PublisherForm() {
     );
   }
 
+  const activeStep = PUBLISH_STEPS[currentStep];
+  const errorEntries = Object.entries(errors);
+
   return (
     <div className="publish-layout">
       <form className="publisher-form" noValidate onSubmit={handleSubmit}>
+        <nav aria-label="Publish steps" className="publish-progress">
+          <ol>
+            {PUBLISH_STEPS.map((step, index) => {
+              const isCurrent = index === currentStep;
+              const isReachable = index <= highestStepReached;
+              return (
+                <li key={step.number} data-complete={index < currentStep || undefined}>
+                  <button
+                    aria-current={isCurrent ? "step" : undefined}
+                    disabled={!isReachable}
+                    onClick={() => goToStep(index)}
+                    type="button"
+                  >
+                    <span aria-hidden="true">{step.number}</span>
+                    <span>{step.shortTitle}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
+
+        {submissionAttempted && errorEntries.length > 0 ? (
+          <div
+            aria-labelledby="validation-summary-title"
+            className="validation-summary"
+            ref={validationSummaryRef}
+            role="alert"
+            tabIndex={-1}
+          >
+            <h2 id="validation-summary-title">
+              Fix {errorEntries.length} {errorEntries.length === 1 ? "issue" : "issues"} before submitting
+            </h2>
+            <ul>
+              {errorEntries.map(([fieldId, message]) => (
+                <li key={fieldId}>
+                  <a href={`#${fieldId}`} onClick={(event) => handleValidationLink(event, fieldId)}>
+                    {message}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         <FormSection
-          number="01"
-          title="Post format and rights"
-          description="Choose text, image, or video, then document any source material."
+          description={activeStep.description}
+          number={activeStep.number}
+          ref={stepPanelRef}
+          title={activeStep.title}
         >
+          {currentStep === 0 ? (
+            <>
           <fieldset className="media-kind-picker">
             <legend className="field-label">Post format</legend>
             <div>
@@ -1135,13 +1356,11 @@ export function PublisherForm() {
               <FieldError fieldId="permission-confirmed" message={errors["permission-confirmed"]} />
             </div>
           </div>
-        </FormSection>
+            </>
+          ) : null}
 
-        <FormSection
-          number="02"
-          title="Case context"
-          description="Give reviewers enough match and rules context to assess the decision."
-        >
+          {currentStep === 1 ? (
+            <>
           <div className="form-grid">
             <div className="form-field--wide">
               <label className="field-label" htmlFor="case-title">
@@ -1284,13 +1503,11 @@ export function PublisherForm() {
               <FieldError fieldId="original-decision" message={errors["original-decision"]} />
             </div>
           </div>
-        </FormSection>
+            </>
+          ) : null}
 
-        <FormSection
-          number="03"
-          title="Decision"
-          description="Write one clear question and three to five mutually distinct calls."
-        >
+          {currentStep === 2 ? (
+            <>
           <div>
             <label className="field-label" htmlFor="case-prompt">
               Learner prompt <span aria-hidden="true">*</span>
@@ -1410,13 +1627,11 @@ export function PublisherForm() {
               <span className="field-hint">Reviewers must confirm this classification.</span>
             </div>
           </div>
-        </FormSection>
+            </>
+          ) : null}
 
-        <FormSection
-          number="04"
-          title="Structured reasoning"
-          description="Make the decision path inspectable instead of relying on a free-form verdict."
-        >
+          {currentStep === 3 ? (
+            <>
           <fieldset className="choice-group" id="reasoning-factors">
             <legend className="field-label">
               Decision factors <span aria-hidden="true">*</span>
@@ -1426,8 +1641,25 @@ export function PublisherForm() {
             </span>
             <div className="answer-builder">
               {form.factors.map((factor, index) => (
-                <fieldset className="form-section" key={factor.uid}>
-                  <legend className="field-label">Factor {index + 1}</legend>
+                <div className="factor-card" key={factor.uid}>
+                  <div className="factor-card__header">
+                    <span className="answer-builder__index" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <strong>Factor {index + 1}</strong>
+                    {form.factors.length > 1 ? (
+                      <button
+                        aria-label={`Remove factor ${index + 1}`}
+                        className="icon-button icon-button--small"
+                        onClick={() => removeFactor(factor.uid)}
+                        type="button"
+                      >
+                        <Trash2 aria-hidden="true" size={16} />
+                      </button>
+                    ) : (
+                      <span aria-hidden="true" />
+                    )}
+                  </div>
                   <div className="form-grid">
                     <div>
                       <label className="field-label" htmlFor={`factor-key-${factor.uid}`}>
@@ -1523,17 +1755,7 @@ export function PublisherForm() {
                       </label>
                     </div>
                   </div>
-                  {form.factors.length > 1 ? (
-                    <button
-                      className="button button--ghost"
-                      onClick={() => removeFactor(factor.uid)}
-                      type="button"
-                    >
-                      <Trash2 aria-hidden="true" size={15} />
-                      Remove factor {index + 1}
-                    </button>
-                  ) : null}
-                </fieldset>
+                </div>
               ))}
             </div>
             <FieldError fieldId="reasoning-factors" message={errors["reasoning-factors"]} />
@@ -1666,36 +1888,11 @@ export function PublisherForm() {
               <FieldError fieldId="expert-explanation" message={errors["expert-explanation"]} />
             </div>
           </div>
-        </FormSection>
-
-        <FormSection
-          number="05"
-          title="Review and submit"
-          description="Resolve every blocking issue, then add the draft to this browser's demo state."
-        >
-          {Object.keys(errors).length > 0 ? (
-            <div
-              aria-labelledby="validation-summary-title"
-              className="validation-summary"
-              ref={validationSummaryRef}
-              role="alert"
-              tabIndex={-1}
-            >
-              <h2 id="validation-summary-title">
-                Fix {Object.keys(errors).length} {Object.keys(errors).length === 1 ? "issue" : "issues"} before submitting
-              </h2>
-              <ul>
-                {Object.entries(errors).map(([fieldId, message]) => (
-                  <li key={fieldId}>
-                    <a href={`#${fieldId}`} onClick={(event) => handleValidationLink(event, fieldId)}>
-                      {message}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </>
           ) : null}
 
+          {currentStep === 4 ? (
+            <>
           <div className="permission-notice">
             <ShieldAlert aria-hidden="true" size={18} />
             <span>
@@ -1705,18 +1902,65 @@ export function PublisherForm() {
             </span>
           </div>
 
-          <button className="button button--wide" disabled={!hydrated} type="submit">
-            <Send aria-hidden="true" size={17} />
-            Submit for expert review
-          </button>
-          <p className="field-hint" role="status">
-            {!hydrated
-              ? "Preparing browser-local demo storage; submission will be available shortly."
+          <div className="review-checklist" aria-label="Draft checklist">
+            <p>
+              <strong>Format:</strong> {form.mediaKind[0].toUpperCase() + form.mediaKind.slice(1)}
+              {selectedFile ? ` · ${selectedFile.name}` : form.mediaKind === "text" ? " · text only" : " · no file yet"}
+            </p>
+            <p>
+              <strong>Title:</strong> {form.title.trim() || "Not added"}
+            </p>
+            <p>
+              <strong>Prompt:</strong> {form.prompt.trim() || "Not added"}
+            </p>
+            <p>
+              <strong>Answers:</strong>{" "}
+              {form.answers.map((answer) => answer.label.trim()).filter(Boolean).join(" · ") || "Not added"}
+            </p>
+            <p>
+              <strong>Critical factor:</strong>{" "}
+              {form.factors.find((factor) => factor.uid === form.criticalFactorUid)?.label.trim() ||
+                form.factors.find((factor) => factor.uid === form.criticalFactorUid)?.key.trim() ||
+                "Not selected"}
+            </p>
+            <p>
+              <strong>Citation:</strong> {form.ruleReference.trim() || "Not added"}
+            </p>
+          </div>
+            </>
+          ) : null}
+        </FormSection>
+
+        <div className="publish-step-actions">
+          {currentStep > 0 ? (
+            <button className="button button--secondary" onClick={goBack} type="button">
+              <ArrowLeft aria-hidden="true" size={17} />
+              Back
+            </button>
+          ) : (
+            <span />
+          )}
+          {currentStep < PUBLISH_STEPS.length - 1 ? (
+            <button className="button" onClick={goContinue} type="button">
+              Continue
+              <ArrowRight aria-hidden="true" size={17} />
+            </button>
+          ) : (
+            <button className="button" disabled={!hydrated} type="submit">
+              <Send aria-hidden="true" size={17} />
+              Submit for expert review
+            </button>
+          )}
+        </div>
+        <p className="field-hint publish-step-status" role="status">
+          {!hydrated
+            ? "Preparing browser-local demo storage; submission will be available shortly."
+            : currentStep < PUBLISH_STEPS.length - 1
+              ? `Step ${currentStep + 1} of ${PUBLISH_STEPS.length}`
               : Object.keys(errors).length > 0
                 ? `${Object.keys(errors).length} blocking ${Object.keys(errors).length === 1 ? "issue remains" : "issues remain"}.`
                 : "Ready to store a browser-local draft."}
-          </p>
-        </FormSection>
+        </p>
       </form>
 
       <CasePreview model={livePreviewModel(form, selectedFile)} />
