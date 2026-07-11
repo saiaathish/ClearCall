@@ -60,6 +60,11 @@ const validComment: DiscussionResponse = {
 
 const validDraft: PublishedCaseDraft = {
   id: "draft-a",
+  mediaKind: "video",
+  mediaFileName: "challenge.mp4",
+  mediaFileSize: 4096,
+  mediaFileType: "video/mp4",
+  mediaAlt: "Two players contest the ball near midfield before late contact.",
   clipFileName: "challenge.mp4",
   clipFileSize: 4096,
   clipFileType: "video/mp4",
@@ -222,5 +227,39 @@ describe("demo storage", () => {
     );
 
     expect(readDemoState().publishedDrafts).toEqual([validDraft]);
+  });
+
+  it("preserves text posts without file metadata and normalizes legacy video drafts", () => {
+    const storage = installWindow();
+    const textDraft: PublishedCaseDraft = {
+      ...validDraft,
+      id: "draft-text",
+      mediaKind: "text",
+      mediaAlt: validDraft.description,
+      mediaFileName: undefined,
+      mediaFileSize: undefined,
+      mediaFileType: undefined,
+      clipFileName: undefined,
+      clipFileSize: undefined,
+      clipFileType: undefined,
+      clipStartTime: undefined,
+      clipEndTime: undefined,
+      posterFrameLabel: undefined,
+    };
+    const legacyVideoDraft: Partial<PublishedCaseDraft> = { ...validDraft };
+    delete legacyVideoDraft.mediaKind;
+    delete legacyVideoDraft.mediaAlt;
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({ publishedDrafts: [textDraft, legacyVideoDraft] }),
+    );
+
+    const drafts = readDemoState().publishedDrafts;
+    expect(drafts[0]).toEqual(textDraft);
+    expect(drafts[1]).toMatchObject({
+      id: validDraft.id,
+      mediaKind: "video",
+      mediaAlt: validDraft.posterFrameLabel,
+    });
   });
 });

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Wide challenge diagram</title>
+  <desc id="desc">Diagram of two players meeting near midfield with the contact point highlighted.</desc>
+  <rect width="1600" height="900" fill="#153f32"/>
+  <path d="M80 90h1440v720H80zM800 90v720M80 450h1440" fill="none" stroke="#f2eee3" stroke-opacity=".55" stroke-width="8"/>
+  <circle cx="800" cy="450" r="150" fill="none" stroke="#f2eee3" stroke-opacity=".45" stroke-width="7"/>
+  <path d="M490 306l176 150-184 90" fill="none" stroke="#f2c94c" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="448" cy="270" r="54" fill="#f2c94c" stroke="#101713" stroke-width="9"/>
+  <path d="M940 300l-112 184 226 70" fill="none" stroke="#fffdf7" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="974" cy="252" r="54" fill="#fffdf7" stroke="#101713" stroke-width="9"/>
+  <circle cx="762" cy="474" r="45" fill="#c94737" stroke="#101713" stroke-width="10"/>
+  <path d="M762 402v-86M690 474h-88M834 474h88M762 546v86" stroke="#f2c94c" stroke-width="12" stroke-linecap="round"/>
+</svg>

@@ -128,6 +128,8 @@ const PERMISSION_STATUSES = new Set([
   "pending-review",
 ]);
 
+const MEDIA_KINDS = new Set(["text", "image", "video"]);
+
 function isOneOf(value: unknown, allowed: ReadonlySet<string>): value is string {
   return typeof value === "string" && allowed.has(value);
 }
@@ -241,16 +243,34 @@ function isRuleFactor(value: unknown): value is RuleFactor {
   );
 }
 
-function isPublishedDraft(value: unknown): value is PublishedCaseDraft {
-  return (
-    isRecord(value) &&
+function readPublishedDraft(value: unknown): PublishedCaseDraft | null {
+  if (!isRecord(value)) return null;
+  const mediaKind = isOneOf(value.mediaKind, MEDIA_KINDS)
+    ? value.mediaKind as PublishedCaseDraft["mediaKind"]
+    : typeof value.clipFileName === "string"
+      ? "video"
+      : "text";
+  const mediaAlt = typeof value.mediaAlt === "string"
+    ? value.mediaAlt
+    : typeof value.posterFrameLabel === "string"
+      ? value.posterFrameLabel
+      : typeof value.description === "string"
+        ? value.description
+        : "";
+
+  const valid = (
     typeof value.id === "string" &&
+    isOptionalString(value.mediaFileName) &&
+    (value.mediaFileSize === undefined || isNonNegativeInteger(value.mediaFileSize)) &&
+    isOptionalString(value.mediaFileType) &&
+    (value.mediaWidth === undefined || isNonNegativeInteger(value.mediaWidth)) &&
+    (value.mediaHeight === undefined || isNonNegativeInteger(value.mediaHeight)) &&
     isOptionalString(value.clipFileName) &&
     (value.clipFileSize === undefined || isNonNegativeInteger(value.clipFileSize)) &&
     isOptionalString(value.clipFileType) &&
-    typeof value.clipStartTime === "string" &&
-    typeof value.clipEndTime === "string" &&
-    typeof value.posterFrameLabel === "string" &&
+    isOptionalString(value.clipStartTime) &&
+    isOptionalString(value.clipEndTime) &&
+    isOptionalString(value.posterFrameLabel) &&
     typeof value.title === "string" &&
     typeof value.prompt === "string" &&
     typeof value.description === "string" &&
@@ -278,6 +298,8 @@ function isPublishedDraft(value: unknown): value is PublishedCaseDraft {
     (value.status === "draft" || value.status === "locally-published") &&
     value.reviewStatus === "PENDING_EXPERT_REVIEW"
   );
+  if (!valid) return null;
+  return { ...value, mediaKind, mediaAlt } as unknown as PublishedCaseDraft;
 }
 
 export function readDemoState(): DemoState {
@@ -304,7 +326,9 @@ export function readDemoState(): DemoState {
           : initialDemoState.currentStreak,
       temporaryComments: readComments(candidate.temporaryComments),
       publishedDrafts: Array.isArray(candidate.publishedDrafts)
-        ? candidate.publishedDrafts.filter(isPublishedDraft)
+        ? candidate.publishedDrafts
+            .map(readPublishedDraft)
+            .filter((draft): draft is PublishedCaseDraft => Boolean(draft))
         : [],
       onboardingComplete:
         typeof candidate.onboardingComplete === "boolean"

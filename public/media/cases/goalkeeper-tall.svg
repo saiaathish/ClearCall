@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280" role="img" aria-labelledby="title desc">
+  <title id="title">Tall goalkeeper handling diagram</title>
+  <desc id="desc">Diagram of a goalkeeper picking up a deliberate pass inside the penalty area.</desc>
+  <rect width="720" height="1280" fill="#153f32"/>
+  <path d="M54 54h612v1172H54zM54 760h612M180 760v-260h360v260" fill="none" stroke="#f2eee3" stroke-opacity=".52" stroke-width="8"/>
+  <circle cx="360" cy="470" r="58" fill="#f2c94c" stroke="#101713" stroke-width="9"/>
+  <path d="M360 534v222M360 606l-136 120M360 606l136 120M360 756l-96 170M360 756l96 170" fill="none" stroke="#f2c94c" stroke-width="36" stroke-linecap="round"/>
+  <circle cx="360" cy="692" r="42" fill="#fffdf7" stroke="#101713" stroke-width="9"/>
+  <path d="M110 1050c170-104 308-175 492-260" fill="none" stroke="#fffdf7" stroke-opacity=".45" stroke-width="8" stroke-dasharray="20 18"/>
+  <path d="M298 692h124" stroke="#c94737" stroke-width="12" stroke-linecap="round"/>
+</svg>

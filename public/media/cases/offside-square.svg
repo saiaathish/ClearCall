@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Square offside line-of-vision diagram</title>
+  <desc id="desc">Diagram of an attacker between a shot and the goalkeeper with the sight line highlighted.</desc>
+  <rect width="1000" height="1000" fill="#153f32"/>
+  <path d="M70 70h860v860H70zM500 70v860" fill="none" stroke="#f2eee3" stroke-opacity=".5" stroke-width="8"/>
+  <path d="M760 260h170v480H760" fill="none" stroke="#f2eee3" stroke-opacity=".6" stroke-width="9"/>
+  <circle cx="245" cy="500" r="46" fill="#fffdf7" stroke="#101713" stroke-width="9"/>
+  <circle cx="490" cy="500" r="56" fill="#f2c94c" stroke="#101713" stroke-width="9"/>
+  <circle cx="816" cy="500" r="58" fill="#fffdf7" stroke="#101713" stroke-width="9"/>
+  <path d="M300 500h450" stroke="#c94737" stroke-width="18" stroke-linecap="round" stroke-dasharray="26 18"/>
+  <path d="M464 360v280" stroke="#f2c94c" stroke-width="10" stroke-dasharray="18 14"/>
+  <circle cx="166" cy="500" r="30" fill="#fffdf7" stroke="#101713" stroke-width="8"/>
+</svg>

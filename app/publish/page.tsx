@@ -15,8 +15,8 @@ export default function PublishPage() {
           <p className="eyebrow">Verified creator flow · frontend prototype</p>
           <h1 className="page-title">Build a case reviewers can inspect</h1>
           <p className="page-description">
-            Pair a rights-documented clip with a decision, rule path, and structured factors. This
-            demo stores the submitted draft in your browser; it does not publish or verify it.
+            Pair a clear incident description or rights-documented media with a decision, rule path,
+            and structured factors. This demo stores the draft in your browser; it does not publish or verify it.
           </p>
         </div>
         <span className="status-badge status-badge--pending">Local demo only</span>

@@ -125,19 +125,19 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
 
   return (
     <div className="page-shell">
-      <div className="page-header">
-        <div className="page-header__copy">
-          <p className="eyebrow">Case review</p>
-          <h1 className="page-title">Read the call. Then read the reasoning.</h1>
-          <p className="page-description">
-            Structured factors make disagreement useful. Authored demo evidence remains separate from public opinion.
-          </p>
+      <header className="thread-header">
+        <Link className="thread-back" href="/">
+          <ArrowLeft aria-hidden="true" size={18} /> Back to feed
+        </Link>
+        <div className="thread-header__title">
+          <span>Case</span>
+          <h1>{scenario.title}</h1>
         </div>
         <div className="button-row">
           <SaveButton caseId={scenario.id} showLabel />
           <ShareButton caseId={scenario.id} showLabel />
         </div>
-      </div>
+      </header>
 
       <div className="case-detail-layout">
         <div className="detail-main">
@@ -170,8 +170,10 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   <DistributionBars distribution={scenario.learnerDistribution} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} tone="learner" />
                 </div>
               </section>
+            </>
+          )}
 
-              <section className="content-section" aria-labelledby="discussion-heading">
+          <section className="content-section" aria-labelledby="discussion-heading">
                 <div className="content-section__header">
                   <div>
                     <h2 className="section-title" id="discussion-heading">Structured discussion</h2>
@@ -225,9 +227,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </div>
                   {commentError && <p className="field-error" id="local-comment-error" role="alert"><CircleAlert aria-hidden="true" size={14} /> Add reasoning and choose a decision.</p>}
                 </form>
-              </section>
-            </>
-          )}
+          </section>
         </div>
 
         <aside className="detail-aside" aria-label="Case context and similar cases">
