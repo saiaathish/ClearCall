@@ -419,9 +419,11 @@ function enhancementResult(): ReasoningAnalysisResult {
 
 test("enhancer success returns explanation text while preserving the original result", async () => {
   const result = enhancementResult();
+  const before = structuredClone(result);
   const enhancer: ReasoningFeedbackEnhancer = {
     async enhance(received, writtenReasoning) {
-      assert.strictEqual(received, result);
+      assert.notStrictEqual(received, result);
+      assert.deepEqual(received, before);
       assert.equal(writtenReasoning, "my reasoning");
       return "A clearer educational explanation.";
     },
@@ -437,6 +439,82 @@ test("enhancer success returns explanation text while preserving the original re
   assert.equal(enhanced.enhancedFeedback, "A clearer educational explanation.");
   assert.equal(enhanced.feedback, "A clearer educational explanation.");
   assert.equal(enhanced.deterministicFeedback, result.deterministicFeedback);
+});
+
+test("enhancer receives a deeply frozen defensive snapshot", async () => {
+  const result = enhancementResult();
+  const before = structuredClone(result);
+  let receivedSnapshot: ReasoningAnalysisResult | undefined;
+
+  const enhanced = await enhanceReasoningFeedback(result, {
+    async enhance(received) {
+      receivedSnapshot = received as ReasoningAnalysisResult;
+      assert.notStrictEqual(received, result);
+      assert(Object.isFrozen(received));
+      assert(Object.isFrozen(received.ruleReference));
+      assert(Object.isFrozen(received.consideredFactors));
+      assert(Object.isFrozen(received.consideredFactors[0]));
+      assert(Object.isFrozen(received.missingFactors));
+      assert(Object.isFrozen(received.missingFactors[0]));
+      assert(Object.isFrozen(received.unsupportedFactors));
+
+      const mutable = received as unknown as {
+        decisionAlignment: string;
+        recommendedDecision: string;
+        ruleReference: { law: string };
+        unsupportedFactors: string[];
+        consideredFactors: Array<{ label: string }>;
+        missingFactors: Array<{ label: string }>;
+      };
+      assert.throws(() => {
+        mutable.decisionAlignment = "unsupported";
+      }, TypeError);
+      assert.throws(() => {
+        mutable.recommendedDecision = "fake-decision";
+      }, TypeError);
+      assert.throws(() => {
+        mutable.ruleReference.law = "Law 99";
+      }, TypeError);
+      assert.throws(() => {
+        mutable.unsupportedFactors.push("fabricated");
+      }, TypeError);
+      assert.throws(() => {
+        mutable.consideredFactors[0]!.label = "fabricated";
+      }, TypeError);
+      assert.throws(() => {
+        mutable.missingFactors[0]!.label = "fabricated";
+      }, TypeError);
+      return "Safe enhanced explanation.";
+    },
+  });
+
+  assert(receivedSnapshot);
+  assert.deepEqual(result, before);
+  assert.deepEqual(enhanced.result, before);
+  assert.equal(enhanced.enhancedFeedback, "Safe enhanced explanation.");
+  assert.equal(enhanced.source, "enhanced");
+  assert.doesNotMatch(enhanced.feedback, /Law 99|fake-decision|fabricated/);
+});
+
+test("mutation error triggers deterministic fallback and preserves trusted analysis", async () => {
+  const result = enhancementResult();
+  const before = structuredClone(result);
+  const enhanced = await enhanceReasoningFeedback(result, {
+    async enhance(received) {
+      (
+        received as unknown as { recommendedDecision: string }
+      ).recommendedDecision = "fake-decision";
+      return "must not be returned";
+    },
+  });
+
+  assert.deepEqual(result, before);
+  assert.strictEqual(enhanced.result, result);
+  assert.strictEqual(enhanced.analysis, result);
+  assert.equal(enhanced.source, "fallback");
+  assert.equal(enhanced.fallbackReason, "enhancer-error");
+  assert.equal(enhanced.feedback, result.deterministicFeedback);
+  assert.equal(result.recommendedDecision, "penalty-red-card");
 });
 
 test("missing enhancer falls back to deterministic feedback", async () => {

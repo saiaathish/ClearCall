@@ -147,11 +147,18 @@ interface ReasoningFeedbackEnhancer {
 ```
 
 `enhanceReasoningFeedback` passes the structured result and optional raw
-reasoning to an enhancer, but treats enhancer output as explanation text only.
-It never parses or merges that text into the structured result. If there is no
-enhancer, it throws/rejects, returns blank or whitespace output, or returns an
-invalid runtime value, the deterministic feedback is returned with fallback
-metadata. The original structured result is preserved unchanged.
+reasoning to an enhancer through a defensive deep-frozen snapshot. The clone
+includes the top-level result, rule reference, factor objects and arrays, and
+all other nested values. The caller's live result is never passed to the
+enhancer. Runtime freezing reinforces the TypeScript readonly types.
+
+Enhancer output is untrusted explanation text only. It is never parsed or merged
+into the structured result, which remains authoritative. If there is no
+enhancer, it throws/rejects, returns blank or whitespace output, returns an
+invalid runtime value, or a mutation attempt throws, deterministic feedback is
+returned with fallback metadata. Mutation attempts cannot alter trusted fields.
+This runtime protection is a focused boundary for the enhancer and is not a
+claim of total application security.
 
 ## Backend and frontend handoff
 
