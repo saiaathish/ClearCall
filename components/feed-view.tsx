@@ -1,69 +1,118 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpenCheck,
-  CircleAlert,
-  Gauge,
-  Target,
-  X,
-} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Funnel, LoaderCircle, RotateCcw, SquarePlus } from "lucide-react";
 import { cases } from "@/data/cases";
-import { deriveLearnerProfile, rankPersonalizedCases } from "@/lib/algorithms";
+import type { CaseCategory } from "@/lib/types";
+import { rankPersonalizedCases } from "@/lib/algorithms";
 import { useDemo } from "@/context/demo-context";
-import { CaseCard } from "@/components/case-card";
+import { FeedPostCard } from "@/components/feed-post-card";
+
+const BATCH_SIZE = 4;
+const categoryOptions = [...new Set(cases.map((scenario) => scenario.category))] as CaseCategory[];
+
+function isCaseCategory(value: string | null): value is CaseCategory {
+  return Boolean(value && categoryOptions.includes(value as CaseCategory));
+}
 
 export function FeedView() {
-  const {
-    answers,
-    savedCaseIds,
-    currentStreak,
-    hydrated,
-    onboardingComplete,
-    completeOnboarding,
-  } = useDemo();
-  const [index, setIndex] = useState(0);
-  const [activeCaseId, setActiveCaseId] = useState("");
-  const answerList = useMemo(() => Object.values(answers), [answers]);
-  const ranked = useMemo(
-    () => rankPersonalizedCases(cases, answerList),
-    [answerList],
-  );
-  const displayCases = ranked.length ? ranked.map((entry) => entry.case) : [...cases];
-  const safeIndex = index % displayCases.length;
-  const scenario = cases.find((item) => item.id === activeCaseId) ?? displayCases[safeIndex];
-  const visiblePosition = displayCases.findIndex((item) => item.id === scenario.id);
-  const profile = useMemo(
-    () =>
-      deriveLearnerProfile(answerList, cases, {
-        savedCaseIds,
-        currentStreak,
-      }),
-    [answerList, currentStreak, savedCaseIds],
-  );
-  const completion = Math.round((answerList.length / cases.length) * 100);
+  const { answers, hydrated } = useDemo();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const filterParam = searchParams.get("foul");
+  const activeCategory: CaseCategory | "all" = isCaseCategory(filterParam) ? filterParam : "all";
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      const stored = window.sessionStorage.getItem("clearcall-feed-counts");
+      const parsed = stored ? JSON.parse(stored) as unknown : null;
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+      return Object.fromEntries(
+        Object.entries(parsed).filter((entry): entry is [string, number] => (
+          typeof entry[1] === "number" && Number.isFinite(entry[1]) && entry[1] > 0
+        )),
+      );
+    } catch {
+      return {};
+    }
+  });
+  const [isAppending, setIsAppending] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef(false);
 
-  const moveFeed = (direction: -1 | 1) => {
-    const currentPosition = displayCases.findIndex((item) => item.id === scenario.id);
-    const nextPosition =
-      currentPosition === -1
-        ? direction === 1
-          ? 0
-          : displayCases.length - 1
-        : (currentPosition + direction + displayCases.length) % displayCases.length;
-    setIndex(nextPosition);
-    setActiveCaseId(displayCases[nextPosition].id);
+  const answerList = useMemo(() => Object.values(answers), [answers]);
+  const orderedCases = useMemo(() => {
+    const ranked = rankPersonalizedCases(cases, answerList).map((entry) => entry.case);
+    const rankedIds = new Set(ranked.map((scenario) => scenario.id));
+    return [...ranked, ...cases.filter((scenario) => !rankedIds.has(scenario.id))];
+  }, [answerList]);
+  const filteredCases = useMemo(
+    () => activeCategory === "all"
+      ? orderedCases
+      : orderedCases.filter((scenario) => scenario.category === activeCategory),
+    [activeCategory, orderedCases],
+  );
+  const visibleCount = Math.min(
+    filteredCases.length,
+    Math.max(BATCH_SIZE, visibleCounts[activeCategory] ?? BATCH_SIZE),
+  );
+  const visibleCases = filteredCases.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredCases.length;
+
+  const loadMore = useCallback(() => {
+    if (loadingRef.current || visibleCount >= filteredCases.length) return;
+    loadingRef.current = true;
+    setIsAppending(true);
+
+    window.requestAnimationFrame(() => {
+      const next = Math.min(filteredCases.length, visibleCount + BATCH_SIZE);
+      const added = Math.max(0, next - visibleCount);
+      const nextCounts = { ...visibleCounts, [activeCategory]: next };
+      setVisibleCounts(nextCounts);
+      window.sessionStorage.setItem("clearcall-feed-counts", JSON.stringify(nextCounts));
+      setAnnouncement(added > 0 ? `${added} more cases loaded. ${next} shown.` : "All matching cases are shown.");
+      setIsAppending(false);
+      loadingRef.current = false;
+    });
+  }, [activeCategory, filteredCases.length, visibleCount, visibleCounts]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !hasMore || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) loadMore();
+      },
+      { rootMargin: "700px 0px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMore]);
+
+  const setCategory = (category: CaseCategory | "all") => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    if (category === "all") nextParams.delete("foul");
+    else nextParams.set("foul", category);
+    const query = nextParams.toString();
+    router.replace(query ? `/?${query}` : "/", { scroll: false });
+    setVisibleCounts((current) => ({ ...current, [category]: BATCH_SIZE }));
+    setAnnouncement(
+      category === "all"
+        ? `${cases.length} seeded cases shown across all foul types.`
+        : `Feed filtered to ${category}.`,
+    );
   };
 
   if (!hydrated) {
     return (
-      <div className="feed-page" aria-label="Loading your training feed">
-        <div className="feed-layout">
-          <div className="loading-skeleton" style={{ minHeight: 760 }} />
-          <div className="loading-skeleton" style={{ minHeight: 260 }} />
+      <div className="feed-page" aria-label="Loading the case feed">
+        <div className="feed-toolbar loading-skeleton" style={{ minHeight: 82 }} />
+        <div className="feed-stream-skeleton" aria-hidden="true">
+          <div className="loading-skeleton" />
+          <div className="loading-skeleton" />
         </div>
       </div>
     );
@@ -71,108 +120,70 @@ export function FeedView() {
 
   return (
     <div className="feed-page">
-      <header className="feed-intro">
-        <div>
-          <h1>Make the call</h1>
-          <p>Watch → decide → explain. Evidence stays hidden until you commit.</p>
+      <header className="feed-toolbar">
+        <div className="feed-toolbar__title">
+          <h1>Feed</h1>
+          <p>Watch → decide → explain. Open a case to make the call.</p>
         </div>
-        <div className="feed-progress" aria-label={`${answerList.length} of ${cases.length} cases completed`}>
-          <span>{answerList.length}/{cases.length} reviewed</span>
-          <span className="feed-progress__track" aria-hidden="true">
-            <span style={{ width: `${completion}%` }} />
-          </span>
+        <div className="feed-toolbar__actions">
+          <label className="feed-filter" htmlFor="foul-type-filter">
+            <Funnel aria-hidden="true" size={17} />
+            <span>Foul type</span>
+            <select
+              id="foul-type-filter"
+              onChange={(event) => setCategory(event.target.value as CaseCategory | "all")}
+              value={activeCategory}
+            >
+              <option value="all">All incidents</option>
+              {categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
+          </label>
         </div>
       </header>
 
-      {!onboardingComplete && (
-        <section className="onboarding-strip" aria-labelledby="onboarding-title">
-          <span className="onboarding-strip__icon" aria-hidden="true"><Target size={18} /></span>
-          <div>
-            <strong id="onboarding-title">Train your judgment, not just your rulebook.</strong>
-            <p>Choose a decision, set your confidence, and name the factors before revealing the authored teaching rationale.</p>
-          </div>
-          <button className="button button--secondary" type="button" onClick={completeOnboarding}>
-            Start training
-          </button>
-          <button className="icon-button icon-button--small" type="button" onClick={completeOnboarding} aria-label="Dismiss introduction">
-            <X aria-hidden="true" size={16} />
+      <Link className="feed-composer" href="/publish">
+        <span className="profile-avatar" aria-hidden="true">JL</span>
+        <span>
+          <strong>Publish a case</strong>
+          <small>Start with text, an image, or a video.</small>
+        </span>
+        <SquarePlus aria-hidden="true" size={20} />
+      </Link>
+
+      <div className="feed-result-line">
+        <span>{filteredCases.length} {filteredCases.length === 1 ? "case" : "cases"}</span>
+        <span>{answerList.length}/{cases.length} reviewed</span>
+      </div>
+
+      {filteredCases.length > 0 ? (
+        <ol className="feed-stream" aria-label="Officiating case feed">
+          {visibleCases.map((scenario, index) => (
+            <li key={scenario.id}>
+              <FeedPostCard scenario={scenario} priority={index === 0} />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <section className="feed-empty" aria-labelledby="feed-empty-title">
+          <h2 id="feed-empty-title">No seeded cases match this foul type.</h2>
+          <p>Clear the filter to return to the full local case catalog.</p>
+          <button className="button button--secondary" type="button" onClick={() => setCategory("all")}>
+            <RotateCcw aria-hidden="true" size={16} /> Clear filter
           </button>
         </section>
       )}
 
-      <div className="feed-layout">
-        <div className="feed-stage">
-          <CaseCard key={scenario.id} scenario={scenario} onSubmitted={setActiveCaseId} />
-          <div className="feed-nav">
-            <button
-              className="button button--ghost"
-              type="button"
-              onClick={() => moveFeed(-1)}
-            >
-              <ArrowLeft aria-hidden="true" size={16} /> Previous
-            </button>
-            <span className="feed-nav__count">
-              {visiblePosition === -1
-                ? `Reviewed · ${displayCases.length} left`
-                : `${visiblePosition + 1} / ${displayCases.length}`}
-            </span>
-            <button
-              className="button button--secondary"
-              type="button"
-              onClick={() => moveFeed(1)}
-            >
-              Next case <ArrowRight aria-hidden="true" size={16} />
-            </button>
-          </div>
-        </div>
-
-        <aside className="learning-rail" aria-label="Learning context">
-          <section className="learning-card">
-            <span className="learning-card__label">Current calibration</span>
-            <div className="learning-card__metric">
-              <strong>{profile.completedCases ? `${profile.calibrationScore}%` : "—"}</strong>
-              <span>{profile.calibrationLabel}</span>
-            </div>
-            <p>
-              {profile.completedCases
-                ? "Calibration compares your confidence with recommendation alignment."
-                : "Complete a case to start measuring confidence calibration."}
-            </p>
-          </section>
-          <section className="learning-card">
-            <span className="learning-card__label">Your review loop</span>
-            <ol className="learning-path">
-              <li data-active><span className="learning-path__step">01</span><span>Watch the incident context</span></li>
-              <li data-active><span className="learning-path__step">02</span><span>Decide and explain</span></li>
-              <li data-active={Boolean(answers[scenario.id]) || undefined}><span className="learning-path__step">03</span><span>Reveal authored evidence</span></li>
-              <li><span className="learning-path__step">04</span><span>Compare the teaching pair</span></li>
-            </ol>
-          </section>
-          <section className="learning-card">
-            <span className="learning-card__label">Practice signal</span>
-            <div className="learning-card__metric">
-              <strong>{profile.weakestCategory ? "1" : "—"}</strong>
-              <span>{profile.weakestCategory ?? "Collecting evidence"}</span>
-            </div>
-            <p>{profile.mostCommonReasoningMistake}</p>
-            <Link className="text-link" href="/profile" style={{ marginTop: 13 }}>
-              View learner profile <ArrowRight size={13} />
-            </Link>
-          </section>
-          <div className="demo-notice">
-            <CircleAlert aria-hidden="true" size={15} />
-            <span>All cases, distributions, and reviewer patterns are authored demo material requiring qualified review.</span>
-          </div>
-          <div className="button-row">
-            <Link className="button button--ghost" href="/about">
-              <BookOpenCheck aria-hidden="true" size={15} /> Trust model
-            </Link>
-            <Link className="button button--ghost" href="/profile">
-              <Gauge aria-hidden="true" size={15} /> Progress
-            </Link>
-          </div>
-        </aside>
+      <div className="feed-loader" ref={sentinelRef}>
+        {hasMore ? (
+          <button className="button button--secondary" type="button" onClick={loadMore} disabled={isAppending}>
+            {isAppending ? <LoaderCircle className="spin" aria-hidden="true" size={17} /> : null}
+            {isAppending ? "Loading cases…" : "Load more cases"}
+          </button>
+        ) : filteredCases.length > 0 ? (
+          <p>All matching seeded cases are shown.</p>
+        ) : null}
       </div>
+      <p className="sr-only" aria-live="polite">{announcement}</p>
     </div>
   );
 }

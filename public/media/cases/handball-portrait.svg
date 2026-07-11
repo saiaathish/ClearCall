@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1125" role="img" aria-labelledby="title desc">
+  <title id="title">Portrait handball diagram</title>
+  <desc id="desc">Diagram of a defender sliding with one arm supporting the body near the ball.</desc>
+  <rect width="900" height="1125" fill="#153f32"/>
+  <path d="M80 80h740v965H80zM80 562h740" fill="none" stroke="#f2eee3" stroke-opacity=".48" stroke-width="7"/>
+  <path d="M190 764c120-72 222-112 330-98 76 10 132 49 202 120" fill="none" stroke="#f2eee3" stroke-opacity=".38" stroke-width="8" stroke-dasharray="18 18"/>
+  <circle cx="474" cy="392" r="62" fill="#f2c94c" stroke="#101713" stroke-width="10"/>
+  <path d="M474 462l-96 204 182 108M418 550l-180 72M526 548l146 134" fill="none" stroke="#f2c94c" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="714" cy="712" r="50" fill="#fffdf7" stroke="#101713" stroke-width="10"/>
+  <circle cx="675" cy="678" r="92" fill="none" stroke="#c94737" stroke-width="12"/>
+  <path d="M612 615l126 126M738 615L612 741" stroke="#c94737" stroke-width="10" stroke-linecap="round"/>
+</svg>

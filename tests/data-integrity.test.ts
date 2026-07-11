@@ -29,4 +29,19 @@ describe("seeded case integrity", () => {
       expect(cases.filter((item) => item.category === category)).toHaveLength(2);
     }
   });
+
+  it("mixes text, image, and video-shaped cases without forcing one aspect ratio", () => {
+    expect(new Set(cases.map((item) => item.mediaKind))).toEqual(new Set(["text", "image", "video"]));
+
+    const imageRatios = cases
+      .filter((item) => item.mediaKind === "image")
+      .map((item) => `${item.mediaWidth}:${item.mediaHeight}`);
+    expect(new Set(imageRatios).size).toBeGreaterThanOrEqual(4);
+    expect(
+      cases
+        .filter((item) => item.mediaKind === "image")
+        .every((item) => item.imageSrc && item.mediaWidth && item.mediaHeight && item.mediaAlt),
+    ).toBe(true);
+    expect(cases.filter((item) => item.mediaKind === "text").every((item) => !item.imageSrc)).toBe(true);
+  });
 });
