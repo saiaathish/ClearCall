@@ -1,0 +1,24 @@
+{
+  "name": "clearcall",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Structured referee-case fixtures and demo documentation for ClearCall.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "build": "npm run typecheck && npm run validate",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run typecheck && npm run validate",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate": "node scripts/validate-referee-cases.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2"
+  }
+}
