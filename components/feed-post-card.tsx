@@ -5,7 +5,7 @@ import { ArrowUpRight, BookOpen, Clock3, MessageCircle } from "lucide-react";
 import type { MediaKind, OfficiatingCase } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { CaseVideo } from "@/components/case-video";
-import { SaveButton, ShareButton } from "@/components/case-actions";
+import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
 import { StatusBadge } from "@/components/status-badge";
 
 function formatPublishedAt(value: string) {
@@ -54,6 +54,7 @@ export function FeedPostCard({
         <div className="feed-post__actions" aria-label={`Actions for ${scenario.title}`}>
           <SaveButton caseId={scenario.id} />
           <ShareButton caseId={scenario.id} />
+          <ReportButton caseId={scenario.id} />
         </div>
       </header>
 

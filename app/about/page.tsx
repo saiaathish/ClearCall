@@ -139,7 +139,9 @@ export default function AboutPage() {
           </p>
           <p>
             A production service would also need attribution, rights review, reporting,
-            and removal workflows. Those workflows are not implemented in this prototype.
+            and removal workflows. This prototype includes a browser-local report dialog,
+            copyright warning, and flagged-content removal queue on the profile page—not a
+            live moderation backend.
           </p>
         </article>
 

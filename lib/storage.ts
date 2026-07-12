@@ -1,5 +1,6 @@
 import type {
   AnswerOption,
+  CaseReport,
   DiscussionResponse,
   FactorReactionCounts,
   PublishedCaseDraft,
@@ -17,6 +18,8 @@ export interface DemoState {
   currentStreak: number;
   temporaryComments: Record<string, DiscussionResponse[]>;
   publishedDrafts: PublishedCaseDraft[];
+  reports: CaseReport[];
+  removedCaseIds: string[];
   onboardingComplete: boolean;
 }
 
@@ -62,6 +65,8 @@ export const initialDemoState: DemoState = {
   currentStreak: 4,
   temporaryComments: {},
   publishedDrafts: [],
+  reports: [],
+  removedCaseIds: [],
   onboardingComplete: false,
 };
 
@@ -129,6 +134,16 @@ const PERMISSION_STATUSES = new Set([
 ]);
 
 const MEDIA_KINDS = new Set(["text", "image", "video"]);
+
+const REPORT_REASONS = new Set([
+  "copyright",
+  "inaccurate",
+  "inappropriate",
+  "spam",
+  "other",
+]);
+
+const REPORT_STATUSES = new Set(["open", "removed"]);
 
 function isOneOf(value: unknown, allowed: ReadonlySet<string>): value is string {
   return typeof value === "string" && allowed.has(value);
@@ -243,6 +258,23 @@ function isRuleFactor(value: unknown): value is RuleFactor {
   );
 }
 
+function isCaseReport(value: unknown): value is CaseReport {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.caseId === "string" &&
+    isOneOf(value.reason, REPORT_REASONS) &&
+    typeof value.details === "string" &&
+    typeof value.reportedAt === "string" &&
+    isOneOf(value.status, REPORT_STATUSES)
+  );
+}
+
+function readReports(value: unknown): CaseReport[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(isCaseReport);
+}
+
 function readPublishedDraft(value: unknown): PublishedCaseDraft | null {
   if (!isRecord(value)) return null;
   const mediaKind = isOneOf(value.mediaKind, MEDIA_KINDS)
@@ -329,6 +361,10 @@ export function readDemoState(): DemoState {
         ? candidate.publishedDrafts
             .map(readPublishedDraft)
             .filter((draft): draft is PublishedCaseDraft => Boolean(draft))
+        : [],
+      reports: readReports(candidate.reports),
+      removedCaseIds: Array.isArray(candidate.removedCaseIds)
+        ? candidate.removedCaseIds.filter((id): id is string => typeof id === "string")
         : [],
       onboardingComplete:
         typeof candidate.onboardingComplete === "boolean"

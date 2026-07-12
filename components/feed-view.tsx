@@ -18,7 +18,7 @@ function isCaseCategory(value: string | null): value is CaseCategory {
 }
 
 export function FeedView() {
-  const { answers, hydrated } = useDemo();
+  const { answers, hydrated, removedCaseIds } = useDemo();
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterParam = searchParams.get("foul");
@@ -44,11 +44,13 @@ export function FeedView() {
   const loadingRef = useRef(false);
 
   const answerList = useMemo(() => Object.values(answers), [answers]);
+  const removedIds = useMemo(() => new Set(removedCaseIds), [removedCaseIds]);
   const orderedCases = useMemo(() => {
-    const ranked = rankPersonalizedCases(cases, answerList).map((entry) => entry.case);
+    const available = cases.filter((scenario) => !removedIds.has(scenario.id));
+    const ranked = rankPersonalizedCases(available, answerList).map((entry) => entry.case);
     const rankedIds = new Set(ranked.map((scenario) => scenario.id));
-    return [...ranked, ...cases.filter((scenario) => !rankedIds.has(scenario.id))];
-  }, [answerList]);
+    return [...ranked, ...available.filter((scenario) => !rankedIds.has(scenario.id))];
+  }, [answerList, removedIds]);
   const filteredCases = useMemo(
     () => activeCategory === "all"
       ? orderedCases
