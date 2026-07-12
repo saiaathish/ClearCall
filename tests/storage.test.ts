@@ -1,33 +1,14 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
-  clearDemoState,
+  addCommentRemote,
+  completeOnboardingRemote,
+  fetchDemoState,
   initialDemoState,
-  readDemoState,
-  writeDemoState,
+  publishDraftRemote,
+  submitAnswerRemote,
+  toggleSavedRemote,
 } from "@/lib/storage";
-import type { DiscussionResponse, PublishedCaseDraft } from "@/lib/types";
-
-class MemoryStorage {
-  private data = new Map<string, string>();
-
-  getItem(key: string) {
-    return this.data.get(key) ?? null;
-  }
-
-  setItem(key: string, value: string) {
-    this.data.set(key, value);
-  }
-
-  removeItem(key: string) {
-    this.data.delete(key);
-  }
-}
-
-function installWindow() {
-  const localStorage = new MemoryStorage();
-  vi.stubGlobal("window", { localStorage });
-  return localStorage;
-}
+import type { DiscussionResponse, PublishedCaseDraft, UserAnswer } from "@/lib/types";
 
 const validComment: DiscussionResponse = {
   id: "comment-a",
@@ -51,7 +32,7 @@ const validComment: DiscussionResponse = {
   factorReactions: {
     "contact-point": { agree: 4, disagree: 1 },
   },
-  postedAtLabel: "Just now · local only",
+  postedAtLabel: "Just now",
   isPinned: false,
   isVerifiedExplanation: false,
   isSynthetic: false,
@@ -60,6 +41,11 @@ const validComment: DiscussionResponse = {
 
 const validDraft: PublishedCaseDraft = {
   id: "draft-a",
+  mediaKind: "video",
+  mediaFileName: "challenge.mp4",
+  mediaFileSize: 4096,
+  mediaFileType: "video/mp4",
+  mediaAlt: "Two players contest the ball near midfield before late contact.",
   clipFileName: "challenge.mp4",
   clipFileSize: 4096,
   clipFileType: "video/mp4",
@@ -107,120 +93,184 @@ const validDraft: PublishedCaseDraft = {
   reviewStatus: "PENDING_EXPERT_REVIEW",
 };
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
+const validAnswer: UserAnswer = {
+  caseId: "case-a",
+  selectedOptionId: "option-a",
+  confidence: 80,
+  selectedFactorKeys: ["speed"],
+  answeredAt: "2026-07-10T00:00:00.000Z",
+};
 
-describe("demo storage", () => {
-  it("uses the seeded baseline outside the browser", () => {
-    expect(readDemoState()).toEqual(initialDemoState);
+/** Minimal chainable Supabase query builder mock. */
+function makeQueryBuilder(result: { data: unknown; error: unknown }) {
+  const builder: Record<string, unknown> = {};
+  const chain = () => builder;
+  builder.select = vi.fn(chain);
+  builder.eq = vi.fn(chain);
+  builder.order = vi.fn(chain);
+  builder.upsert = vi.fn(chain);
+  builder.insert = vi.fn(chain);
+  builder.update = vi.fn(chain);
+  builder.delete = vi.fn(chain);
+  builder.single = vi.fn(() => Promise.resolve(result));
+  builder.maybeSingle = vi.fn(() => Promise.resolve(result));
+  // Make the builder itself thenable so `await supabase.from(...).select(...)`
+  // resolves without an explicit terminal call, matching supabase-js.
+  builder.then = (resolve: (value: unknown) => unknown) => Promise.resolve(result).then(resolve);
+  return builder;
+}
+
+function makeSupabaseMock(tableResults: Record<string, { data: unknown; error: unknown }>) {
+  const storageUpload = vi.fn(() => Promise.resolve({ data: { path: "x" }, error: null }));
+  return {
+    from: vi.fn((table: string) =>
+      makeQueryBuilder(tableResults[table] ?? { data: null, error: null }),
+    ),
+    storage: {
+      from: vi.fn(() => ({ upload: storageUpload })),
+    },
+  } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+}
+
+describe("demo storage (Supabase-backed)", () => {
+  it("exposes a seeded baseline for signed-out visitors", () => {
+    expect(initialDemoState.answers).toBeTypeOf("object");
+    expect(initialDemoState.savedCaseIds.length).toBeGreaterThan(0);
+    expect(initialDemoState.publishedDrafts).toEqual([]);
+    expect(initialDemoState.onboardingComplete).toBe(false);
   });
 
-  it("round-trips a versioned state envelope", () => {
-    installWindow();
-    const state = { ...initialDemoState, currentStreak: 9, savedCaseIds: ["case-a"] };
-    expect(writeDemoState(state)).toBe(true);
-    expect(readDemoState()).toEqual(state);
-  });
-
-  it("recovers safely from malformed JSON", () => {
-    const storage = installWindow();
-    storage.setItem("clearcall-demo-v1", "{broken");
-    expect(readDemoState()).toEqual(initialDemoState);
-  });
-
-  it("filters malformed answers and can clear the envelope", () => {
-    const storage = installWindow();
-    storage.setItem(
-      "clearcall-demo-v1",
-      JSON.stringify({
-        answers: {
-          bad: { caseId: "bad", confidence: "certain" },
-          good: {
-            caseId: "good",
-            selectedOptionId: "option-a",
+  it("fetchDemoState reshapes rows from every table into DemoState", async () => {
+    const supabase = makeSupabaseMock({
+      user_answers: {
+        data: [
+          {
+            case_id: "case-a",
+            selected_option_id: "option-a",
             confidence: 80,
-            selectedFactorKeys: ["speed"],
-            answeredAt: "2026-07-10T00:00:00.000Z",
+            selected_factor_keys: ["speed"],
+            answered_at: "2026-07-10T00:00:00.000Z",
           },
+        ],
+        error: null,
+      },
+      saved_cases: { data: [{ case_id: "case-a" }], error: null },
+      profiles: {
+        data: {
+          current_streak: 3,
+          onboarding_complete: true,
+          display_name: "Jordan Lee",
+          avatar_initials: "JL",
+          role: "learner",
         },
-        savedCaseIds: ["good", 42],
-      }),
-    );
-    expect(Object.keys(readDemoState().answers)).toEqual(["good"]);
-    expect(readDemoState().savedCaseIds).toEqual(["good"]);
-    clearDemoState();
-    expect(storage.getItem("clearcall-demo-v1")).toBeNull();
-  });
-
-  it("hydrates only discussion responses with complete nested author and reaction data", () => {
-    const storage = installWindow();
-    storage.setItem(
-      "clearcall-demo-v1",
-      JSON.stringify({
-        version: 1,
-        state: {
-          temporaryComments: {
-            "case-a": [
-              validComment,
-              {
-                ...validComment,
-                id: "missing-author-fields",
-                author: { id: "learner-b", displayName: "Incomplete" },
-              },
-              {
-                ...validComment,
-                id: "bad-reaction-count",
-                factorReactions: { speed: { agree: "many", disagree: 0 } },
-              },
-              {
-                ...validComment,
-                id: "wrong-case",
-                caseId: "case-b",
-              },
-            ],
-            "not-an-array": { ...validComment },
+        error: null,
+      },
+      published_drafts: {
+        data: [
+          {
+            id: "draft-a",
+            data: validDraft,
+            status: "draft",
+            media_path: null,
+            created_at: "2026-07-10T00:00:00.000Z",
           },
-        },
-      }),
-    );
+        ],
+        error: null,
+      },
+      discussion_responses: {
+        data: [
+          {
+            id: "comment-a",
+            case_id: "case-a",
+            body: validComment.body,
+            selected_option_id: "option-a",
+            confidence: 76,
+            selected_factor_keys: ["contact-point"],
+            rule_citation: "Law 12",
+            helpful_count: 2,
+            factor_reactions: { "contact-point": { agree: 4, disagree: 1 } },
+            created_at: "2026-07-10T00:00:00.000Z",
+            is_pinned: false,
+            is_verified_explanation: false,
+          },
+        ],
+        error: null,
+      },
+    });
 
-    expect(readDemoState().temporaryComments).toEqual({
-      "case-a": [validComment],
+    const result = await fetchDemoState(supabase, "user-1");
+
+    expect(result.answers["case-a"]).toEqual(validAnswer);
+    expect(result.savedCaseIds).toEqual(["case-a"]);
+    expect(result.currentStreak).toBe(3);
+    expect(result.onboardingComplete).toBe(true);
+    expect(result.publishedDrafts).toHaveLength(1);
+    expect(result.publishedDrafts[0]).toMatchObject({ id: "draft-a", status: "draft" });
+    expect(result.temporaryComments["case-a"]).toHaveLength(1);
+    expect(result.temporaryComments["case-a"][0]).toMatchObject({
+      id: "comment-a",
+      body: validComment.body,
     });
   });
 
-  it("hydrates only published drafts with complete nested options and factors", () => {
-    const storage = installWindow();
-    storage.setItem(
-      "clearcall-demo-v1",
-      JSON.stringify({
-        publishedDrafts: [
-          validDraft,
-          {
-            ...validDraft,
-            id: "bad-option",
-            answerOptions: [{ id: "option-a", label: "Incomplete option" }],
-          },
-          {
-            ...validDraft,
-            id: "bad-factor",
-            factors: [{ ...validDraft.factors[0], supportsRecommendation: "yes" }],
-          },
-          {
-            ...validDraft,
-            id: "bad-enum",
-            category: "Unknown category",
-          },
-          {
-            ...validDraft,
-            id: "bad-file-size",
-            clipFileSize: Number.POSITIVE_INFINITY,
-          },
-        ],
+  it("falls back to the seeded baseline if any Supabase call throws", async () => {
+    const supabase = {
+      from: vi.fn(() => {
+        throw new Error("network down");
       }),
-    );
+      storage: { from: vi.fn() },
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    expect(readDemoState().publishedDrafts).toEqual([validDraft]);
+    const result = await fetchDemoState(supabase, "user-1");
+    expect(result).toEqual(initialDemoState);
+  });
+
+  it("submitAnswerRemote upserts into user_answers", async () => {
+    const supabase = makeSupabaseMock({
+      profiles: { data: { current_streak: 1 }, error: null },
+    });
+    await submitAnswerRemote(supabase, "user-1", validAnswer, false);
+    expect(supabase.from).toHaveBeenCalledWith("user_answers");
+  });
+
+  it("toggleSavedRemote upserts when saving and deletes when unsaving", async () => {
+    const supabase = makeSupabaseMock({});
+    await toggleSavedRemote(supabase, "user-1", "case-a", true);
+    await toggleSavedRemote(supabase, "user-1", "case-a", false);
+    expect(supabase.from).toHaveBeenCalledWith("saved_cases");
+  });
+
+  it("addCommentRemote inserts into discussion_responses", async () => {
+    const supabase = makeSupabaseMock({});
+    await addCommentRemote(supabase, "user-1", "case-a", validComment);
+    expect(supabase.from).toHaveBeenCalledWith("discussion_responses");
+  });
+
+  it("completeOnboardingRemote updates the profile", async () => {
+    const supabase = makeSupabaseMock({});
+    await completeOnboardingRemote(supabase, "user-1");
+    expect(supabase.from).toHaveBeenCalledWith("profiles");
+  });
+
+  it("publishDraftRemote uploads media then inserts a published_drafts row", async () => {
+    const supabase = makeSupabaseMock({
+      published_drafts: {
+        data: { id: "server-id", created_at: "2026-07-11T00:00:00.000Z" },
+        error: null,
+      },
+    });
+    const file = new File(["clip"], "clip.mp4", { type: "video/mp4" });
+    const result = await publishDraftRemote(supabase, "user-1", validDraft, file);
+
+    expect(supabase.storage.from).toHaveBeenCalledWith("case-media");
+    expect(result.id).toBe("server-id");
+    expect(result.createdAt).toBe("2026-07-11T00:00:00.000Z");
+  });
+
+  it("publishDraftRemote throws when the insert fails", async () => {
+    const supabase = makeSupabaseMock({
+      published_drafts: { data: null, error: new Error("insert failed") },
+    });
+    await expect(publishDraftRemote(supabase, "user-1", validDraft, null)).rejects.toThrow();
   });
 });
