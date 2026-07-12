@@ -11,11 +11,12 @@ import {
   Search,
   SearchX,
 } from "lucide-react";
+import { CaseVideo } from "@/components/case-video";
 import { getStatusLabel, StatusBadge } from "@/components/status-badge";
 import { useToast } from "@/components/toast-provider";
 import { useDemo } from "@/context/demo-context";
 import { cases } from "@/data/cases";
-import type { Difficulty, OfficiatingCase, ScenarioStatus } from "@/lib/types";
+import type { Difficulty, MediaKind, OfficiatingCase, ScenarioStatus } from "@/lib/types";
 
 type ViewMode = "grid" | "list";
 
@@ -37,6 +38,13 @@ const categoryOptions = Array.from(new Set(cases.map((item) => item.category))).
 
 function titleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function getMediaKind(scenario: OfficiatingCase): MediaKind {
+  if (scenario.mediaKind) return scenario.mediaKind;
+  if (scenario.videoSrc) return "video";
+  if (scenario.imageSrc || scenario.posterSrc) return "image";
+  return "text";
 }
 
 function SavedSkeleton() {
@@ -81,9 +89,16 @@ function SavedCaseCard({
   item: OfficiatingCase;
   onRemove: (item: OfficiatingCase) => void;
 }) {
+  const mediaKind = getMediaKind(item);
+  const hasMedia = mediaKind !== "text";
+
   return (
-    <article className="saved-case-card">
-      <div className="saved-case-card__poster" aria-hidden="true" />
+    <article className="saved-case-card" data-media={mediaKind}>
+      {hasMedia && (
+        <div className="saved-case-card__poster">
+          <CaseVideo scenario={item} compact />
+        </div>
+      )}
       <div className="saved-case-card__body">
         <div className="meta-row">
           <StatusBadge status={item.scenarioStatus} />
@@ -95,8 +110,9 @@ function SavedCaseCard({
         </div>
 
         <div>
-          <h2>{item.title}</h2>
-          <p>{item.prompt}</p>
+          <p className="saved-case-card__title">{item.title}</p>
+          <h2>{item.prompt}</h2>
+          <p>{item.description}</p>
         </div>
 
         <footer className="saved-case-card__footer">
@@ -200,9 +216,6 @@ export function SavedView() {
       <header className="page-header">
         <div className="page-header__copy">
           <h1 className="page-title">Saved cases</h1>
-          <p className="page-description">
-            Cases you want to revisit.
-          </p>
         </div>
       </header>
 

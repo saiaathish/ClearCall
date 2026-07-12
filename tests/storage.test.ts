@@ -336,6 +336,14 @@ describe("demo storage (Supabase-backed)", () => {
     expect(supabase.from).toHaveBeenCalledWith("saved_cases");
   });
 
+  it("toggleSavedRemote throws when the write fails", async () => {
+    const failure = new Error("fk violation");
+    const supabase = makeSupabaseMock({
+      saved_cases: { data: null, error: failure },
+    });
+    await expect(toggleSavedRemote(supabase, "user-1", "case-a", true)).rejects.toBe(failure);
+  });
+
   it("addCommentRemote inserts into discussion_responses", async () => {
     const supabase = makeSupabaseMock({});
     await addCommentRemote(supabase, "user-1", "case-a", validComment);

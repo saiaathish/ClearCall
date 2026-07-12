@@ -604,7 +604,11 @@ export async function fetchDemoState(
   try {
     const [answersRes, savedRes, profileMeta, draftsRes, commentsRes] = await Promise.all([
       supabase.from("user_answers").select("*").eq("user_id", userId),
-      supabase.from("saved_cases").select("case_id").eq("user_id", userId),
+      supabase
+        .from("saved_cases")
+        .select("case_id")
+        .eq("user_id", userId)
+        .order("saved_at", { ascending: true }),
       fetchProfileMeta(supabase, userId),
       supabase
         .from("published_drafts")
@@ -705,17 +709,20 @@ export async function toggleSavedRemote(
   willSave: boolean,
 ): Promise<void> {
   if (willSave) {
-    await supabase.from("saved_cases").upsert(
+    const { error } = await supabase.from("saved_cases").upsert(
       { user_id: userId, case_id: caseId },
       { onConflict: "user_id,case_id" },
     );
-  } else {
-    await supabase
-      .from("saved_cases")
-      .delete()
-      .eq("user_id", userId)
-      .eq("case_id", caseId);
+    if (error) throw error;
+    return;
   }
+
+  const { error } = await supabase
+    .from("saved_cases")
+    .delete()
+    .eq("user_id", userId)
+    .eq("case_id", caseId);
+  if (error) throw error;
 }
 
 export async function addCommentRemote(

@@ -82,6 +82,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Low contact alone doesn't settle it. Weigh that with control and force.",
       "I'd sell the yellow, get close, split them, and note exactly where it hit.",
       "Law 12 concept: reckless challenges",
+      undefined,
+      [],
+      {
+        category: "Serious foul play",
+        criticalFactor: "control",
+        title: "Controlled lunge, lower contact",
+      },
     ),
   },
   {
@@ -148,6 +155,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "You can see the cleat on the boot. Still, one still doesn't prove speed by itself. Height, force, and whether he could pull out. All three.",
       "Freeze contact. Boot height and studs are obvious. Question is whether he had any real chance to pull out.",
       "Law 12 concept: serious foul play",
+      undefined,
+      [],
+      {
+        category: "Serious foul play",
+        criticalFactor: "contact-height",
+        title: "Studs-up, cleat-on-boot contact",
+      },
     ),
   },
   {
@@ -214,6 +228,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Full slide is in the still. Ask if the arm is working for the body or for the ball. That's the whole thing.",
       "Looking at the full slide, that arm is for balance as he goes down. Not reaching for the ball.",
       "Law 12 concept: handling the ball",
+      undefined,
+      [],
+      {
+        category: "Handball",
+        criticalFactor: "arm-position",
+        title: "Arm contact in a sliding challenge",
+      },
     ),
   },
   {
@@ -280,6 +301,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Penalty already happened. Doesn't mean the arm read was right. Outcome isn't proof.",
       "Once the pen's taken the pressure's gone, but still go back and check the arm on the cross.",
       "Law 12 concept: handling the ball",
+      undefined,
+      [],
+      {
+        category: "Handball",
+        criticalFactor: "arm-position",
+        title: "Handball in the area, penalty awarded",
+      },
     ),
   },
   {
@@ -343,6 +371,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Challenge pulls your eye. Real question is the offside guy's proximity. Position first, then did it actually change the challenge?",
       "I'd watch the offside player during the challenge. Standing still away from it is different from drifting toward the ball.",
       "Law 11 concept: interfering with an opponent",
+      undefined,
+      [],
+      {
+        category: "Offside interference",
+        criticalFactor: "line-of-vision",
+        title: "Challenge for the ball, offside player nearby",
+      },
     ),
   },
   {
@@ -406,6 +441,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "VAR only tells you where he was. You still have to answer whether it mattered. Here every involvement check is empty.",
       "Keeping the flag down after VAR confirms position takes discipline. Tech measures location. Involvement is still on you.",
       "Law 11 concept: offside position and offence",
+      undefined,
+      [],
+      {
+        category: "Offside interference",
+        criticalFactor: "opponent-impact",
+        title: "VAR flags offside, but does position mean offence?",
+      },
     ),
   },
   {
@@ -474,6 +516,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Hold is obvious and deliberate. Run the four DOGSO checks. Wide cover only counts if they can actually get there before the shot.",
       "Hold kills the run. Still check direction, distance, cover. I'd look straight to my AR for where the covering defender is.",
       "Law 12 concept: denial of an obvious goal-scoring opportunity",
+      undefined,
+      [],
+      {
+        category: "Denial of an obvious goal-scoring opportunity",
+        criticalFactor: "defenders",
+        title: "Physical hold stops a central run",
+      },
     ),
   },
   {
@@ -538,6 +587,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "You signalled advantage. It dies in the next beat. Bring it back. Timing's the whole call.",
       "Loud voice, bring it back clean so both teams know why.",
       "Law 5 concept: advantage",
+      undefined,
+      [],
+      {
+        category: "Advantage",
+        criticalFactor: "time-elapsed",
+        title: "Advantage disappears immediately",
+      },
     ),
   },
   {
@@ -606,6 +662,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Only sell simulation if you saw the attacker create it. If you're unsure, drop the confidence. Don't auto-label.",
       "Don't guess from the appeal. Watch the defender's feet and the attacker's leg path.",
       "Law 12 concept: simulation",
+      undefined,
+      [],
+      {
+        category: "Simulation",
+        criticalFactor: "initiator",
+        title: "Attacker initiates the contact",
+      },
     ),
   },
   {
@@ -674,6 +737,13 @@ const seedCases: readonly OfficiatingCase[] = [
       "Slide clearance muddies it. People say it wasn't deliberate. Judge the body action, not how pretty the pass was.",
       "Slide is clear, intent isn't. Did he have other options and still choose the foot? That's deliberate vs reflex.",
       "Law 12 concept: goalkeeper handling restrictions",
+      undefined,
+      [],
+      {
+        category: "Goalkeeper handling",
+        criticalFactor: "teammate-action",
+        title: "Sliding clearance played back to the goalkeeper",
+      },
     ),
   },
 ];

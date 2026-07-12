@@ -45,7 +45,7 @@ export const PHOTO_ASSETS: readonly MediaAsset[] = [
   { src: "/media/stock/stock-07.jpg", width: 1200, height: 800, alt: "Match ball resting on the grass near the touchline", tags: ["ball", "match", "set-piece"] },
   { src: "/media/stock/stock-09.jpg", width: 1200, height: 1552, alt: "Portrait still of a player preparing a pass", tags: ["attack", "open-play", "advantage"] },
   { src: "/media/stock/stock-10.jpg", width: 1200, height: 800, alt: "Match action under stadium lights", tags: ["match", "open-play", "advantage"] },
-  { src: "/media/stock/stock-11.jpg", width: 1200, height: 1200, alt: "Low angle of a player striking the ball near a defender", tags: ["challenge", "duel", "tackle"] },
+  { src: "/media/stock/stock-11.jpg", width: 1200, height: 1200, alt: "Low angle of a player striking the ball near a defender", tags: ["challenge", "duel", "tackle", "simulation"] },
   { src: "/media/stock/stock-12.jpg", width: 1200, height: 800, alt: "Wide shot of a soccer pitch during play", tags: ["match", "open-play", "offside"] },
   { src: "/media/stock/stock-13.jpg", width: 1200, height: 800, alt: "Attackers pressing high up the field", tags: ["attack", "offside", "advantage"] },
   { src: "/media/stock/stock-14.jpg", width: 1200, height: 800, alt: "Ball at a player's feet near the box", tags: ["ball", "goal", "dogso"] },
@@ -60,7 +60,7 @@ export const PHOTO_ASSETS: readonly MediaAsset[] = [
   { src: "/media/stock/stock-22.jpg", width: 1200, height: 800, alt: "Athlete in motion during a match", tags: ["open-play", "attack", "match"] },
   { src: "/media/stock/stock-23.jpg", width: 1400, height: 1867, alt: "Player striking through a soccer ball on turf", tags: ["challenge", "goal", "ball"] },
   { src: "/media/stock/stock-24.jpg", width: 1400, height: 933, alt: "Empty pitch lines ready for match play", tags: ["match", "offside", "open-play"] },
-  { src: "/media/stock/stock-25.jpg", width: 1400, height: 2105, alt: "Player mid-kick during a competitive challenge", tags: ["challenge", "tackle", "duel"] },
+  { src: "/media/stock/stock-25.jpg", width: 1400, height: 2105, alt: "Player mid-kick during a competitive challenge", tags: ["challenge", "tackle", "duel", "simulation"] },
   { src: "/media/stock/stock-26.jpg", width: 1000, height: 1400, alt: "Portrait match still near the touchline", tags: ["open-play", "attack", "match"] },
   { src: "/media/stock/stock-27.jpg", width: 900, height: 1200, alt: "Vertical crop of players competing for the ball", tags: ["duel", "challenge", "tackle"] },
   { src: "/media/stock/stock-28.jpg", width: 1000, height: 1000, alt: "Square crop of a player on the ball", tags: ["ball", "attack", "open-play"] },
@@ -100,7 +100,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "One-on-one dribble and challenge during a match",
-    tags: ["challenge", "duel", "tackle", "breakaway"],
+    tags: ["challenge", "duel", "tackle", "breakaway", "simulation"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-02.mp4",
@@ -132,7 +132,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "Penalty kick viewed from behind the goal net",
-    tags: ["set-piece", "goal", "keeper", "handball"],
+    tags: ["set-piece", "goal", "keeper"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-06.mp4",
@@ -140,7 +140,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "Close shot of a player striking a penalty",
-    tags: ["set-piece", "challenge", "simulation", "goal"],
+    tags: ["set-piece", "challenge", "goal"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-07.mp4",
@@ -156,7 +156,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "Two teams contesting the ball in open match play",
-    tags: ["match", "duel", "open-play", "challenge"],
+    tags: ["match", "duel", "open-play", "challenge", "simulation"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-09.mp4",
@@ -172,7 +172,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "Player setting the ball and striking a penalty",
-    tags: ["set-piece", "goal", "simulation", "challenge"],
+    tags: ["set-piece", "goal", "challenge"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-11.mp4",
@@ -180,7 +180,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     width: 1280,
     height: 720,
     alt: "Goalkeeper set in the goal during live play",
-    tags: ["keeper", "goal", "dogso", "handball"],
+    tags: ["keeper", "goal", "dogso"],
   },
   {
     videoSrc: "/media/demo/pitch/pitch-12.mp4",

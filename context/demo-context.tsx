@@ -209,7 +209,21 @@ export function DemoProvider({ children }: { children: ReactNode }) {
           ? [...current.savedCaseIds, caseId]
           : current.savedCaseIds.filter((id) => id !== caseId),
       }));
-      if (user) void toggleSavedRemote(supabase, user.id, caseId, willSave);
+      if (user) {
+        const signedInUserId = user.id;
+        void toggleSavedRemote(supabase, signedInUserId, caseId, willSave).catch(() => {
+          if (userRef.current?.id !== signedInUserId) return;
+          pendingSavedRef.current.delete(caseId);
+          commitLocalState((current) => ({
+            ...current,
+            savedCaseIds: willSave
+              ? current.savedCaseIds.filter((id) => id !== caseId)
+              : current.savedCaseIds.includes(caseId)
+                ? current.savedCaseIds
+                : [...current.savedCaseIds, caseId],
+          }));
+        });
+      }
       return willSave;
     },
     [commitLocalState, requireAuth, supabase, user],

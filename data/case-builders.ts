@@ -200,26 +200,46 @@ const TIME_LABELS = [
 ] as const;
 
 /**
- * Short-form discussion bodies (protocol: Reddit/Discord mode).
- * Vary structure per comment. Contractions. Fragments ok. No em-dashes.
- * Do not stitch the same opener+middle+closer skeleton every time.
- * Light emoji only — roughly 1 in 3 thread replies (and sometimes the lead ref), never stacks, never on pinned educator takes.
+ * Short-form discussion bodies (authentic-human protocol, Reddit/Discord mode).
+ * Mind-in-motion: fragments, contractions, mid-thought flips. No em-dashes.
+ * Don't quote case ids. Don't reuse opener+middle+closer every time.
+ * Light emoji — about half the thread replies, never stacks, never on pinned educators.
  */
 function pick<T>(list: readonly T[], random: () => number): T {
   return list[Math.floor(random() * list.length)]!;
 }
 
 function maybeSpiceBody(body: string, agrees: boolean, random: () => number): string {
-  // Keep most replies clean; a minority get one small react.
-  if (random() > 0.34) return body;
+  // Skip if it already has a react (some templates bake one in).
+  if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(body)) return body;
+  // ~half get one small react (user asked for a bit of life).
+  if (random() > 0.52) return body;
   const spice = agrees
-    ? pick(["👍", "👀", "✅", "🟨"], random)
-    : pick(["🤔", "👀", "😅", "🟥"], random);
-  // Prefer trailing react; occasional lead-in for short takes.
-  if (body.length < 70 && random() > 0.55) {
+    ? pick(["👍", "👀", "✅", "🟨", "⚽", "🔥"], random)
+    : pick(["🤔", "👀", "😅", "🟥", "😬", "🤷"], random);
+  if (body.length < 64 && random() > 0.5) {
     return `${spice} ${body}`;
   }
   return `${body} ${spice}`;
+}
+
+function humanTitle(title: string, caseId: string): string {
+  // Prefer the real title; never fall back to a slugy case id in quotes.
+  if (!title || title === caseId || /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(title)) {
+    return "";
+  }
+  if (title.length <= 40) return title;
+  const cut = title.slice(0, 38);
+  const at = cut.lastIndexOf(" ");
+  return `${(at > 20 ? cut.slice(0, at) : cut).trim()}…`;
+}
+
+/** Short spoken cue for comments: first clause, lowercased. */
+function shortCue(title: string, caseId: string): string {
+  const named = humanTitle(title, caseId) || title || caseId;
+  const first = named.split(",")[0]!.trim();
+  const cue = first.length >= 8 ? first : named;
+  return cue.toLowerCase();
 }
 
 function composeThreadBody(input: {
@@ -237,62 +257,91 @@ function composeThreadBody(input: {
   const { caseId, title, category, criticalFactor, slot, agrees, role, random, usedBodies } = input;
   const factor = criticalFactor.replaceAll("-", " ");
   const cat = category.toLowerCase();
-  const shortTitle = title.length > 42 ? `${title.slice(0, 40)}…` : title;
+  // Short spoken cue is the uniqueness anchor. Never quote a slug.
+  const cue = shortCue(title, caseId);
 
   const builds: Array<() => string> = [
     () =>
       agrees
-        ? `Same call as the pin on “${shortTitle}”. ${factor} is what sells it for me.`
-        : `Not sold on the pin for “${shortTitle}”. ${factor} doesn't get me there.`,
+        ? `yeah i'm with the pin on ${cue}. ${factor} is doing the work.`
+        : `nah not buying the pin on ${cue}. ${factor} just isn't enough.`,
     () =>
       agrees
-        ? `Watched “${shortTitle}” twice. Yeah I'm with the pin. Crowd noise isn't doing anything.`
-        : `Watched “${shortTitle}” twice. Still going the other way. ${factor} feels thin here.`,
+        ? `watched ${cue} twice. still with them. crowd noise isn't evidence lol`
+        : `watched ${cue} twice and still flipping it. ${factor} feels thin.`,
     () =>
-      `Ok so “${shortTitle}”. ${
-        agrees ? "I'd sell what they pinned." : "I'd flip it."
-      } ${
+      `ok so ${cue}. ${agrees ? "i'd sell what they pinned." : "i'd go the other way."} ${
         role === "learner"
-          ? "Still learning to say the factor out loud before the card."
-          : "If I can't sell it live, I don't invent it in the comments."
+          ? "still trying to say the factor out loud before the card tbh"
+          : "if i can't sell it live i'm not inventing it here"
       }`,
     () =>
       agrees
-        ? `Hmm. Pin feels right. ${factor} first, then the rest. “${shortTitle}” isn't as close as people are making it.`
-        : `Hmm. Pin feels off. People are reacting to the fall more than ${factor}. “${shortTitle}” is a trap clip.`,
+        ? `hmm pin feels right on ${cue}. ${factor} first. everything else is noise.`
+        : `hmm pin feels off on ${cue}. people are reacting to the fall more than ${factor}.`,
     () =>
-      `${agrees ? "Locking the pin." : "Pushing back."} On “${shortTitle}” I'm stuck on ${factor}. ${
-        role === "educator" ? "Newer refs: name that before you colour the card." : "Write it short and move."
+      `${agrees ? "locking it." : "pushing back."} stuck on ${factor} for ${cue}. ${
+        role === "educator" ? "newer refs: name that before you colour the card." : "write it short and move."
       }`,
     () =>
-      `Live I went ${agrees ? "with" : "against"} what got pinned on “${shortTitle}”. Replay didn't change much. ${factor} did the work.`,
+      `live i went ${agrees ? "with" : "against"} the pin on ${cue}. replay didn't change much. ${factor} did.`,
     () =>
       agrees
-        ? `“${shortTitle}”. ${factor} is clean enough. Same as pin.`
-        : `“${shortTitle}”. Wait. ${factor} isn't enough for me. Different call.`,
+        ? `${cue}. ${factor} is clean enough. same call.`
+        : `${cue}. wait. ${factor} isn't enough for me. different call.`,
     () =>
-      `${
-        agrees ? "Yeah that tracks." : "Nah."
-      } ${cat} debates always get loud. For “${shortTitle}” I'm still on ${factor}.`,
+      `${agrees ? "yeah that tracks." : "nah."} ${cat} threads always get loud. for ${cue} i'm still on ${factor}.`,
     () =>
       role === "learner"
-        ? `Gonna sit with “${shortTitle}” before next weekend. Tentatively ${agrees ? "with the pin" : "against it"}. ${factor} is the bit I keep replaying.`
-        : `Match day I'd ${agrees ? "sell the pin" : "go the other way"} on “${shortTitle}”. ${factor}. That's it.`,
+        ? `gonna sit with ${cue} before next weekend. tentatively ${agrees ? "with the pin" : "against it"}. ${factor} is the bit i keep replaying.`
+        : `match day i'd ${agrees ? "sell the pin" : "go the other way"} on ${cue}. ${factor}. that's it.`,
     () =>
-      `Anyone else flip once on “${shortTitle}”? I did. Landed ${agrees ? "back with the pin" : "against it"} after staring at ${factor}.`,
+      `anyone else flip once on ${cue}? i did. landed ${agrees ? "back with the pin" : "against it"} after staring at ${factor}.`,
     () =>
       agrees
-        ? `Blunt take: pin is fine. “${shortTitle}” just needs you to ignore the theatre and watch ${factor}.`
-        : `Blunt take: pin is wrong. “${shortTitle}” is all theatre if you skip ${factor}.`,
+        ? `blunt take on ${cue}: pin is fine. ignore the theatre, watch ${factor}.`
+        : `blunt take on ${cue}: pin is wrong. it's all theatre if you skip ${factor}.`,
     () =>
-      `From the AR angle on “${shortTitle}”… ${agrees ? "same place as pin." : "I'm out."} ${factor} or nothing.`,
+      `from the ar angle on ${cue}… ${agrees ? "same place as pin." : "i'm out."} ${factor} or nothing.`,
+    () =>
+      agrees
+        ? `idk why ${cue} is even a fight. ${factor} sells it.`
+        : `idk man ${factor} isn't getting me to the pin on ${cue}.`,
+    () =>
+      agrees
+        ? `same on ${cue}. ${factor}. moved on.`
+        : `different read on ${cue}. ${factor} is the whole disagreement for me.`,
+    () =>
+      role === "learner"
+        ? `ngl still learning these. leaning ${agrees ? "pin" : "other way"} on ${cue} cos of ${factor}.`
+        : `honestly on ${cue}? ${agrees ? "sell it." : "don't sell it."} ${factor} is what i'd write in the report.`,
+    () =>
+      agrees
+        ? `yep. ${cue}, ${factor} clears it for me.`
+        : `nope. ${cue}, ${factor} doesn't clear it.`,
+    () => `so ${factor} on ${cue}. ${agrees ? "with the pin." : "against the pin."}`,
+    () =>
+      agrees
+        ? `came in skeptical on ${cue}, left agreeing. ${factor} flipped me.`
+        : `came in agreeing on ${cue}, left skeptical. ${factor} flipped me the other way.`,
+    () =>
+      agrees
+        ? `tbh ${cue} isn't close. ${factor} 👍`
+        : `tbh ${cue} is messy. ${factor} has me elsewhere.`,
+    () =>
+      `${agrees ? "✅" : "🤔"} ${cue}. ${factor}. ${agrees ? "that's the call." : "not sold."}`,
   ];
 
-  for (let attempt = 0; attempt < 28; attempt += 1) {
-    const plain = pick(builds, random)()
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    let plain = pick(builds, random)()
       .replaceAll("—", ",")
       .replaceAll(/\s+/g, " ")
+      .replaceAll(/\s+([,.!?])/g, "$1")
       .trim();
+    // If a template somehow collides, add a soft slot crumb.
+    if (usedBodies.has(plain)) {
+      plain = `${plain} (${slot})`;
+    }
     if (usedBodies.has(plain)) continue;
     usedBodies.add(plain);
     const body = maybeSpiceBody(plain, agrees, random);
@@ -300,7 +349,7 @@ function composeThreadBody(input: {
     return body;
   }
 
-  const fallback = `On “${shortTitle}” (${caseId}/${slot}): ${agrees ? "same call" : "different call"}. ${factor}.`;
+  const fallback = `${agrees ? "same call" : "different call"} on ${cue}. ${factor}. #${slot}`;
   usedBodies.add(fallback);
   return fallback;
 }
@@ -359,13 +408,33 @@ export function makeDiscussion(
     assignedPeople.push(more[0]);
   }
 
-  const titleHint = context.title ? ` Looking at “${context.title}”.` : "";
-  const pinnedEducator = `${educatorBody.trim()}${titleHint}`.replaceAll("—", ",");
-  // Educators stay clean; match-day refs get a light react sometimes.
-  const refereePlain = `${refereeBody.trim()}${titleHint ? ` Same clip, “${context.title}”.` : ""}`.replaceAll(
-    "—",
-    ",",
-  );
+  // Pinned educator stays authored; weave a short case cue so catalog bodies stay unique
+  // without the old "Looking at…" template. Lead ref gets a light react sometimes.
+  const cue = shortCue(context.title ?? "", caseId);
+  const eduCrumb = cue
+    ? pick(
+        [
+          ` On the ${cue}.`,
+          ` For the ${cue}.`,
+          ` re: ${cue}`,
+          ` (${cue})`,
+        ],
+        random,
+      )
+    : "";
+  const refCrumb = cue
+    ? pick(
+        [
+          ` Same on the ${cue}.`,
+          ` Match day: ${cue}.`,
+          ` Thinking the ${cue}.`,
+          "",
+        ],
+        random,
+      )
+    : "";
+  const pinnedEducator = `${educatorBody.trim()}${eduCrumb}`.replaceAll("—", ",");
+  const refereePlain = `${refereeBody.trim()}${refCrumb}`.replaceAll("—", ",");
   const pinnedReferee = maybeSpiceBody(refereePlain, true, random);
   usedBodies.add(pinnedEducator);
   usedBodies.add(refereePlain);
