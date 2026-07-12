@@ -1454,6 +1454,12 @@ select:focus {
   font-family: Georgia, "Times New Roman", serif;
 }
 
+.saved-case-card__title {
+  color: var(--ink-soft, var(--text-muted));
+  font-family: inherit;
+  letter-spacing: 0.04em;
+}
+
 .comparison-insight {
   background: var(--green-pale);
 }
