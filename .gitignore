@@ -8,3 +8,6 @@ coverage/
 .env*
 !.env.example
 artifacts/
+
+# Local Claude Code session config
+.claude/

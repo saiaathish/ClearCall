@@ -11,7 +11,9 @@ import {
   UserRound,
   type LucideIcon,
 } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
+import { useDemo } from "@/context/demo-context";
 
 interface NavItem {
   href: string;
@@ -52,6 +54,7 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { user, signOut } = useDemo();
 
   return (
     <div className="app-shell">
@@ -77,6 +80,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Link className="about-link" href="/about">
             <Info aria-hidden="true" size={16} /> <span>About & trust</span>
           </Link>
+          {user ? (
+            <button className="about-link" type="button" onClick={() => void signOut()}>
+              <LogOut aria-hidden="true" size={16} /> <span>Sign out</span>
+            </button>
+          ) : (
+            <Link className="about-link" href="/auth">
+              <LogIn aria-hidden="true" size={16} /> <span>Sign in</span>
+            </Link>
+          )}
         </div>
       </aside>
       <main id="main-content" className="main-content" tabIndex={-1}>

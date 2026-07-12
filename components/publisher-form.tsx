@@ -520,6 +520,20 @@ export function PublisherForm() {
     if (submissionAttempted) setErrors(validateForm(next, null, ""));
   }
 
+  function selectMediaKind(mediaKind: MediaKind) {
+    clearSelectedFile(false);
+    const next = {
+      ...form,
+      mediaKind,
+      clipEndTime: mediaKind === "video" ? form.clipEndTime : "",
+      posterFrameLabel: mediaKind === "video"
+        ? form.posterFrameLabel || "Poster frame selected during expert review"
+        : "",
+    };
+    setForm(next);
+    if (submissionAttempted) setErrors(validateForm(next, null, null, ""));
+  }
+
   function updateAnswer(uid: string, label: string) {
     updateField(
       "answers",
@@ -600,7 +614,7 @@ export function PublisherForm() {
     });
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmissionAttempted(true);
     setStepValidationActive(false);
@@ -669,10 +683,14 @@ export function PublisherForm() {
       reviewStatus: "PENDING_EXPERT_REVIEW",
     };
 
-    publishDraft(draft);
+    const published = await publishDraft(draft, selectedFile);
+    if (!published) {
+      showToast("Sign in to publish a case for expert review.");
+      return;
+    }
     setSubmittedDraft(draft);
     clearSelectedFile(false);
-    showToast("Case added to this demo session for expert review.", "success");
+    showToast("Case submitted for expert review.", "success");
     window.setTimeout(() => successRef.current?.focus(), 0);
   }
 

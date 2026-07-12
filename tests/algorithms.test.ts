@@ -7,6 +7,11 @@ import {
   deriveLearnerProfile,
   findTeachingContrast,
   rankPersonalizedCases,
+  DISAGREEMENT_WEIGHT,
+  DIFFICULTY_WEIGHT,
+  FRESHNESS_WEIGHT,
+  INTEREST_WEIGHT,
+  WEAKNESS_WEIGHT,
 } from "../lib/algorithms";
 import type { OfficiatingCase, UserAnswer } from "../lib/types";
 
@@ -15,6 +20,13 @@ const caseById = (id: string): OfficiatingCase => {
   if (!item) throw new Error(`Missing test case: ${id}`);
   return item;
 };
+
+describe("BE-006 feed weights", () => {
+  it("matches the required formula", () => {
+    expect([WEAKNESS_WEIGHT, INTEREST_WEIGHT, DISAGREEMENT_WEIGHT, DIFFICULTY_WEIGHT, FRESHNESS_WEIGHT]).toEqual([0.35, 0.2, 0.2, 0.15, 0.1]);
+    expect(WEAKNESS_WEIGHT + INTEREST_WEIGHT + DISAGREEMENT_WEIGHT + DIFFICULTY_WEIGHT + FRESHNESS_WEIGHT).toBe(1);
+  });
+});
 
 const answer = (
   caseId: string,
@@ -131,7 +143,7 @@ describe("rankPersonalizedCases", () => {
     );
     expect(firstRun).toHaveLength(10);
     expect(firstRun[0]?.case.id).toBe("handball-supporting-arm");
-    expect(firstRun[0]?.score).toBe(54.9);
+    expect(firstRun[0]?.score).toBe(59.9);
     expect(firstRun[1]?.case.category).not.toBe(firstRun[0]?.case.category);
   });
 });
