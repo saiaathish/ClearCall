@@ -171,27 +171,9 @@ export function ProfileView() {
             </div>
           </section>
 
-          <section className="content-section" aria-labelledby="calibration-heading">
-            <div className="content-section__header">
-              <div><h2 className="section-title" id="calibration-heading">Confidence vs. alignment</h2></div>
-            </div>
-            <CalibrationPlot answers={answerList} />
-          </section>
+        
 
-          <section className="content-section" aria-labelledby="trend-heading">
-            <div className="content-section__header">
-              <div><h2 className="section-title" id="trend-heading">Recent performance</h2></div>
-            </div>
-            {trend.length ? (
-              <svg className="trend-chart" viewBox="0 0 100 68" role="img" aria-label={`Recent alignment trend ending at ${trend.at(-1)} percent`}>
-                <line className="trend-chart__grid" x1="0" y1="8" x2="100" y2="8" />
-                <line className="trend-chart__grid" x1="0" y1="35" x2="100" y2="35" />
-                <line className="trend-chart__grid" x1="0" y1="62" x2="100" y2="62" />
-                <path className="trend-chart__area" d={`${trendPath(trend)} L100,62 L0,62 Z`} />
-                <path className="trend-chart__line" d={trendPath(trend)} />
-              </svg>
-            ) : <p className="muted">Complete a case to start the trend.</p>}
-          </section>
+          
         </div>
 
         <aside className="profile-column" aria-label="Learning insights">
