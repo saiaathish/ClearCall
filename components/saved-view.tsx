@@ -200,9 +200,6 @@ export function SavedView() {
       <header className="page-header">
         <div className="page-header__copy">
           <h1 className="page-title">Saved cases</h1>
-          <p className="page-description">
-            Cases you want to revisit.
-          </p>
         </div>
       </header>
 
