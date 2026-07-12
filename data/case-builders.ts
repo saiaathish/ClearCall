@@ -28,7 +28,9 @@ export const demoDesk: Publisher = personToPublisher(
     displayName: "ClearCall demo desk",
     role: "educator",
     organization: "Authored product prototype",
-    avatarIndex: 50,
+    gender: "men",
+    nationality: "us",
+    portraitIndex: 0,
   },
   "clearcall-demo-desk",
 );
@@ -239,6 +241,7 @@ const CLOSERS = [
 
 function composeThreadBody(input: {
   caseId: string;
+  title: string;
   category: string;
   criticalFactor: string;
   ruleCitation: string;
@@ -248,8 +251,8 @@ function composeThreadBody(input: {
   random: () => number;
   usedBodies: Set<string>;
 }): string {
-  const { caseId, category, criticalFactor, ruleCitation, slot, agrees, role, random, usedBodies } = input;
-  for (let attempt = 0; attempt < 12; attempt += 1) {
+  const { caseId, title, category, criticalFactor, ruleCitation, slot, agrees, role, random, usedBodies } = input;
+  for (let attempt = 0; attempt < 24; attempt += 1) {
     const opener = OPENERS[Math.floor(random() * OPENERS.length)]!;
     const middle = MIDDLES[Math.floor(random() * MIDDLES.length)]!;
     const closer = CLOSERS[Math.floor(random() * CLOSERS.length)]!;
@@ -263,8 +266,14 @@ function composeThreadBody(input: {
         : role === "educator"
           ? "Teaching point first"
           : "On the pitch I need a sellable signal";
+    const angle = [
+      `watching “${title}”`,
+      `on the “${title}” clip`,
+      `for “${title}”`,
+      `after scrolling “${title}”`,
+    ][attempt % 4]!;
     const body = [
-      `${opener} ${stance} on ${caseId}.`,
+      `${opener} ${stance} ${angle}.`,
       `${factorBit} — ${middle}.`,
       `${roleBit}. ${ruleCitation.split("—")[0]?.trim() ?? ruleCitation}.`,
       closer,
@@ -274,7 +283,7 @@ function composeThreadBody(input: {
       return body;
     }
   }
-  const fallback = `On ${caseId} slot ${slot}: ${agrees ? "agree" : "dissent"} around ${criticalFactor} for ${category}.`;
+  const fallback = `On “${title}” (${caseId} / slot ${slot}): ${agrees ? "agree" : "dissent"} around ${criticalFactor} for ${category}.`;
   usedBodies.add(fallback);
   return fallback;
 }
@@ -306,7 +315,7 @@ export function makeDiscussion(
 ): readonly DiscussionResponse[] {
   const random = seededRandom(`discussion:${caseId}`);
   const replyCount = 2 + Math.floor(random() * 10); // 2–11 total replies
-  const usedBodies = new Set<string>([educatorBody.trim(), refereeBody.trim()].filter(Boolean));
+  const usedBodies = new Set<string>();
 
   const fallbackDissent =
     answerOptionIds.find((id) => id !== recommendedDecision) ?? recommendedDecision;
@@ -333,6 +342,15 @@ export function makeDiscussion(
     assignedPeople.push(more[0]);
   }
 
+  const pinnedEducator = context.title
+    ? `${educatorBody.trim()} That is the read I would pin on “${context.title}”.`
+    : educatorBody.trim();
+  const pinnedReferee = context.title
+    ? `${refereeBody.trim()} Match-day sell on “${context.title}”.`
+    : refereeBody.trim();
+  usedBodies.add(pinnedEducator);
+  usedBodies.add(pinnedReferee);
+
   return assignedPeople.map((person, slot) => {
     const isPinned = slot === 0;
     const isLeadReferee = slot === 1 && replyCount > 1;
@@ -340,12 +358,14 @@ export function makeDiscussion(
     const selectedKeys = agrees
       ? factorKeys.slice(0, Math.max(1, factorKeys.length - (slot % 2)))
       : factorKeys.slice(0, 1);
+
     const body = isPinned
-      ? educatorBody
+      ? pinnedEducator
       : isLeadReferee
-        ? refereeBody
+        ? pinnedReferee
         : composeThreadBody({
             caseId,
+            title: context.title ?? caseId,
             category: context.category,
             criticalFactor: context.criticalFactor,
             ruleCitation,

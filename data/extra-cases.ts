@@ -13,24 +13,10 @@ import {
   simulationOptions,
 } from "@/data/case-builders";
 
-const IMAGE_POOL = [
-  { src: "/media/cases/lunge-wide.png", width: 1600, height: 900 },
-  { src: "/media/cases/handball-portrait.png", width: 900, height: 1125 },
-  { src: "/media/cases/handball-raised-arm.png", width: 710, height: 530 },
-  { src: "/media/cases/offside-square.png", width: 1000, height: 1000 },
-  { src: "/media/cases/offside-no-impact.png", width: 1024, height: 576 },
-  { src: "/media/cases/dogso-landscape.png", width: 1200, height: 800 },
-  { src: "/media/cases/goalkeeper-tall.png", width: 720, height: 1280 },
-  { src: "/media/cases/lunge-wide.svg", width: 1600, height: 900 },
-  { src: "/media/cases/handball-portrait.svg", width: 900, height: 1400 },
-  { src: "/media/cases/offside-square.svg", width: 1200, height: 1200 },
-  { src: "/media/library/field-lanes.svg", width: 1600, height: 900 },
-  { src: "/media/library/box-angle.svg", width: 1400, height: 1050 },
-  { src: "/media/library/midfield-press.svg", width: 1200, height: 1200 },
-] as const;
+import { PHOTO_ASSETS, VIDEO_ASSETS, photoAt } from "@/data/media-assets";
 
 function imageAt(index: number) {
-  return IMAGE_POOL[index % IMAGE_POOL.length]!;
+  return photoAt(index);
 }
 
 /**

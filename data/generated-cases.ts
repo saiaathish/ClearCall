@@ -11,21 +11,8 @@ import {
   offsideOptions,
   simulationOptions,
 } from "@/data/case-builders";
+import { PHOTO_ASSETS, VIDEO_ASSETS, photoAt } from "@/data/media-assets";
 import { seededRandom } from "@/data/feed-people";
-
-const IMAGE_POOL = [
-  { src: "/media/cases/lunge-wide.png", width: 1600, height: 900 },
-  { src: "/media/cases/handball-portrait.png", width: 900, height: 1125 },
-  { src: "/media/cases/handball-raised-arm.png", width: 710, height: 530 },
-  { src: "/media/cases/offside-square.png", width: 1000, height: 1000 },
-  { src: "/media/cases/offside-no-impact.png", width: 1024, height: 576 },
-  { src: "/media/cases/dogso-landscape.png", width: 1200, height: 800 },
-  { src: "/media/cases/goalkeeper-tall.png", width: 720, height: 1280 },
-  { src: "/media/cases/lunge-wide.svg", width: 1600, height: 900 },
-  { src: "/media/library/field-lanes.svg", width: 1600, height: 900 },
-  { src: "/media/library/box-angle.svg", width: 1400, height: 1050 },
-  { src: "/media/library/midfield-press.svg", width: 1200, height: 1200 },
-] as const;
 
 const LEVELS = [
   "Youth U13 recreational",
@@ -39,7 +26,6 @@ const LEVELS = [
 ] as const;
 
 const DIFFICULTIES: readonly Difficulty[] = ["beginner", "intermediate", "advanced"];
-const MEDIA_KINDS: readonly MediaKind[] = ["text", "image", "video", "image", "text", "video", "image"];
 
 type Template = {
   category: CaseCategory;
@@ -50,13 +36,24 @@ type Template = {
   rulePath: readonly string[];
   factors: ReturnType<typeof factor>[];
   criticalFactor: string;
-  prompt: (n: number) => string;
-  title: (n: number) => string;
-  description: (n: number, level: string) => string;
+  prompts: readonly string[];
+  titles: readonly string[];
+  description: (level: string, beat: string) => string;
   originalDecision: string;
-  educator: (n: number) => string;
-  referee: (n: number) => string;
+  educatorBodies: readonly string[];
+  refereeBodies: readonly string[];
 };
+
+const BEATS = [
+  "right after a restart",
+  "in the final ten minutes",
+  "with the score still level",
+  "after a long spell of possession",
+  "on a wet pitch",
+  "with substitutes waiting to enter",
+  "under a loud sideline",
+  "just after a warning for dissent",
+] as const;
 
 const templates: readonly Template[] = [
   {
@@ -74,15 +71,41 @@ const templates: readonly Template[] = [
       factor("force", "Force", "Elevated", true, "Force separates yellow from red."),
     ],
     criticalFactor: "force",
-    prompt: (n) => `Variant ${n}: does this late challenge stay yellow or tip into a red?`,
-    title: (n) => `Late challenge threshold #${n}`,
-    description: (n, level) =>
-      `Clip bank case ${n} from a ${level} match. A defender arrives a beat late into a midfield duel; contact is low but the follow-through carries noticeable force. Teaching focus is whether control still exists at impact.`,
+    prompts: [
+      "Late challenge — does this stay yellow or tip into a red?",
+      "How would you sell this midfield tackle from your angle?",
+      "Is the follow-through enough to upgrade this from reckless to serious foul play?",
+      "Card colour on this late arrival — caution or send-off?",
+      "Would you stay with yellow if the attacker stays on their feet?",
+      "Studs are partially showing — where do you land?",
+      "Same contact height, more force: still a yellow for you?",
+      "Defend your card here — yellow or red?",
+    ],
+    titles: [
+      "Late challenge, low contact",
+      "Midfield duel arrives a beat late",
+      "Follow-through after the ball is gone",
+      "Ankle-height side tackle",
+      "Recoverable control or not?",
+      "Studs angled through the duel",
+      "Force threshold in open play",
+      "Caution or send-off on the break",
+    ],
+    description: (level, beat) =>
+      `${level} match, ${beat}. A defender arrives late into a midfield duel; contact is low but the follow-through carries force. Decide whether control still exists at impact.`,
     originalDecision: "Yellow card",
-    educator: (n) =>
-      `Case ${n} is about thresholding force and control together — neither factor alone sells the card colour.`,
-    referee: (n) =>
-      `On case ${n} I would sell the yellow unless the follow-through clearly rides up after the ball is gone.`,
+    educatorBodies: [
+      "Threshold force and control together — neither factor alone sells the card colour.",
+      "Start with contact height, then ask whether the player could still withdraw.",
+      "If the follow-through rides up after the ball is gone, you are in red-card territory.",
+      "Teach the paired comparison: same challenge shape, different force story.",
+    ],
+    refereeBodies: [
+      "I sell the yellow unless the follow-through clearly rides up after the ball is gone.",
+      "From that angle I need the stud path before I escalate.",
+      "If the attacker stays upright and the contact stays low, I am staying yellow.",
+      "I get close, separate them, and record the contact point for the review.",
+    ],
   },
   {
     category: "Handball",
@@ -99,15 +122,41 @@ const templates: readonly Template[] = [
       factor("deflection", "Prior deflection", "Possible", true, "Unexpected path."),
     ],
     criticalFactor: "arm-position",
-    prompt: (n) => `Variant ${n}: is arm contact after a deflection still an offence?`,
-    title: (n) => `Deflection handball debate #${n}`,
-    description: (n, level) =>
-      `Scenario ${n} in ${level}: a blocked ball changes direction quickly and strikes a nearby arm. The arm is close to the body. Decide whether reaction time and position clear the defender.`,
+    prompts: [
+      "Arm contact after a deflection — still an offence?",
+      "Is this arm making the body bigger or just bracing?",
+      "Would you give a penalty on this handball look?",
+      "Reaction time enough to clear the defender here?",
+      "Natural position or deliberate block — your call?",
+      "Close-range ricochet onto the arm: play on or penalty?",
+      "Does the arm leave a natural path at all?",
+      "Sell this handball the way you would in a game.",
+    ],
+    titles: [
+      "Deflection onto a nearby arm",
+      "Arm tucked near the torso",
+      "Unexpected bounce in the box",
+      "Handball or play on?",
+      "Silhouette stays mostly natural",
+      "Close-range arm contact",
+      "Brace vs block in the area",
+      "Arm path after a blocked shot",
+    ],
+    description: (level, beat) =>
+      `${level}, ${beat}. A blocked ball changes direction quickly and strikes a nearby arm. The arm is close to the body. Decide whether reaction time and position clear the defender.`,
     originalDecision: "Play on",
-    educator: (n) =>
-      `For handball case ${n}, start with reaction time and silhouette before you invent intent.`,
-    referee: (n) =>
-      `Case ${n}: if the arm never leaves a natural path, I am selling play on immediately.`,
+    educatorBodies: [
+      "Start with reaction time and silhouette before you invent intent.",
+      "If the arm never leaves a natural path, play on is available.",
+      "Deflection plus proximity is the whole lesson on this one.",
+      "Separate make-the-body-bigger from an arm that simply cannot move in time.",
+    ],
+    refereeBodies: [
+      "If the arm never leaves a natural path, I am selling play on immediately.",
+      "I need a clearer view of whether the arm moved toward the ball.",
+      "From my angle this looks like a brace, not a block.",
+      "Close range plus tucked arm — I am staying with play on.",
+    ],
   },
   {
     category: "Offside interference",
@@ -124,15 +173,41 @@ const templates: readonly Template[] = [
       factor("touch", "Ball touch", "No touch", true, "Interfering with play."),
     ],
     criticalFactor: "opponent-impact",
-    prompt: (n) => `Variant ${n}: position is offside — but is there an actual offence?`,
-    title: (n) => `Offside involvement check #${n}`,
-    description: (n, level) =>
-      `Teaching clip ${n} (${level}). An attacker starts offside when the pass is played. Before deciding, separate position from involvement: touch, challenge, sightline, or impact on an opponent.`,
+    prompts: [
+      "Offside position — but is there an actual offence?",
+      "Does this attacker impact anyone before the shot?",
+      "Would you flag involvement or stay down?",
+      "Goal stands or offside offence — what do you sell?",
+      "Position is clear. Involvement is not. Your call?",
+      "Keeper sightline mostly clear — enough to play on?",
+      "No touch, no challenge: still an offside offence?",
+      "How do you talk through this with your AR?",
+    ],
+    titles: [
+      "Offside position, unclear impact",
+      "Attacker held in an offside spot",
+      "Involvement vs position",
+      "Keeper sightline stays mostly clear",
+      "No touch before the finish",
+      "Did the defender actually react?",
+      "Passive look near the six",
+      "AR check on opponent impact",
+    ],
+    description: (level, beat) =>
+      `${level} teaching clip, ${beat}. An attacker starts offside when the pass is played. Separate position from involvement: touch, challenge, sightline, or impact on an opponent.`,
     originalDecision: "Offside offence",
-    educator: (n) =>
-      `Offside case ${n}: position is the start of the question, not the answer.`,
-    referee: (n) =>
-      `On ${n} I need my AR to tell me whether anyone actually reacted to that attacker.`,
+    educatorBodies: [
+      "Position is the start of the question, not the answer.",
+      "If nobody reacts to the attacker, involvement is hard to sell.",
+      "Teach the AR conversation: what did you see the defender do?",
+      "No touch and no challenge leaves you hunting for real impact.",
+    ],
+    refereeBodies: [
+      "I need my AR to tell me whether anyone actually reacted to that attacker.",
+      "Sightline looks clear enough that I am awarding the goal.",
+      "Without a touch or challenge I am reluctant to flag.",
+      "I stay down unless the defender's movement is clearly affected.",
+    ],
   },
   {
     category: "Denial of an obvious goal-scoring opportunity",
@@ -149,15 +224,41 @@ const templates: readonly Template[] = [
       factor("foul-type", "Foul type", "Hold / trip", true, "How the chance ended."),
     ],
     criticalFactor: "defenders",
-    prompt: (n) => `Variant ${n}: tactical foul — SPA yellow or DOGSO red?`,
-    title: (n) => `SPA vs DOGSO threshold #${n}`,
-    description: (n, level) =>
-      `Case ${n} from ${level}. An attacker is stopped by a tactical foul while progressing toward goal. Work all four DOGSO considerations before choosing the card.`,
+    prompts: [
+      "Tactical foul — SPA yellow or DOGSO red?",
+      "Is the chance still obvious with cover recovering?",
+      "How do you read distance and direction on this break?",
+      "Hold just outside the box: yellow or red?",
+      "Would covering defenders save this from a send-off?",
+      "Four DOGSO checks — where does this fail?",
+      "Attacker in the channel: still an obvious goal-scoring opportunity?",
+      "Sell SPA or DOGSO from this angle.",
+    ],
+    titles: [
+      "SPA vs DOGSO on the break",
+      "Tactical foul outside the box",
+      "Cover recovering toward the ball",
+      "Chance quality on a through ball",
+      "Hold that ends a promising attack",
+      "Central channel, late trip",
+      "Direction toward goal, not wide",
+      "Last look before the card colour",
+    ],
+    description: (level, beat) =>
+      `${level}, ${beat}. An attacker is stopped by a tactical foul while progressing toward goal. Work all four DOGSO considerations before choosing the card.`,
     originalDecision: "Yellow card",
-    educator: (n) =>
-      `DOGSO case ${n} fails if you skip covering defenders or direction.`,
-    referee: (n) =>
-      `For ${n} I glance at cover first, then decide whether the chance was still obvious.`,
+    educatorBodies: [
+      "DOGSO fails if you skip covering defenders or direction.",
+      "Distance alone does not answer the card colour.",
+      "Teach the four considerations in order every time.",
+      "If cover is genuinely recovering, SPA is often available.",
+    ],
+    refereeBodies: [
+      "I glance at cover first, then decide whether the chance was still obvious.",
+      "Direction is toward goal, but the recovering defender matters here.",
+      "Outside the box with cover — I am landing on yellow.",
+      "If the attacker keeps the ball under control into the box, I escalate.",
+    ],
   },
   {
     category: "Advantage",
@@ -174,15 +275,41 @@ const templates: readonly Template[] = [
       factor("severity", "Original foul severity", "Careless", true, "Still available to punish."),
     ],
     criticalFactor: "time-elapsed",
-    prompt: (n) => `Variant ${n}: advantage signalled — bring it back or live with it?`,
-    title: (n) => `Advantage window #${n}`,
-    description: (n, level) =>
-      `Advantage puzzle ${n} in ${level}. The referee signals advantage after a foul, but the next action does not create a clear attacking benefit. Decide whether the window is still open.`,
+    prompts: [
+      "Advantage signalled — bring it back or live with it?",
+      "Did the attacking team actually get a benefit here?",
+      "How long do you wait before returning to the foul?",
+      "Possession looks unstable — still advantage?",
+      "Would you bring this back under immediate pressure?",
+      "Signal went up. Next action dies. Your call?",
+      "Is the window still open after that touch?",
+      "Advantage or original foul — sell it.",
+    ],
+    titles: [
+      "Advantage window closes quickly",
+      "Signal up, benefit never arrives",
+      "Pressure kills the next touch",
+      "Bring back or play on?",
+      "Unstable possession after the foul",
+      "Short window in midfield",
+      "Advantage that never materialises",
+      "Return to the original free kick",
+    ],
+    description: (level, beat) =>
+      `Advantage puzzle in ${level}, ${beat}. The referee signals advantage after a foul, but the next action does not create a clear attacking benefit. Decide whether the window is still open.`,
     originalDecision: "Play continued",
-    educator: (n) =>
-      `Advantage case ${n}: the signal is not a life sentence — only the realized benefit is.`,
-    referee: (n) =>
-      `On ${n} I bring it back only if the failure is immediate and obvious.`,
+    educatorBodies: [
+      "The signal is not a life sentence — only the realized benefit is.",
+      "If pressure is immediate, bring it back without apology.",
+      "Teach the difference between a hopeful signal and a real advantage.",
+      "Time elapsed plus possession quality answers most of these.",
+    ],
+    refereeBodies: [
+      "I bring it back only if the failure is immediate and obvious.",
+      "That next touch never escaped pressure — free kick.",
+      "I already signalled, but the benefit never arrived.",
+      "Under that press I am not waiting for a miracle.",
+    ],
   },
   {
     category: "Simulation",
@@ -199,15 +326,41 @@ const templates: readonly Template[] = [
       factor("camera-certainty", "View certainty", "Single angle", true, "Evidence quality."),
     ],
     criticalFactor: "initiator",
-    prompt: (n) => `Variant ${n}: contact or con — what do you sell?`,
-    title: (n) => `Simulation judgement #${n}`,
-    description: (n, level) =>
-      `Deception case ${n} (${level}). There may be light contact in the area, but the fall looks exaggerated. Separate the foul question from the simulation question.`,
+    prompts: [
+      "Contact or con — what do you sell?",
+      "Is the fall bigger than the contact?",
+      "Would you caution for simulation on this look?",
+      "Light contact in the area — penalty, yellow, or play on?",
+      "Who initiates the contact in your view?",
+      "Embellishment enough to punish without a clear foul?",
+      "Single angle only — how confident are you?",
+      "Separate the foul question from the simulation question.",
+    ],
+    titles: [
+      "Light contact, big fall",
+      "Simulation or genuine trip?",
+      "Who created the contact?",
+      "Embellished fall in the area",
+      "Play on with a warning look",
+      "Penalty appeal without a clear initiator",
+      "Theatre after a legal challenge",
+      "Single-angle deception call",
+    ],
+    description: (level, beat) =>
+      `Deception case in ${level}, ${beat}. There may be light contact in the area, but the fall looks exaggerated. Separate the foul question from the simulation question.`,
     originalDecision: "Penalty kick",
-    educator: (n) =>
-      `Simulation case ${n}: punish the foul you saw, or the deception you saw — not the crowd.`,
-    referee: (n) =>
-      `For ${n} I need a clear initiator. Without that I stay away from both extremes.`,
+    educatorBodies: [
+      "Punish the foul you saw, or the deception you saw — not the crowd.",
+      "Without a clear initiator, stay away from both extremes.",
+      "Teach learners to name the contact before naming the theatre.",
+      "Single-angle certainty is often lower than the sideline thinks.",
+    ],
+    refereeBodies: [
+      "I need a clear initiator. Without that I stay away from both extremes.",
+      "The fall is bigger than the contact — I am not giving a penalty.",
+      "Legal challenge plus embellishment: play on, maybe a word.",
+      "If I cannot sell the foul, I am not inventing simulation either.",
+    ],
   },
   {
     category: "Goalkeeper handling",
@@ -224,15 +377,41 @@ const templates: readonly Template[] = [
       factor("trick", "Deliberate trick", "None", false, "Separate trick scenarios."),
     ],
     criticalFactor: "teammate-action",
-    prompt: (n) => `Variant ${n}: can the keeper handle this pass from a teammate?`,
-    title: (n) => `Keeper handling restriction #${n}`,
-    description: (n, level) =>
-      `Handling restriction case ${n} in ${level}. A teammate plays the ball back toward the goalkeeper, who uses the hands inside the area. Identify whether the teammate action triggers the restriction.`,
+    prompts: [
+      "Can the keeper handle this pass from a teammate?",
+      "Footed back-pass — indirect free kick or play on?",
+      "Does the teammate action trigger the handling restriction?",
+      "Throw-in back to the keeper: legal to handle?",
+      "Deliberate play or deflection into the keeper's hands?",
+      "How do you read body part on this restart?",
+      "Keeper picks it up after a teammate's pass — your call?",
+      "Restriction offence or emergency handling?",
+    ],
+    titles: [
+      "Back-pass into the keeper's hands",
+      "Footed pass triggers the restriction",
+      "Throw-in return to the goalkeeper",
+      "Handling after a deliberate play",
+      "Was it a pass or a deflection?",
+      "Keeper collects a teammate's pass",
+      "Indirect free kick near the six",
+      "Body-part check before the whistle",
+    ],
+    description: (level, beat) =>
+      `Handling restriction in ${level}, ${beat}. A teammate plays the ball back toward the goalkeeper, who uses the hands inside the area. Identify whether the teammate action triggers the restriction.`,
     originalDecision: "Play on",
-    educator: (n) =>
-      `Keeper case ${n}: body part and deliberateness are the whole lesson.`,
-    referee: (n) =>
-      `On ${n} I check foot vs head/chest before I even think about a whistle.`,
+    educatorBodies: [
+      "Body part and deliberateness are the whole lesson.",
+      "Head or chest back is different from a footed pass.",
+      "Teach the restriction trigger before debating pressure.",
+      "If the teammate deliberately played it with the foot, hands are out.",
+    ],
+    refereeBodies: [
+      "I check foot vs head/chest before I even think about a whistle.",
+      "That looks like a deliberate footed pass — indirect free kick.",
+      "If it came off the body as a deflection, I am playing on.",
+      "Low pressure does not erase a clear restriction offence.",
+    ],
   },
 ];
 
@@ -254,74 +433,111 @@ function distribute(seed: number, keys: readonly string[], favorite: string) {
   return percentages;
 }
 
-/** Procedural unique catalog entries to reach 100 total posts. */
-export function buildGeneratedCases(needed: number): readonly OfficiatingCase[] {
+/**
+ * Procedural catalog filler. Uses unique real photos, real demo clips, or text-only —
+ * never SVG placeholders, never "Variant ##" labels.
+ */
+export function buildGeneratedCases(needed: number, mediaStartIndex = 0): readonly OfficiatingCase[] {
   const cases: OfficiatingCase[] = [];
+  let photoCursor = mediaStartIndex;
+
   for (let index = 0; index < needed; index += 1) {
     const template = templates[index % templates.length]!;
-    const n = index + 1;
-    const id = `gen-${template.category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${String(n).padStart(3, "0")}`;
+    const id = `gen-${template.category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${String(index + 1).padStart(3, "0")}`;
     const level = LEVELS[index % LEVELS.length]!;
     const difficulty = DIFFICULTIES[index % DIFFICULTIES.length]!;
-    const mediaKind = MEDIA_KINDS[index % MEDIA_KINDS.length]!;
-    const image = IMAGE_POOL[index % IMAGE_POOL.length]!;
+    const beat = BEATS[index % BEATS.length]!;
+    const title = template.titles[index % template.titles.length]!;
+    const prompt = template.prompts[index % template.prompts.length]!;
+    const educatorBody = template.educatorBodies[index % template.educatorBodies.length]!;
+    const refereeBody = template.refereeBodies[index % template.refereeBodies.length]!;
     const optionIds = template.options.map((item) => item.id);
     const day = String((index % 27) + 1).padStart(2, "0");
     const hour = String((index % 20) + 4).padStart(2, "0");
+
+    // Prefer unique photos, then a few real videos, then text-only when media is exhausted.
+    let mediaKind: MediaKind = "text";
+    let imageSrc: string | null = null;
+    let videoSrc: string | null = null;
+    let posterSrc: string | null = null;
+    let mediaWidth: number | null = null;
+    let mediaHeight: number | null = null;
+    let mediaAlt = `Text-only teaching prompt: ${title}`;
+
+    const slot = index % 5;
+    if (slot === 0 && photoCursor < PHOTO_ASSETS.length) {
+      const photo = photoAt(photoCursor);
+      photoCursor += 1;
+      mediaKind = "image";
+      imageSrc = photo.src;
+      mediaWidth = photo.width;
+      mediaHeight = photo.height;
+      mediaAlt = photo.alt;
+    } else if (slot === 1 && index < VIDEO_ASSETS.length * 4) {
+      const video = VIDEO_ASSETS[index % VIDEO_ASSETS.length]!;
+      const poster = photoAt(photoCursor < PHOTO_ASSETS.length ? photoCursor : index);
+      if (photoCursor < PHOTO_ASSETS.length) photoCursor += 1;
+      mediaKind = "video";
+      videoSrc = video.videoSrc;
+      posterSrc = poster.src;
+      mediaWidth = video.width;
+      mediaHeight = video.height;
+      mediaAlt = video.alt;
+    } else if (slot === 2 && photoCursor < PHOTO_ASSETS.length) {
+      const photo = photoAt(photoCursor);
+      photoCursor += 1;
+      mediaKind = "image";
+      imageSrc = photo.src;
+      mediaWidth = photo.width;
+      mediaHeight = photo.height;
+      mediaAlt = photo.alt;
+    } else {
+      mediaKind = "text";
+    }
 
     cases.push(
       buildCase({
         id,
         slug: id,
-        title: template.title(n),
-        prompt: template.prompt(n),
-        description: template.description(n, level),
+        title,
+        prompt,
+        description: template.description(level, beat),
         competitionLevel: level,
         difficulty,
         category: template.category,
         originalDecision: template.originalDecision,
         answerOptions: template.options,
         recommendedDecision: template.recommended,
-        expertExplanation: `Authored demo rationale for ${id}: teaching material only; requires qualified review.`,
+        expertExplanation:
+          "Authored demo rationale for a teaching scenario only; requires qualified review before production use.",
         ruleReference: template.ruleReference,
         rulePath: template.rulePath,
-        factors: template.factors.map((item, factorIndex) =>
-          factor(
-            item.key,
-            item.label,
-            `${item.value} · v${n}.${factorIndex + 1}`,
-            item.supportsRecommendation,
-            `${item.explanation} (case ${n})`,
-          ),
-        ),
+        factors: template.factors,
         criticalFactor: template.criticalFactor,
         communityDistribution: makeDistribution(
           "Authored demo — community pattern",
-          distribute(n, optionIds, template.recommended),
+          distribute(index + 1, optionIds, template.recommended),
         ),
         verifiedDistribution: makeDistribution(
           "Authored demo — reviewer pattern",
-          distribute(n + 50, optionIds, template.recommended),
+          distribute(index + 51, optionIds, template.recommended),
         ),
         learnerDistribution: makeDistribution(
           "Authored demo — learner pattern",
-          distribute(n + 90, optionIds, template.alternate),
+          distribute(index + 91, optionIds, template.alternate),
         ),
         disagreementScore: 0.25 + ((index * 7) % 55) / 100,
         freshnessScore: 0.55 + ((index * 11) % 40) / 100,
         publishedAt: `2026-05-${day}T${hour}:15:00.000Z`,
         mediaKind,
-        imageSrc: mediaKind === "image" ? image.src : null,
-        mediaWidth: mediaKind === "text" ? null : image.width,
-        mediaHeight: mediaKind === "text" ? null : image.height,
-        mediaAlt:
-          mediaKind === "text"
-            ? `Text-only teaching prompt for ${id}`
-            : mediaKind === "video"
-              ? `Demo clip placeholder for ${id}`
-              : `Still frame for ${id}`,
-        educatorBody: template.educator(n),
-        refereeBody: template.referee(n),
+        imageSrc,
+        videoSrc,
+        posterSrc,
+        mediaWidth,
+        mediaHeight,
+        mediaAlt,
+        educatorBody,
+        refereeBody,
         ruleCitation: template.ruleReference,
         alternateOptionId: template.alternate,
         publisherSeed: id,

@@ -16,7 +16,7 @@ export function Avatar({
   if (src) {
     return (
       <span className={`${classes} avatar--photo`} aria-hidden="true">
-        {/* Local geometric avatars are SVG; plain img avoids next/image SVG limits. */}
+        {/* Local portrait photos; plain img avoids next/image remote config for demo assets. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img alt="" className="avatar__image" height={pixels} src={src} width={pixels} />
       </span>

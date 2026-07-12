@@ -1,37 +1,200 @@
 import type { Publisher, UserRole } from "@/lib/types";
+import portraitManifest from "@/public/media/avatars/portraits/manifest.json";
+
+export type PersonGender = "women" | "men";
+export type PersonNat =
+  | "us"
+  | "gb"
+  | "es"
+  | "br"
+  | "fr"
+  | "de"
+  | "nl"
+  | "tr"
+  | "au"
+  | "ca"
+  | "in"
+  | "mx"
+  | "fi"
+  | "no"
+  | "ir";
 
 export interface FeedPersonSeed {
   displayName: string;
   role: UserRole;
   organization?: string;
   isVerified?: boolean;
-  /** Index into /media/avatars/avatar-XX.svg */
-  avatarIndex: number;
+  gender: PersonGender;
+  nationality: PersonNat;
+  /** Stable pick into the nationality+gender portrait pool. */
+  portraitIndex: number;
 }
 
-const FIRST_NAMES = [
-  "Maya", "Omar", "Priya", "Jonas", "Aisha", "Leo", "Harper", "Diego", "Sofia", "Kenji",
-  "Amelia", "Noah", "Elena", "Caleb", "Fatima", "Marcus", "Ines", "Theo", "Yuki", "Grace",
-  "Rohan", "Chloe", "Andre", "Nora", "Jamal", "Lucia", "Ethan", "Zara", "Felix", "Camila",
-  "Benji", "Ananya", "Owen", "Mei", "Santiago", "Hannah", "Idris", "Claire", "Mateo", "Riley",
-  "Nadia", "Hugo", "Amara", "Sean", "Valentina", "Kai", "Isabelle", "Tariq", "Emma", "Luis",
-  "Ava", "Miles", "Layla", "Brett", "Sienna", "Devon", "Nina", "Callum", "Imani", "Victor",
-  "Freya", "Hassan", "Jun", "Paula", "Ravi", "Greta", "Malik", "Iris", "Tobias", "Noor",
-  "Adrian", "Selena", "Kofi", "Helena", "Bruno", "Yara", "Patrick", "Mina", "Oscar", "Leila",
-  "Daniel", "Aiko", "Gabriel", "Ruth", "Ibrahim", "Celine", "Nathan", "Dalia", "Quinn", "Soren",
-  "Bianca", "Ashwin", "Tara", "Erik", "Monique", "Jasper", "Hana", "Reuben", "Ophelia", "Cruz",
-] as const;
+type PortraitManifest = Record<string, readonly string[]>;
+const PORTRAITS = portraitManifest as PortraitManifest;
 
-const LAST_NAMES = [
-  "Chen", "Haddad", "Nair", "Berg", "Okonkwo", "Martins", "Quinn", "Alvarez", "Rossi", "Watanabe",
-  "Brooks", "Ibrahim", "Popov", "Nguyen", "Al-Rashid", "Doyle", "Duarte", "Lambert", "Tanaka", "Mwangi",
-  "Kapoor", "Sanders", "Silva", "Lindqvist", "Wright", "Fernandez", "Park", "Khan", "Hartmann", "Soto",
-  "Cole", "Shah", "McCarthy", "Ling", "Ruiz", "Vogel", "Bello", "Dubois", "Costa", "Fox",
-  "Petrova", "Jensen", "Diallo", "ONeill", "Ricci", "Nakamura", "Moreau", "Hassan", "Johansson", "Ortega",
-  "Kim", "Carter", "Walsh", "Price", "Okada", "Brennan", "Adeyemi", "Novak", "Cho", "Sullivan",
-  "Patel", "Rivera", "Lee", "Garcia", "Mbeki", "Andersen", "Torres", "Singh", "Kowalski", "Bailey",
-  "Hoffman", "Morales", "Abbas", "Fischer", "Yamamoto", "Collins", "Reyes", "Bergstrom", "Diaz", "Okafor",
-] as const;
+type NameCard = {
+  first: string;
+  last: string;
+  gender: PersonGender;
+  nationality: PersonNat;
+};
+
+/** Curated name cards so gender + nationality map to real portrait buckets. */
+const NAME_CARDS: readonly NameCard[] = [
+  // US
+  { first: "Harper", last: "Brooks", gender: "women", nationality: "us" },
+  { first: "Miles", last: "Carter", gender: "men", nationality: "us" },
+  { first: "Ava", last: "Sullivan", gender: "women", nationality: "us" },
+  { first: "Brett", last: "Price", gender: "men", nationality: "us" },
+  { first: "Grace", last: "Walsh", gender: "women", nationality: "us" },
+  { first: "Ethan", last: "Bailey", gender: "men", nationality: "us" },
+  { first: "Chloe", last: "Fox", gender: "women", nationality: "us" },
+  { first: "Noah", last: "Collins", gender: "men", nationality: "us" },
+  { first: "Riley", last: "Sanders", gender: "women", nationality: "us" },
+  { first: "Devon", last: "Wright", gender: "men", nationality: "us" },
+  { first: "Emma", last: "Doyle", gender: "women", nationality: "us" },
+  { first: "Owen", last: "Cole", gender: "men", nationality: "us" },
+  // GB
+  { first: "Amelia", last: "Quinn", gender: "women", nationality: "gb" },
+  { first: "Callum", last: "ONeill", gender: "men", nationality: "gb" },
+  { first: "Freya", last: "Hartmann", gender: "women", nationality: "gb" },
+  { first: "Oliver", last: "Brennan", gender: "men", nationality: "gb" },
+  { first: "Isla", last: "McCarthy", gender: "women", nationality: "gb" },
+  { first: "Sean", last: "Doyle", gender: "men", nationality: "gb" },
+  { first: "Poppy", last: "Lambert", gender: "women", nationality: "gb" },
+  { first: "Harry", last: "Price", gender: "men", nationality: "gb" },
+  // ES
+  { first: "Sofia", last: "Alvarez", gender: "women", nationality: "es" },
+  { first: "Diego", last: "Ruiz", gender: "men", nationality: "es" },
+  { first: "Lucia", last: "Fernandez", gender: "women", nationality: "es" },
+  { first: "Mateo", last: "Garcia", gender: "men", nationality: "es" },
+  { first: "Valentina", last: "Morales", gender: "women", nationality: "es" },
+  { first: "Hugo", last: "Ortega", gender: "men", nationality: "es" },
+  { first: "Elena", last: "Reyes", gender: "women", nationality: "es" },
+  { first: "Pablo", last: "Diaz", gender: "men", nationality: "es" },
+  // BR
+  { first: "Camila", last: "Silva", gender: "women", nationality: "br" },
+  { first: "Andre", last: "Costa", gender: "men", nationality: "br" },
+  { first: "Isabela", last: "Santos", gender: "women", nationality: "br" },
+  { first: "Lucas", last: "Oliveira", gender: "men", nationality: "br" },
+  { first: "Beatriz", last: "Souza", gender: "women", nationality: "br" },
+  { first: "Rafael", last: "Martins", gender: "men", nationality: "br" },
+  { first: "Larissa", last: "Ferreira", gender: "women", nationality: "br" },
+  { first: "Thiago", last: "Almeida", gender: "men", nationality: "br" },
+  // FR
+  { first: "Claire", last: "Dubois", gender: "women", nationality: "fr" },
+  { first: "Theo", last: "Moreau", gender: "men", nationality: "fr" },
+  { first: "Ines", last: "Laurent", gender: "women", nationality: "fr" },
+  { first: "Louis", last: "Bernard", gender: "men", nationality: "fr" },
+  { first: "Camille", last: "Petit", gender: "women", nationality: "fr" },
+  { first: "Hugo", last: "Robert", gender: "men", nationality: "fr" },
+  // DE
+  { first: "Greta", last: "Hoffman", gender: "women", nationality: "de" },
+  { first: "Felix", last: "Fischer", gender: "men", nationality: "de" },
+  { first: "Helena", last: "Vogel", gender: "women", nationality: "de" },
+  { first: "Jonas", last: "Hartmann", gender: "men", nationality: "de" },
+  { first: "Nina", last: "Weber", gender: "women", nationality: "de" },
+  { first: "Tobias", last: "Schneider", gender: "men", nationality: "de" },
+  // NL
+  { first: "Iris", last: "Jansen", gender: "women", nationality: "nl" },
+  { first: "Daan", last: "de Vries", gender: "men", nationality: "nl" },
+  { first: "Lotte", last: "Bakker", gender: "women", nationality: "nl" },
+  { first: "Sven", last: "Visser", gender: "men", nationality: "nl" },
+  // TR
+  { first: "Elif", last: "Yilmaz", gender: "women", nationality: "tr" },
+  { first: "Emre", last: "Demir", gender: "men", nationality: "tr" },
+  { first: "Zeynep", last: "Kaya", gender: "women", nationality: "tr" },
+  { first: "Can", last: "Celik", gender: "men", nationality: "tr" },
+  // AU
+  { first: "Sienna", last: "Taylor", gender: "women", nationality: "au" },
+  { first: "Liam", last: "Wilson", gender: "men", nationality: "au" },
+  { first: "Olivia", last: "Harris", gender: "women", nationality: "au" },
+  { first: "Jack", last: "Thompson", gender: "men", nationality: "au" },
+  // CA
+  { first: "Hannah", last: "MacLeod", gender: "women", nationality: "ca" },
+  { first: "Nathan", last: "Roy", gender: "men", nationality: "ca" },
+  { first: "Emily", last: "Tremblay", gender: "women", nationality: "ca" },
+  { first: "Owen", last: "Gagnon", gender: "men", nationality: "ca" },
+  // IN
+  { first: "Priya", last: "Nair", gender: "women", nationality: "in" },
+  { first: "Rohan", last: "Kapoor", gender: "men", nationality: "in" },
+  { first: "Ananya", last: "Shah", gender: "women", nationality: "in" },
+  { first: "Arjun", last: "Patel", gender: "men", nationality: "in" },
+  { first: "Meera", last: "Iyer", gender: "women", nationality: "in" },
+  { first: "Vikram", last: "Singh", gender: "men", nationality: "in" },
+  { first: "Neha", last: "Reddy", gender: "women", nationality: "in" },
+  { first: "Kabir", last: "Mehta", gender: "men", nationality: "in" },
+  // MX
+  { first: "Valeria", last: "Hernandez", gender: "women", nationality: "mx" },
+  { first: "Luis", last: "Ramirez", gender: "men", nationality: "mx" },
+  { first: "Mariana", last: "Torres", gender: "women", nationality: "mx" },
+  { first: "Carlos", last: "Lopez", gender: "men", nationality: "mx" },
+  { first: "Daniela", last: "Gonzalez", gender: "women", nationality: "mx" },
+  { first: "Miguel", last: "Rivera", gender: "men", nationality: "mx" },
+  // FI
+  { first: "Aino", last: "Virtanen", gender: "women", nationality: "fi" },
+  { first: "Elias", last: "Korhonen", gender: "men", nationality: "fi" },
+  { first: "Emilia", last: "Nieminen", gender: "women", nationality: "fi" },
+  { first: "Onni", last: "Makinen", gender: "men", nationality: "fi" },
+  // NO
+  { first: "Ingrid", last: "Hansen", gender: "women", nationality: "no" },
+  { first: "Lars", last: "Johansen", gender: "men", nationality: "no" },
+  { first: "Nora", last: "Olsen", gender: "women", nationality: "no" },
+  { first: "Erik", last: "Andersen", gender: "men", nationality: "no" },
+  // IR
+  { first: "Sara", last: "Hosseini", gender: "women", nationality: "ir" },
+  { first: "Reza", last: "Mohammadi", gender: "men", nationality: "ir" },
+  { first: "Leila", last: "Ahmadi", gender: "women", nationality: "ir" },
+  { first: "Amir", last: "Karimi", gender: "men", nationality: "ir" },
+  // Extra US / GB depth for pool size
+  { first: "Maya", last: "Johnson", gender: "women", nationality: "us" },
+  { first: "Marcus", last: "Williams", gender: "men", nationality: "us" },
+  { first: "Jordan", last: "Lee", gender: "men", nationality: "us" },
+  { first: "Sam", last: "Rivera", gender: "men", nationality: "us" },
+  { first: "Nia", last: "Patel", gender: "women", nationality: "us" },
+  { first: "Aisha", last: "Coleman", gender: "women", nationality: "us" },
+  { first: "Jamal", last: "Brooks", gender: "men", nationality: "us" },
+  { first: "Imani", last: "Grant", gender: "women", nationality: "us" },
+  { first: "Ruth", last: "Parker", gender: "women", nationality: "gb" },
+  { first: "Patrick", last: "Murphy", gender: "men", nationality: "gb" },
+  { first: "Isabelle", last: "Clarke", gender: "women", nationality: "gb" },
+  { first: "Daniel", last: "Hughes", gender: "men", nationality: "gb" },
+  { first: "Fatima", last: "Khan", gender: "women", nationality: "gb" },
+  { first: "Omar", last: "Hassan", gender: "men", nationality: "gb" },
+  { first: "Yara", last: "Abbas", gender: "women", nationality: "gb" },
+  { first: "Idris", last: "Ali", gender: "men", nationality: "gb" },
+  { first: "Bianca", last: "Rossi", gender: "women", nationality: "es" },
+  { first: "Marco", last: "Ricci", gender: "men", nationality: "es" },
+  { first: "Selena", last: "Costa", gender: "women", nationality: "br" },
+  { first: "Bruno", last: "Nunes", gender: "men", nationality: "br" },
+  { first: "Celine", last: "Martin", gender: "women", nationality: "fr" },
+  { first: "Antoine", last: "Lefevre", gender: "men", nationality: "fr" },
+  { first: "Paula", last: "Keller", gender: "women", nationality: "de" },
+  { first: "Lukas", last: "Bauer", gender: "men", nationality: "de" },
+  { first: "Mina", last: "van Dijk", gender: "women", nationality: "nl" },
+  { first: "Jasper", last: "Smit", gender: "men", nationality: "nl" },
+  { first: "Noor", last: "Yildiz", gender: "women", nationality: "tr" },
+  { first: "Baran", last: "Aydin", gender: "men", nationality: "tr" },
+  { first: "Tara", last: "Mitchell", gender: "women", nationality: "au" },
+  { first: "Ethan", last: "Campbell", gender: "men", nationality: "au" },
+  { first: "Amara", last: "Nguyen", gender: "women", nationality: "ca" },
+  { first: "Victor", last: "Chen", gender: "men", nationality: "ca" },
+  { first: "Aisha", last: "Banerjee", gender: "women", nationality: "in" },
+  { first: "Dev", last: "Choudhury", gender: "men", nationality: "in" },
+  { first: "Sofia", last: "Castillo", gender: "women", nationality: "mx" },
+  { first: "Javier", last: "Mendoza", gender: "men", nationality: "mx" },
+  { first: "Helmi", last: "Laine", gender: "women", nationality: "fi" },
+  { first: "Mika", last: "Heikkinen", gender: "men", nationality: "fi" },
+  { first: "Astrid", last: "Berg", gender: "women", nationality: "no" },
+  { first: "Soren", last: "Nilsen", gender: "men", nationality: "no" },
+  { first: "Dalia", last: "Rahimi", gender: "women", nationality: "ir" },
+  { first: "Kian", last: "Nazari", gender: "men", nationality: "ir" },
+  { first: "Quinn", last: "Foster", gender: "women", nationality: "us" },
+  { first: "Adrian", last: "Hayes", gender: "men", nationality: "us" },
+  { first: "Phoebe", last: "Bennett", gender: "women", nationality: "gb" },
+  { first: "George", last: "Palmer", gender: "men", nationality: "gb" },
+];
 
 const ROLES: readonly UserRole[] = ["learner", "referee", "verified_referee", "educator"];
 const ORGS = [
@@ -55,52 +218,122 @@ const ORGS = [
   undefined,
 ] as const;
 
+function portraitBucket(gender: PersonGender, nationality: PersonNat): string {
+  return `${gender}-${nationality}`;
+}
+
+function avatarSrcForPerson(person: Pick<FeedPersonSeed, "gender" | "nationality" | "portraitIndex">): string {
+  const key = portraitBucket(person.gender, person.nationality);
+  const pool = PORTRAITS[key] ?? PORTRAITS[`men-us`] ?? [];
+  if (pool.length === 0) return "/media/avatars/portraits/men-us-00.jpg";
+  return pool[((person.portraitIndex % pool.length) + pool.length) % pool.length]!;
+}
+
 function buildPeoplePool(): FeedPersonSeed[] {
   const people: FeedPersonSeed[] = [];
   const seen = new Set<string>();
+  const portraitCursor: Record<string, number> = {};
 
-  // Keep a few familiar demo anchors first.
   const anchors: FeedPersonSeed[] = [
-    { displayName: "ClearCall demo desk", role: "educator", organization: "Authored product prototype", avatarIndex: 50 },
-    { displayName: "Sam Rivera", role: "referee", avatarIndex: 51 },
-    { displayName: "Nia Patel", role: "learner", avatarIndex: 52 },
-    { displayName: "Jordan Lee", role: "learner", avatarIndex: 53 },
+    {
+      displayName: "ClearCall demo desk",
+      role: "educator",
+      organization: "Authored product prototype",
+      gender: "men",
+      nationality: "us",
+      portraitIndex: 0,
+    },
+    {
+      displayName: "Sam Rivera",
+      role: "referee",
+      gender: "men",
+      nationality: "us",
+      portraitIndex: 1,
+    },
+    {
+      displayName: "Nia Patel",
+      role: "learner",
+      gender: "women",
+      nationality: "us",
+      portraitIndex: 2,
+    },
+    {
+      displayName: "Jordan Lee",
+      role: "learner",
+      gender: "men",
+      nationality: "us",
+      portraitIndex: 3,
+    },
   ];
+
   for (const person of anchors) {
     seen.add(person.displayName);
     people.push(person);
   }
 
-  let avatarIndex = 0;
-  for (let firstIndex = 0; firstIndex < FIRST_NAMES.length; firstIndex += 1) {
-    for (let lastOffset = 0; lastOffset < LAST_NAMES.length; lastOffset += 1) {
-      if (people.length >= 220) return people;
-      const lastIndex = (firstIndex * 3 + lastOffset * 7) % LAST_NAMES.length;
-      const displayName = `${FIRST_NAMES[firstIndex]} ${LAST_NAMES[lastIndex]}`;
+  for (let index = 0; index < NAME_CARDS.length; index += 1) {
+    if (people.length >= 220) break;
+    const card = NAME_CARDS[index]!;
+    const displayName = `${card.first} ${card.last}`;
+    if (seen.has(displayName)) continue;
+    seen.add(displayName);
+
+    const bucket = portraitBucket(card.gender, card.nationality);
+    const nextIndex = portraitCursor[bucket] ?? 0;
+    portraitCursor[bucket] = nextIndex + 1;
+
+    const role = ROLES[(index + card.first.length) % ROLES.length]!;
+    const organization = ORGS[(index * 3 + card.last.length) % ORGS.length];
+
+    people.push({
+      displayName,
+      role,
+      organization,
+      isVerified: role === "verified_referee" || role === "educator",
+      gender: card.gender,
+      nationality: card.nationality,
+      portraitIndex: nextIndex,
+    });
+  }
+
+  // Expand the pool with rotated surname pairings so discussions stay unique.
+  for (let round = 0; people.length < 220 && round < 4; round += 1) {
+    for (let index = 0; index < NAME_CARDS.length && people.length < 220; index += 1) {
+      const firstCard = NAME_CARDS[index]!;
+      const lastCard = NAME_CARDS[(index * 5 + round * 11 + 3) % NAME_CARDS.length]!;
+      if (firstCard.nationality !== lastCard.nationality || firstCard.gender !== lastCard.gender) continue;
+      const displayName = `${firstCard.first} ${lastCard.last}`;
       if (seen.has(displayName)) continue;
       seen.add(displayName);
-      const role = ROLES[(firstIndex + lastIndex) % ROLES.length]!;
-      const organization = ORGS[(firstIndex * 5 + lastIndex) % ORGS.length];
+
+      const bucket = portraitBucket(firstCard.gender, firstCard.nationality);
+      const nextIndex = portraitCursor[bucket] ?? 0;
+      portraitCursor[bucket] = nextIndex + 1;
+      const role = ROLES[(index + round) % ROLES.length]!;
+      const organization = ORGS[(index + round * 7) % ORGS.length];
+
       people.push({
         displayName,
         role,
         organization,
         isVerified: role === "verified_referee" || role === "educator",
-        avatarIndex: avatarIndex % 80,
+        gender: firstCard.gender,
+        nationality: firstCard.nationality,
+        portraitIndex: nextIndex,
       });
-      avatarIndex += 1;
     }
   }
 
   return people;
 }
 
-/** Diverse fictional demo names — picked by seeded RNG, not hardcoded repeats. */
+/** Diverse fictional demo names with gender/nationality-matched portraits. */
 export const FEED_PEOPLE: readonly FeedPersonSeed[] = buildPeoplePool();
 
+/** @deprecated Prefer avatarSrcForPerson via personToPublisher. Kept for call sites. */
 export function avatarSrcForIndex(index: number): string {
-  const clamped = ((index % 80) + 80) % 80;
-  return `/media/avatars/avatar-${String(clamped).padStart(2, "0")}.svg`;
+  const person = FEED_PEOPLE[((index % FEED_PEOPLE.length) + FEED_PEOPLE.length) % FEED_PEOPLE.length]!;
+  return avatarSrcForPerson(person);
 }
 
 export function initialsForName(displayName: string): string {
@@ -121,7 +354,7 @@ export function personToPublisher(person: FeedPersonSeed, idSuffix: string): Pub
     role: person.role,
     organization: person.organization,
     avatarInitials: initialsForName(person.displayName),
-    avatarSrc: avatarSrcForIndex(person.avatarIndex),
+    avatarSrc: avatarSrcForPerson(person),
     isVerified: Boolean(person.isVerified),
     isSynthetic: true,
     disclosure:

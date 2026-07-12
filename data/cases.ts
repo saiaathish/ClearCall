@@ -12,6 +12,7 @@ import {
 } from "@/data/case-builders";
 import { extraCases } from "@/data/extra-cases";
 import { buildGeneratedCases } from "@/data/generated-cases";
+import { assignUniqueRealMedia } from "@/data/assign-media";
 
 export { DEMO_REVIEW_DISCLAIMER };
 
@@ -68,7 +69,11 @@ const seedCases: readonly OfficiatingCase[] = [
     disagreementScore: 0.62,
     freshnessScore: 0.84,
     publishedAt: "2026-06-24T14:00:00.000Z",
-    mediaAlt: "Diagrammatic demo frame of a low sliding challenge near midfield.",
+    mediaKind: "image",
+    imageSrc: "/media/cases/lunge-wide.png",
+    mediaWidth: 590,
+    mediaHeight: 782,
+    mediaAlt: "Still of a low sliding challenge near midfield.",
     similarCaseIds: ["sfp-high-contact-lunge"],
     seededDiscussion: makeDiscussion(
       "sfp-controlled-lunge",
@@ -131,8 +136,8 @@ const seedCases: readonly OfficiatingCase[] = [
     freshnessScore: 0.81,
     publishedAt: "2026-06-22T16:30:00.000Z",
     mediaKind: "image",
-    imageSrc: "/media/cases/lunge-wide.png",
-    mediaWidth: 1600,
+    imageSrc: "/media/stock/stock-31.jpg",
+    mediaWidth: 1400,
     mediaHeight: 900,
     mediaAlt: "Photo of a studs-up challenge with direct cleat-on-boot contact, tackler at full pace.",
     similarCaseIds: ["sfp-controlled-lunge"],
@@ -673,8 +678,8 @@ const seedCases: readonly OfficiatingCase[] = [
   },
 ];
 
-export const cases: readonly OfficiatingCase[] = [
+export const cases: readonly OfficiatingCase[] = assignUniqueRealMedia([
   ...seedCases,
   ...extraCases,
   ...buildGeneratedCases(Math.max(0, 100 - seedCases.length - extraCases.length)),
-];
+]);
