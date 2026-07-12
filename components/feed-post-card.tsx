@@ -4,9 +4,9 @@ import Link from "next/link";
 import { ArrowUpRight, BookOpen, Clock3, MessageCircle } from "lucide-react";
 import type { MediaKind, OfficiatingCase } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
-import { Avatar } from "@/components/avatar";
 import { CaseVideo } from "@/components/case-video";
 import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
+import { PublisherLink, PublisherNameLink } from "@/components/publisher-link";
 import { StatusBadge } from "@/components/status-badge";
 
 function formatPublishedAt(value: string) {
@@ -52,16 +52,14 @@ export function FeedPostCard({
       aria-labelledby={titleId}
     >
       <header className="feed-post__header">
-        <Avatar
-          initials={scenario.publisher.avatarInitials}
-          src={scenario.publisher.avatarSrc}
-        />
-        <div className="publisher">
-          <div className="publisher__name">{scenario.publisher.displayName}</div>
-          <div className="publisher__meta">
-            {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+        <PublisherLink publisher={scenario.publisher}>
+          <div className="publisher">
+            <div className="publisher__name">{scenario.publisher.displayName}</div>
+            <div className="publisher__meta">
+              {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+            </div>
           </div>
-        </div>
+        </PublisherLink>
         <div className="feed-post__actions" aria-label={`Actions for ${scenario.title}`}>
           <SaveButton caseId={scenario.id} />
           <ShareButton caseId={scenario.id} />
@@ -104,13 +102,11 @@ export function FeedPostCard({
               <ul>
                 {previewComments.map((comment) => (
                   <li key={comment.id}>
-                    <Avatar
-                      initials={comment.author.avatarInitials}
-                      size="sm"
-                      src={comment.author.avatarSrc}
-                    />
+                    <PublisherLink publisher={comment.author} size="sm" />
                     <span>
-                      <strong>{comment.author.displayName}</strong>
+                      <PublisherNameLink publisher={comment.author}>
+                        <strong>{comment.author.displayName}</strong>
+                      </PublisherNameLink>
                       <span>{comment.body}</span>
                     </span>
                   </li>

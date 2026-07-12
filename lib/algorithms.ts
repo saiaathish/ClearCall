@@ -281,8 +281,8 @@ export function findTeachingContrast(
 
       const comparisonValue = outcomesDiffer
         ? similarity.score >= 70
-          ? "High teaching contrast"
-          : "Useful teaching contrast"
+          ? "Strong contrast case"
+          : "Good contrast case"
         : "Similar outcome review";
 
       return [
@@ -412,13 +412,13 @@ const deriveReasoningMistake = (
       if (factor.supportsRecommendation && !selected.has(factor.key)) {
         record(
           `missing:${factor.key}`,
-          `Underweighted ${factor.label.toLocaleLowerCase()}.`,
+          `You keep skipping ${factor.label.toLocaleLowerCase()}.`,
         );
       }
       if (!factor.supportsRecommendation && selected.has(factor.key)) {
         record(
           `extra:${factor.key}`,
-          `Overweighted ${factor.label.toLocaleLowerCase()}.`,
+          `You're leaning too hard on ${factor.label.toLocaleLowerCase()}.`,
         );
       }
     }
@@ -561,24 +561,24 @@ const recommendationReason = (
 
   if (highConfidenceMisses > 0) {
     return highConfidenceMisses === 1
-      ? `Recommended because a high-confidence miss in ${item.category.toLocaleLowerCase()} makes this a useful review.`
-      : `Recommended because ${highConfidenceMisses} high-confidence misses in ${item.category.toLocaleLowerCase()} make this a useful review.`;
+      ? `You missed a ${item.category.toLocaleLowerCase()} call you felt sure about. This one's worth another look.`
+      : `You've whiffed ${highConfidenceMisses} ${item.category.toLocaleLowerCase()} calls you felt sure about. This helps.`;
   }
 
   if (history.length > 0 && breakdown.categoryWeakness >= 0.5) {
     const misses = history.filter((entry) => !entry.isCorrect).length;
-    return `Recommended because ${misses} of your ${history.length} ${item.category.toLocaleLowerCase()} decisions need another look.`;
+    return `${misses}/${history.length} of your ${item.category.toLocaleLowerCase()} calls didn't land — try this one.`;
   }
 
   if (history.length === 0) {
-    return `A balanced ${item.difficulty} case to broaden your practice.`;
+    return `Solid ${item.difficulty} case to get started.`;
   }
 
   if (breakdown.difficultyFit === 1) {
-    return `Matched to your current ${currentLevel} practice level.`;
+    return `Fits where you're at (${currentLevel}).`;
   }
 
-  return `A fresh ${item.category.toLocaleLowerCase()} contrast to vary your practice.`;
+  return `Another ${item.category.toLocaleLowerCase()} angle to keep things fresh.`;
 };
 
 /**

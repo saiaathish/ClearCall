@@ -14,7 +14,7 @@ export const mediaLibrary: readonly MediaLibraryItem[] = PHOTO_ASSETS.map((item,
   width: item.width,
   height: item.height,
   alt: item.alt,
-  tags: ["ambient", "match"],
+  tags: item.tags,
 }));
 
 export function mediaLibrarySrcs(): readonly string[] {

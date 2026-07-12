@@ -84,7 +84,7 @@ describe("findTeachingContrast", () => {
     expect(contrast?.case.id).toBe("sfp-high-contact-lunge");
     expect(contrast?.similarityScore).toBe(76.5);
     expect(contrast?.teachingScore).toBe(96.5);
-    expect(contrast?.comparisonValue).toBe("High teaching contrast");
+    expect(contrast?.comparisonValue).toBe("Strong contrast case");
     expect(contrast?.criticalDifferences.length).toBeGreaterThan(0);
     expect(contrast?.reason).toContain("differ in");
   });
@@ -136,7 +136,7 @@ describe("calculateCalibrationScore", () => {
     expect(calculateCalibrationScore([revised], cases)).toBe(19);
     expect(deriveLearnerProfile([revised], cases).overallAccuracy).toBe(0);
     expect(rankPersonalizedCases(cases, [revised])[0]?.reason).toContain(
-      "high-confidence miss",
+      "felt sure about",
     );
   });
 });
@@ -156,7 +156,7 @@ describe("rankPersonalizedCases", () => {
 
     expect(ranked[0]?.case.id).toBe("sfp-high-contact-lunge");
     expect(ranked[0]?.breakdown.highConfidenceErrorNeed).toBe(1);
-    expect(ranked[0]?.reason).toContain("high-confidence miss");
+    expect(ranked[0]?.reason).toContain("felt sure about");
   });
 
   it("gives a new user a deterministic, category-diverse seeded order", () => {
