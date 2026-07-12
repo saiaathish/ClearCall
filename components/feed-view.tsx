@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Funnel, LoaderCircle, RotateCcw, SquarePlus } from "lucide-react";
+import { Funnel, LoaderCircle, RotateCcw } from "lucide-react";
 import { cases } from "@/data/cases";
 import type { CaseCategory, OfficiatingCase } from "@/lib/types";
 import { rankPersonalizedCases } from "@/lib/algorithms";
@@ -247,16 +246,6 @@ export function FeedView() {
           </label>
         </div>
       </header>
-
-      <Link className="feed-composer" href="/publish">
-        <span className="profile-avatar" aria-hidden="true">
-          JL
-        </span>
-        <span>
-          <strong>Publish a case</strong>
-        </span>
-        <SquarePlus aria-hidden="true" size={20} />
-      </Link>
 
       {feedItems.length > 0 ? (
         <ol className="feed-stream" aria-label="Officiating case feed">

@@ -1,0 +1,3852 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "agents": 100,
+  "concurrency": 10,
+  "completedAt": "2026-07-12T07:46:37.100Z",
+  "summary": {
+    "ok": 100,
+    "failed": 0,
+    "avgMs": 21441
+  },
+  "byJourney": {
+    "feed-browse": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "full-decision": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "compare": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "save-flow": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "publish-peek": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "profile": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "about-trust": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "guest-auth": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "foul-filter": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    },
+    "case-deep": {
+      "count": 10,
+      "fails": 0,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200",
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ]
+    }
+  },
+  "signals": {
+    "feed_visible": {
+      "samples": [
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0",
+        "feed_visible=false call_links=0"
+      ],
+      "count": 10
+    },
+    "feed_empty_main_snip": {
+      "samples": [
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip=",
+        "feed_empty_main_snip="
+      ],
+      "count": 10
+    },
+    "scrolled; call_links_after": {
+      "samples": [
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0",
+        "scrolled; call_links_after=0"
+      ],
+      "count": 10
+    },
+    "nav_/_status": {
+      "samples": [
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200",
+        "nav_/_status=200"
+      ],
+      "count": 100
+    },
+    "nav_/compare_status": {
+      "samples": [
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200",
+        "nav_/compare_status=200"
+      ],
+      "count": 100
+    },
+    "nav_/saved_status": {
+      "samples": [
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200",
+        "nav_/saved_status=200"
+      ],
+      "count": 100
+    },
+    "nav_/profile_status": {
+      "samples": [
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200",
+        "nav_/profile_status=200"
+      ],
+      "count": 100
+    },
+    "case_title": {
+      "samples": [
+        "case_title=",
+        "case_title=",
+        "case_title=",
+        "case_title=",
+        "case_title=",
+        "case_title=",
+        "case_title=",
+        "case_title="
+      ],
+      "count": 10
+    },
+    "decision_radios": {
+      "samples": [
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0",
+        "decision_radios=0"
+      ],
+      "count": 10
+    },
+    "no_radios_maybe_already_answered": {
+      "samples": [
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered",
+        "no_radios_maybe_already_answered"
+      ],
+      "count": 10
+    },
+    "post_answer_ui": {
+      "samples": [
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0",
+        "post_answer_ui=0"
+      ],
+      "count": 10
+    },
+    "compare_h1": {
+      "samples": [
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases",
+        "compare_h1=Compare cases"
+      ],
+      "count": 10
+    },
+    "case_picker": {
+      "samples": [
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false",
+        "case_picker=false"
+      ],
+      "count": 10
+    },
+    "has_similarity": {
+      "samples": [
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true",
+        "has_similarity=true"
+      ],
+      "count": 10
+    },
+    "main_snip": {
+      "samples": [
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot"
+      ],
+      "count": 10
+    },
+    "save_button_missing": {
+      "samples": [
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing",
+        "save_button_missing"
+      ],
+      "count": 10
+    },
+    "saved_continue_links": {
+      "samples": [
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0",
+        "saved_continue_links=0"
+      ],
+      "count": 10
+    },
+    "local_demo_badge": {
+      "samples": [
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true",
+        "local_demo_badge=false submit_visible=true"
+      ],
+      "count": 10
+    },
+    "profile_snip": {
+      "samples": [
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip=",
+        "profile_snip="
+      ],
+      "count": 10
+    },
+    "has_reset": {
+      "samples": [
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false",
+        "has_reset=false"
+      ],
+      "count": 10
+    },
+    "has_calibration": {
+      "samples": [
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false",
+        "has_calibration=false"
+      ],
+      "count": 10
+    },
+    "about_len": {
+      "samples": [
+        "about_len=723",
+        "about_len=723",
+        "about_len=723",
+        "about_len=723",
+        "about_len=723",
+        "about_len=723",
+        "about_len=723",
+        "about_len=723"
+      ],
+      "count": 10
+    },
+    "mentions_demo": {
+      "samples": [
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true",
+        "mentions_demo=true"
+      ],
+      "count": 10
+    },
+    "trust_ok": {
+      "samples": [
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true",
+        "trust_ok=true"
+      ],
+      "count": 10
+    },
+    "after_guest_submit_url": {
+      "samples": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway"
+      ],
+      "count": 10
+    },
+    "landed_auth": {
+      "samples": [
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false",
+        "landed_auth=false"
+      ],
+      "count": 10
+    },
+    "filter": {
+      "samples": [
+        "filter=DOGSO results=0",
+        "filter=Handball results=0",
+        "filter=Simulation results=0",
+        "filter=DOGSO results=0",
+        "filter=Handball results=0",
+        "filter=Simulation results=0",
+        "filter=DOGSO results=0",
+        "filter=Handball results=0"
+      ],
+      "count": 10
+    },
+    "discussion": {
+      "samples": [
+        "discussion=false",
+        "discussion=false",
+        "discussion=false",
+        "discussion=false",
+        "discussion=false",
+        "discussion=false",
+        "discussion=false",
+        "discussion=false"
+      ],
+      "count": 10
+    },
+    "similar": {
+      "samples": [
+        "similar=false",
+        "similar=false",
+        "similar=false",
+        "similar=false",
+        "similar=false",
+        "similar=false",
+        "similar=false",
+        "similar=false"
+      ],
+      "count": 10
+    },
+    "distribution": {
+      "samples": [
+        "distribution=false",
+        "distribution=false",
+        "distribution=false",
+        "distribution=false",
+        "distribution=false",
+        "distribution=false",
+        "distribution=false",
+        "distribution=false"
+      ],
+      "count": 10
+    },
+    "disclaimer": {
+      "samples": [
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false",
+        "disclaimer=false"
+      ],
+      "count": 10
+    },
+    "nav_back": {
+      "samples": [
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick"
+      ],
+      "count": 10
+    }
+  },
+  "failures": [],
+  "sampleOk": [
+    {
+      "agent": "curious-newcomer-1",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 43994,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-2",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 42636,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-3",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 14855,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-4",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 15664,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-5",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 15700,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-6",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 14755,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-7",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 3751,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=eAC3XsBMSzi3Px8wwJjx-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=EnVPZjCfa6zhA3_Zz-rzE' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=-PH28Ls7DU9srq5_jUY7l' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ItlQqFl1aVvAq9cNvdJRh' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rUL0jVHyVsy-QtG6oeO89' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-8",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 3758,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZchX_SOXEbVpURU3ikxay' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DPENPcZDm1kpuAnuGduNO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=bNka0UhGIDKxMu7IOLGNH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=atnOFHTO8j3YB6GgU7Sjs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Yv0iwlQu6qtCNsDYNy2q9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-9",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 43474,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-10",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 42977,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-11",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 42695,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-12",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41474,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-13",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 11372,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-14",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 12139,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-15",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 11533,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    }
+  ],
+  "all": [
+    {
+      "agent": "curious-newcomer-1",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 43994,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zmLb5efs5Rudq9DcgXu8p' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-2",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 42636,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ILglu90di6IChXs8kihia' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-3",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 14855,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7NtRniirBMXmWE3Ik4tOU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-4",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 15664,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=McXMjLATmsBwl69uXfJD9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-5",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 15700,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=3W80Qz2pDGbLAFGVNF40w' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-6",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 14755,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=gVoc9rPletd1v_6wbzjrX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-7",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 3751,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=eAC3XsBMSzi3Px8wwJjx-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=EnVPZjCfa6zhA3_Zz-rzE' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=-PH28Ls7DU9srq5_jUY7l' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ItlQqFl1aVvAq9cNvdJRh' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rUL0jVHyVsy-QtG6oeO89' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-8",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 3758,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZchX_SOXEbVpURU3ikxay' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DPENPcZDm1kpuAnuGduNO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=bNka0UhGIDKxMu7IOLGNH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=atnOFHTO8j3YB6GgU7Sjs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Yv0iwlQu6qtCNsDYNy2q9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-9",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 43474,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LJ5biuiFTjIbrYiw054OT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-10",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 42977,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5_HXFWZfNj0g1tx91z8D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-11",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 42695,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=oBv-UAuwJCcofw3QqU5O1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-12",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41474,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=zRMi6MRddf0yoI4Yi-kCk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-13",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 11372,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xVRhLBkZs43zzbFR-zxOJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-14",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 12139,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=jpeOzPbuwX_bPw8QOTyUb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-15",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 11533,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1z0MOvLa2mEuDHHgDMxmT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-16",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 11502,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=4h0iD_JQGZfW8E9E-csTB' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=4h0iD_JQGZfW8E9E-csTB' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=4h0iD_JQGZfW8E9E-csTB' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=4h0iD_JQGZfW8E9E-csTB' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=4h0iD_JQGZfW8E9E-csTB' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-17",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 671,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-18",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 2058,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZWOv7KkHDRCMKssqMlPIW' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=chikx5HbNPUnl6zkBOuyW' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T_13KPVelGj3fLcSUzYak' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yWwPC_RSNHQh1rtiGzxTC' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-19",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 41252,
+      "findings": [
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=M75cxdDD8k5CPiiCPYani' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=M75cxdDD8k5CPiiCPYani' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=M75cxdDD8k5CPiiCPYani' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=M75cxdDD8k5CPiiCPYani' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=M75cxdDD8k5CPiiCPYani' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-20",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 41245,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FTpOhUnhP-ASHRImGooSm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FTpOhUnhP-ASHRImGooSm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FTpOhUnhP-ASHRImGooSm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FTpOhUnhP-ASHRImGooSm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FTpOhUnhP-ASHRImGooSm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-21",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 42127,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=r-qVl-IXRBlLulu-KAG7b' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=r-qVl-IXRBlLulu-KAG7b' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=r-qVl-IXRBlLulu-KAG7b' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=r-qVl-IXRBlLulu-KAG7b' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=r-qVl-IXRBlLulu-KAG7b' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-22",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 40921,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=W2mKXjryBQFWB_YfycZ6h' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=W2mKXjryBQFWB_YfycZ6h' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=W2mKXjryBQFWB_YfycZ6h' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=W2mKXjryBQFWB_YfycZ6h' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=W2mKXjryBQFWB_YfycZ6h' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-23",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 10972,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7QoGJ6Rb9fBwp_IaAW4v-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7QoGJ6Rb9fBwp_IaAW4v-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7QoGJ6Rb9fBwp_IaAW4v-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7QoGJ6Rb9fBwp_IaAW4v-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7QoGJ6Rb9fBwp_IaAW4v-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-24",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 12205,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DKJmhrQDn0acKJqhNOgJ1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DKJmhrQDn0acKJqhNOgJ1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DKJmhrQDn0acKJqhNOgJ1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DKJmhrQDn0acKJqhNOgJ1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DKJmhrQDn0acKJqhNOgJ1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-25",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 11650,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6SO1fW0-dIqR8oBjhHBcH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6SO1fW0-dIqR8oBjhHBcH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6SO1fW0-dIqR8oBjhHBcH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6SO1fW0-dIqR8oBjhHBcH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6SO1fW0-dIqR8oBjhHBcH' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-26",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 11565,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CeS_uzLeyRj0opOrp_58n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CeS_uzLeyRj0opOrp_58n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CeS_uzLeyRj0opOrp_58n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CeS_uzLeyRj0opOrp_58n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CeS_uzLeyRj0opOrp_58n' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-27",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 360,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-28",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 1109,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=s6IOjqnCTXkcfjm-3SThl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=fD1HI7VUACWkeyhJheKRI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OVL4SdQNI84RhwlCjgZPQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yzF2bl9iohfYUH5BJ3MlP' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=grTgc6uy6PWRib9Up_-7A' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-29",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 40836,
+      "findings": [
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6B7N07jRlnm89MP2jr_Pv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6B7N07jRlnm89MP2jr_Pv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6B7N07jRlnm89MP2jr_Pv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6B7N07jRlnm89MP2jr_Pv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6B7N07jRlnm89MP2jr_Pv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-30",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 40948,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=USVe2oJzoAE7mFx_XVw8W' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=USVe2oJzoAE7mFx_XVw8W' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=USVe2oJzoAE7mFx_XVw8W' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=USVe2oJzoAE7mFx_XVw8W' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=USVe2oJzoAE7mFx_XVw8W' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-31",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 41896,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=0r7ieBi4dxIa3wbNwIntO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=0r7ieBi4dxIa3wbNwIntO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=0r7ieBi4dxIa3wbNwIntO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=0r7ieBi4dxIa3wbNwIntO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=0r7ieBi4dxIa3wbNwIntO' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-32",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41011,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=BeIGGqlXAKPm6bf48GGYs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=BeIGGqlXAKPm6bf48GGYs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=BeIGGqlXAKPm6bf48GGYs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=BeIGGqlXAKPm6bf48GGYs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=BeIGGqlXAKPm6bf48GGYs' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-33",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 11168,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VSbyGRBZpHOpj8Q-nvOrU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VSbyGRBZpHOpj8Q-nvOrU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VSbyGRBZpHOpj8Q-nvOrU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VSbyGRBZpHOpj8Q-nvOrU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VSbyGRBZpHOpj8Q-nvOrU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-34",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11443,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HeDc1vUqXnI2rzayQCxHk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HeDc1vUqXnI2rzayQCxHk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HeDc1vUqXnI2rzayQCxHk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HeDc1vUqXnI2rzayQCxHk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HeDc1vUqXnI2rzayQCxHk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-35",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10884,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7un_zNKhtGGUtlpe19Cl2' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7un_zNKhtGGUtlpe19Cl2' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7un_zNKhtGGUtlpe19Cl2' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7un_zNKhtGGUtlpe19Cl2' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=7un_zNKhtGGUtlpe19Cl2' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-36",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10829,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ0M3Ep31FHIToenSadT1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ0M3Ep31FHIToenSadT1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ0M3Ep31FHIToenSadT1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ0M3Ep31FHIToenSadT1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ0M3Ep31FHIToenSadT1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-37",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 647,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-38",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 1172,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T2jbaUu6NJrhV1S5MDiKT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZYudv4Ota8nmiulKMAjO8' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vXe0L6Hi9ALhbjL7mmryY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ovxu-Wfvs3On37K1LSlzJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=RoSTWhi5UimZgC93-8PQX' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-39",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 40780,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HTRDF9qVT6AoCqizLPDdK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HTRDF9qVT6AoCqizLPDdK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HTRDF9qVT6AoCqizLPDdK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HTRDF9qVT6AoCqizLPDdK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HTRDF9qVT6AoCqizLPDdK' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-40",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 40883,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CqMCN9d7refqL6Eq7FvLI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CqMCN9d7refqL6Eq7FvLI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CqMCN9d7refqL6Eq7FvLI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CqMCN9d7refqL6Eq7FvLI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=CqMCN9d7refqL6Eq7FvLI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-41",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 42022,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=mTfD9ZKbgvNNhBQb7Hthk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=mTfD9ZKbgvNNhBQb7Hthk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=mTfD9ZKbgvNNhBQb7Hthk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=mTfD9ZKbgvNNhBQb7Hthk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=mTfD9ZKbgvNNhBQb7Hthk' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-42",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41290,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Bqf4Qt44P-QX0x78XVBkd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Bqf4Qt44P-QX0x78XVBkd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Bqf4Qt44P-QX0x78XVBkd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Bqf4Qt44P-QX0x78XVBkd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Bqf4Qt44P-QX0x78XVBkd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-43",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 10855,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KqMIGpv3ry_46MuLJoWCe' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KqMIGpv3ry_46MuLJoWCe' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KqMIGpv3ry_46MuLJoWCe' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KqMIGpv3ry_46MuLJoWCe' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KqMIGpv3ry_46MuLJoWCe' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-44",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11417,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=kJAWnY_7uX2MPQ70YEvNx' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=kJAWnY_7uX2MPQ70YEvNx' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=kJAWnY_7uX2MPQ70YEvNx' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=kJAWnY_7uX2MPQ70YEvNx' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=kJAWnY_7uX2MPQ70YEvNx' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-45",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10768,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vkvqDr9ClpKDZiydDvphM' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vkvqDr9ClpKDZiydDvphM' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vkvqDr9ClpKDZiydDvphM' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vkvqDr9ClpKDZiydDvphM' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vkvqDr9ClpKDZiydDvphM' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-46",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10870,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YLqHMX43gdJ6zvnjbTkTr' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YLqHMX43gdJ6zvnjbTkTr' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YLqHMX43gdJ6zvnjbTkTr' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YLqHMX43gdJ6zvnjbTkTr' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YLqHMX43gdJ6zvnjbTkTr' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-47",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 258,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-48",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 889,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qn0_NPGptMYX1QJgvXz7E' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=_kykMgVifYjs7jCJ6Nhsp' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Hwk0k6wdj1ldgkRTVs0X9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OHLFWxOgPs6-Ny5id3abn' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-49",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 41110,
+      "findings": [
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uG93l4eD4o9HIPR7ZG3CN' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uG93l4eD4o9HIPR7ZG3CN' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uG93l4eD4o9HIPR7ZG3CN' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uG93l4eD4o9HIPR7ZG3CN' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uG93l4eD4o9HIPR7ZG3CN' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-50",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 41107,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=MIUZHjhNXwD6FLRxqZ_-D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=MIUZHjhNXwD6FLRxqZ_-D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=MIUZHjhNXwD6FLRxqZ_-D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=MIUZHjhNXwD6FLRxqZ_-D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=MIUZHjhNXwD6FLRxqZ_-D' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-51",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 41818,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T4OcMsomNsAs0ZqeyLpvY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T4OcMsomNsAs0ZqeyLpvY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T4OcMsomNsAs0ZqeyLpvY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T4OcMsomNsAs0ZqeyLpvY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=T4OcMsomNsAs0ZqeyLpvY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-52",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 40767,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=t6f8tFgR9DmzKBxvDUO3d' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=t6f8tFgR9DmzKBxvDUO3d' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=t6f8tFgR9DmzKBxvDUO3d' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=t6f8tFgR9DmzKBxvDUO3d' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=t6f8tFgR9DmzKBxvDUO3d' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-53",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 10930,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=18rMLtxvbvgtkTWwa6cGD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=18rMLtxvbvgtkTWwa6cGD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=18rMLtxvbvgtkTWwa6cGD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=18rMLtxvbvgtkTWwa6cGD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=18rMLtxvbvgtkTWwa6cGD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-54",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11410,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HI-86HSns4C3W143psn50' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HI-86HSns4C3W143psn50' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HI-86HSns4C3W143psn50' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HI-86HSns4C3W143psn50' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=HI-86HSns4C3W143psn50' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-55",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10735,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rpRR4SYfenyYpkHJiNP49' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rpRR4SYfenyYpkHJiNP49' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rpRR4SYfenyYpkHJiNP49' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rpRR4SYfenyYpkHJiNP49' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rpRR4SYfenyYpkHJiNP49' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-56",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10754,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=JllA8Pei9kzGcYnCt7TdQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=JllA8Pei9kzGcYnCt7TdQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=JllA8Pei9kzGcYnCt7TdQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=JllA8Pei9kzGcYnCt7TdQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=JllA8Pei9kzGcYnCt7TdQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-57",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 883,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-58",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 1341,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=60Db0-1oGyBsKhowIa_Js' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FmgsECRoDHWj04_vXJ3vT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=o8rg-00W5PJ2aiCkgj7XE' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x5RdWoNYHmwywrtyDwTDY' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-59",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 40889,
+      "findings": [
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Ha2Aemj7sHwUO95GixZ-V' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Ha2Aemj7sHwUO95GixZ-V' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Ha2Aemj7sHwUO95GixZ-V' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Ha2Aemj7sHwUO95GixZ-V' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Ha2Aemj7sHwUO95GixZ-V' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-60",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 41044,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qaNoQA7wF-AfZ0EEKNL4t' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qaNoQA7wF-AfZ0EEKNL4t' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qaNoQA7wF-AfZ0EEKNL4t' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qaNoQA7wF-AfZ0EEKNL4t' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qaNoQA7wF-AfZ0EEKNL4t' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-61",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 41853,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=etni8CyNo0oyEF0QupMM1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=etni8CyNo0oyEF0QupMM1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=etni8CyNo0oyEF0QupMM1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=etni8CyNo0oyEF0QupMM1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=etni8CyNo0oyEF0QupMM1' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-62",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41086,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=q7zYPZQJYpTezHE2ra0FQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=q7zYPZQJYpTezHE2ra0FQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=q7zYPZQJYpTezHE2ra0FQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=q7zYPZQJYpTezHE2ra0FQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=q7zYPZQJYpTezHE2ra0FQ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-63",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 11110,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OLL6Vt2_YFf0_vHk0RdUi' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OLL6Vt2_YFf0_vHk0RdUi' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OLL6Vt2_YFf0_vHk0RdUi' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OLL6Vt2_YFf0_vHk0RdUi' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=OLL6Vt2_YFf0_vHk0RdUi' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-64",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11233,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Cy7UeFlSXDtSpEQu2H1gm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Cy7UeFlSXDtSpEQu2H1gm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Cy7UeFlSXDtSpEQu2H1gm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Cy7UeFlSXDtSpEQu2H1gm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Cy7UeFlSXDtSpEQu2H1gm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-65",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10917,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qRer-fCozCnV-q4TxXzTq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qRer-fCozCnV-q4TxXzTq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qRer-fCozCnV-q4TxXzTq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qRer-fCozCnV-q4TxXzTq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qRer-fCozCnV-q4TxXzTq' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-66",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10869,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ2vXBd7wj88Ewdo5Bzyf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ2vXBd7wj88Ewdo5Bzyf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ2vXBd7wj88Ewdo5Bzyf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ2vXBd7wj88Ewdo5Bzyf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=cQ2vXBd7wj88Ewdo5Bzyf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-67",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 322,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-68",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 782,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FF5YCh-3zCWu-JwMlZz-a' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ui-SkTTNBRfbalCATVLgZ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=uaA80KlsnHh8e_2uhOE72' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=wK3FRpEeath5icJmzzAVv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-69",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 41057,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DunLVgnZi3yI1dh1BLcqF' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DunLVgnZi3yI1dh1BLcqF' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DunLVgnZi3yI1dh1BLcqF' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DunLVgnZi3yI1dh1BLcqF' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=DunLVgnZi3yI1dh1BLcqF' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-70",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 40960,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=WLx-pd18yaSyP_UlPfrzb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=WLx-pd18yaSyP_UlPfrzb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=WLx-pd18yaSyP_UlPfrzb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=WLx-pd18yaSyP_UlPfrzb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=WLx-pd18yaSyP_UlPfrzb' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-71",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 41883,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qtriOiboW2OolfWD9ZIFg' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qtriOiboW2OolfWD9ZIFg' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qtriOiboW2OolfWD9ZIFg' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qtriOiboW2OolfWD9ZIFg' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=qtriOiboW2OolfWD9ZIFg' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-72",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 40856,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=b-5Hf_XjQYIfK978IZfzv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=b-5Hf_XjQYIfK978IZfzv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=b-5Hf_XjQYIfK978IZfzv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=b-5Hf_XjQYIfK978IZfzv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=b-5Hf_XjQYIfK978IZfzv' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-73",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 10967,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1wW430LD4KHWOMQo0m-cD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1wW430LD4KHWOMQo0m-cD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1wW430LD4KHWOMQo0m-cD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1wW430LD4KHWOMQo0m-cD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1wW430LD4KHWOMQo0m-cD' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-74",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11527,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vrfn7n8k7YtZGLH071d7Z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vrfn7n8k7YtZGLH071d7Z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vrfn7n8k7YtZGLH071d7Z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vrfn7n8k7YtZGLH071d7Z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vrfn7n8k7YtZGLH071d7Z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-75",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10766,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=voLxlYUCEVhpLCVu5YleU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=voLxlYUCEVhpLCVu5YleU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=voLxlYUCEVhpLCVu5YleU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=voLxlYUCEVhpLCVu5YleU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=voLxlYUCEVhpLCVu5YleU' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-76",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10725,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=5Byl00ONJlFLagtNWzC-7' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=5Byl00ONJlFLagtNWzC-7' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=5Byl00ONJlFLagtNWzC-7' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=5Byl00ONJlFLagtNWzC-7' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=5Byl00ONJlFLagtNWzC-7' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-77",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 668,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-78",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 908,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=vIvCMggMhYhvg_6qY7bYm' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=8prSm4vNE7hWPRz7-7kJc' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=xHI3TrTQGWR92uO0pOzNw' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=sA-cK-OJVttswe3312YUA' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-79",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 41043,
+      "findings": [
+        "filter=Handball results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=umheX1ZgFmUSP2WI0a0ye' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=umheX1ZgFmUSP2WI0a0ye' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=umheX1ZgFmUSP2WI0a0ye' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=umheX1ZgFmUSP2WI0a0ye' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=umheX1ZgFmUSP2WI0a0ye' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-80",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 41059,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5I72a_-0nP_FOQzT_SNJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5I72a_-0nP_FOQzT_SNJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5I72a_-0nP_FOQzT_SNJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5I72a_-0nP_FOQzT_SNJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=h5I72a_-0nP_FOQzT_SNJ' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-81",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 42088,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=slEiiFoIgIx-0vX6XKVoT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=slEiiFoIgIx-0vX6XKVoT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=slEiiFoIgIx-0vX6XKVoT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=slEiiFoIgIx-0vX6XKVoT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=slEiiFoIgIx-0vX6XKVoT' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-82",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 41034,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=81EKMZ7bxVyGLYvUTe1Xo' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=81EKMZ7bxVyGLYvUTe1Xo' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=81EKMZ7bxVyGLYvUTe1Xo' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=81EKMZ7bxVyGLYvUTe1Xo' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=81EKMZ7bxVyGLYvUTe1Xo' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-83",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 10838,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x8aXNkPG5TG6o50y4UWBS' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x8aXNkPG5TG6o50y4UWBS' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x8aXNkPG5TG6o50y4UWBS' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x8aXNkPG5TG6o50y4UWBS' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=x8aXNkPG5TG6o50y4UWBS' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-84",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11358,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=U7_G1Rms1seySA1v1gHVl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=U7_G1Rms1seySA1v1gHVl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=U7_G1Rms1seySA1v1gHVl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=U7_G1Rms1seySA1v1gHVl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=U7_G1Rms1seySA1v1gHVl' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-85",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 10830,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=F-EjRf2gItOy6qKoeydKI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=F-EjRf2gItOy6qKoeydKI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=F-EjRf2gItOy6qKoeydKI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=F-EjRf2gItOy6qKoeydKI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=F-EjRf2gItOy6qKoeydKI' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-86",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 11018,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rahztjkrVOduNjqsRlHe9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rahztjkrVOduNjqsRlHe9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rahztjkrVOduNjqsRlHe9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rahztjkrVOduNjqsRlHe9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=rahztjkrVOduNjqsRlHe9' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-87",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 350,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-88",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 862,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=PCEJMiyPTddT6BvFq-4Gz' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LyLqdUL4jJ0lSuwxQxc6r' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=FXLXEgyupkhoSid37kdE-' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=Z9Jz8BGZAZJvdPfPNOmrd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-89",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 40858,
+      "findings": [
+        "filter=Simulation results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LAPy6SyEyskNybaEAAGsd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LAPy6SyEyskNybaEAAGsd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LAPy6SyEyskNybaEAAGsd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LAPy6SyEyskNybaEAAGsd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=LAPy6SyEyskNybaEAAGsd' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-90",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 40780,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nxyWllmnkdxFLzs9V9mu6' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nxyWllmnkdxFLzs9V9mu6' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nxyWllmnkdxFLzs9V9mu6' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nxyWllmnkdxFLzs9V9mu6' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=nxyWllmnkdxFLzs9V9mu6' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "curious-newcomer-91",
+      "journey": "feed-browse",
+      "caseId": "sfp-controlled-lunge",
+      "ms": 41850,
+      "findings": [
+        "feed_visible=false call_links=0",
+        "feed_empty_main_snip=",
+        "scrolled; call_links_after=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=logr6ObPKbm5AkQm5P3ob' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=logr6ObPKbm5AkQm5P3ob' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=logr6ObPKbm5AkQm5P3ob' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=logr6ObPKbm5AkQm5P3ob' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=logr6ObPKbm5AkQm5P3ob' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "decisive-ref-92",
+      "journey": "full-decision",
+      "caseId": "sfp-high-contact-lunge",
+      "ms": 40748,
+      "findings": [
+        "case_title=",
+        "decision_radios=0",
+        "no_radios_maybe_already_answered",
+        "post_answer_ui=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=9JIITNAFAgk3MAzzrqjfL' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=9JIITNAFAgk3MAzzrqjfL' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=9JIITNAFAgk3MAzzrqjfL' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=9JIITNAFAgk3MAzzrqjfL' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=9JIITNAFAgk3MAzzrqjfL' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "comparer-93",
+      "journey": "compare",
+      "caseId": "handball-supporting-arm",
+      "ms": 11195,
+      "findings": [
+        "compare_h1=Compare cases",
+        "case_picker=false",
+        "has_similarity=true",
+        "main_snip=Compare cases Put two similar incidents side by side and find the detail that changes the call. CASE A Controlled lunge, lower contact Studs-up, cleat-on-boot",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YX-t4lsHgnXQKeSETUJla' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YX-t4lsHgnXQKeSETUJla' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YX-t4lsHgnXQKeSETUJla' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YX-t4lsHgnXQKeSETUJla' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=YX-t4lsHgnXQKeSETUJla' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "saver-94",
+      "journey": "save-flow",
+      "caseId": "handball-raised-arm",
+      "ms": 11765,
+      "findings": [
+        "save_button_missing",
+        "saved_continue_links=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZB2R3oXXIhwpzNXs2LkTa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZB2R3oXXIhwpzNXs2LkTa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZB2R3oXXIhwpzNXs2LkTa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZB2R3oXXIhwpzNXs2LkTa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=ZB2R3oXXIhwpzNXs2LkTa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "publisher-95",
+      "journey": "publish-peek",
+      "caseId": "offside-line-of-vision",
+      "ms": 11064,
+      "findings": [
+        "local_demo_badge=false submit_visible=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yHJMIyKjqz4VdgqFfx5Pa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yHJMIyKjqz4VdgqFfx5Pa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yHJMIyKjqz4VdgqFfx5Pa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yHJMIyKjqz4VdgqFfx5Pa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=yHJMIyKjqz4VdgqFfx5Pa' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "profiler-96",
+      "journey": "profile",
+      "caseId": "offside-no-impact",
+      "ms": 10950,
+      "findings": [
+        "profile_snip=",
+        "has_reset=false",
+        "has_calibration=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6F1ZZh0HB2w1wEXLy2oUu' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6F1ZZh0HB2w1wEXLy2oUu' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6F1ZZh0HB2w1wEXLy2oUu' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6F1ZZh0HB2w1wEXLy2oUu' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=6F1ZZh0HB2w1wEXLy2oUu' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "skeptic-97",
+      "journey": "about-trust",
+      "caseId": "dogso-central-breakaway",
+      "ms": 723,
+      "findings": [
+        "about_len=723",
+        "mentions_demo=true",
+        "trust_ok=true",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [],
+      "ok": true
+    },
+    {
+      "agent": "guest-blocked-98",
+      "journey": "guest-auth",
+      "caseId": "advantage-quick-breakdown",
+      "ms": 1166,
+      "findings": [
+        "after_guest_submit_url=http://127.0.0.1:3000/case/dogso-central-breakaway",
+        "landed_auth=false",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=KbNY2QNdee66feV2i_jit' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=wTL2WZ9l1nQoxbnVb3Tby' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=iVsYD_POoXH6yeJgnRU3z' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=1Ax11TvWr0u9Mqt0aejC_' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "filter-surfer-99",
+      "journey": "foul-filter",
+      "caseId": "simulation-initiated-contact",
+      "ms": 40992,
+      "findings": [
+        "filter=DOGSO results=0",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=2RG3SB_pMLc-Ooq4l0gTf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=2RG3SB_pMLc-Ooq4l0gTf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=2RG3SB_pMLc-Ooq4l0gTf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=2RG3SB_pMLc-Ooq4l0gTf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=2RG3SB_pMLc-Ooq4l0gTf' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    },
+    {
+      "agent": "discussion-reader-100",
+      "journey": "case-deep",
+      "caseId": "goalkeeper-deliberate-kick",
+      "ms": 40991,
+      "findings": [
+        "discussion=false",
+        "similar=false",
+        "distribution=false",
+        "disclaimer=false",
+        "nav_back=http://127.0.0.1:3000/case/goalkeeper-deliberate-kick",
+        "nav_/_status=200",
+        "nav_/compare_status=200",
+        "nav_/saved_status=200",
+        "nav_/profile_status=200"
+      ],
+      "errors": [],
+      "consoleErrors": [
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VNW4TmvwLFPB8B2t_Zk26' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VNW4TmvwLFPB8B2t_Zk26' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VNW4TmvwLFPB8B2t_Zk26' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VNW4TmvwLFPB8B2t_Zk26' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE",
+        "WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=VNW4TmvwLFPB8B2t_Zk26' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE"
+      ],
+      "ok": true
+    }
+  ]
+}

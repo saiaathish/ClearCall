@@ -3,6 +3,7 @@ import { alignCaseCopy } from "@/data/align-case-copy";
 import {
   PHOTO_ASSETS,
   VIDEO_ASSETS,
+  matchesCategory,
   scoreTagOverlap,
   tagsForCategory,
   type MediaAsset,
@@ -43,14 +44,40 @@ function minScoreForCategory(category: string): number {
   return 0;
 }
 
+function assetTagsForSrc(src: string): readonly string[] {
+  const known = PHOTO_ASSETS.find((item) => item.src === src);
+  return known?.tags ?? (isAuthoredCaseStill(src) ? ["match"] : []);
+}
+
 function pickBestPhoto(
   preferred: string | null | undefined,
-  wanted: readonly string[],
+  category: string,
   usedPhotos: Set<string>,
   photoQueue: MediaAsset[],
   minScore: number,
 ): MediaAsset | null {
-  if (preferred && isRealPhoto(preferred) && !usedPhotos.has(preferred)) {
+  // Authored /media/cases/* stills are preserved even when reused across related posts.
+  if (preferred && isAuthoredCaseStill(preferred) && isRealPhoto(preferred)) {
+    const known = PHOTO_ASSETS.find((item) => item.src === preferred);
+    usedPhotos.add(preferred);
+    return (
+      known ?? {
+        src: preferred,
+        width: 1200,
+        height: 800,
+        alt: "Match still for this teaching post",
+        tags: ["match"],
+      }
+    );
+  }
+
+  // Stock placeholders only stick when their tags actually match the category.
+  if (
+    preferred &&
+    isRealPhoto(preferred) &&
+    !usedPhotos.has(preferred) &&
+    matchesCategory(assetTagsForSrc(preferred), category, minScore)
+  ) {
     usedPhotos.add(preferred);
     const known = PHOTO_ASSETS.find((item) => item.src === preferred);
     return (
@@ -66,9 +93,11 @@ function pickBestPhoto(
 
   let bestIndex = -1;
   let bestScore = -1;
+  const wanted = tagsForCategory(category);
   for (let i = 0; i < photoQueue.length; i += 1) {
     const candidate = photoQueue[i]!;
     if (usedPhotos.has(candidate.src)) continue;
+    if (!matchesCategory(candidate.tags, category, minScore)) continue;
     const score = scoreTagOverlap(candidate.tags, wanted);
     if (score > bestScore) {
       bestScore = score;
@@ -76,7 +105,7 @@ function pickBestPhoto(
     }
   }
 
-  if (bestIndex >= 0 && bestScore >= minScore) {
+  if (bestIndex >= 0) {
     const [picked] = photoQueue.splice(bestIndex, 1);
     if (picked) {
       usedPhotos.add(picked.src);
@@ -97,7 +126,7 @@ function pickBestPhoto(
 }
 
 function pickBestVideo(
-  wanted: readonly string[],
+  category: string,
   videoCursor: number,
   usedVideos: Map<string, number>,
   maxUses: number,
@@ -105,10 +134,12 @@ function pickBestVideo(
 ): VideoAsset | null {
   const available = VIDEO_ASSETS.filter((video) => (usedVideos.get(video.videoSrc) ?? 0) < maxUses);
   const pool = available.length > 0 ? available : [...VIDEO_ASSETS];
+  const wanted = tagsForCategory(category);
 
   let bestScore = -1;
   const tied: VideoAsset[] = [];
   for (const candidate of pool) {
+    if (!matchesCategory(candidate.tags, category, minScore)) continue;
     const score = scoreTagOverlap(candidate.tags, wanted);
     if (score > bestScore) {
       bestScore = score;
@@ -119,7 +150,7 @@ function pickBestVideo(
     }
   }
 
-  if (bestScore < minScore || tied.length === 0) return null;
+  if (tied.length === 0) return null;
 
   const best = tied[videoCursor % tied.length]!;
   usedVideos.set(best.videoSrc, (usedVideos.get(best.videoSrc) ?? 0) + 1);
@@ -184,10 +215,9 @@ function asImageCase(scenario: OfficiatingCase, photo: MediaAsset): OfficiatingC
 
 /**
  * Ensures every image/video post uses a real photo or demo clip — never SVG —
- * and that image posts do not share the same file across the catalog.
- * Videos keep posters extracted from the same clip. Media is matched to the
- * case category when tags overlap; otherwise the post stays or becomes text
- * so copy never drifts from what is on screen. Authored text posts stay text.
+ * and that image posts do not share the same stock file across the catalog.
+ * Specialty categories keep media only when primary tags match; otherwise the
+ * post becomes text so copy never drifts from what is on screen.
  */
 export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): OfficiatingCase[] {
   const usedPhotos = new Set<string>();
@@ -203,9 +233,10 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
 
   const takeVideo = (scenario: OfficiatingCase, requireMatch: boolean): OfficiatingCase | null => {
     if (videoCursor >= maxVideos) return null;
-    const wanted = tagsForCategory(scenario.category);
     const minScore = requireMatch ? minScoreForCategory(scenario.category) : 0;
-    const video = pickBestVideo(wanted, videoCursor, usedVideos, maxUsesPerClip, minScore);
+    // Specialty categories never accept unmatched clips.
+    if (!requireMatch && minScoreForCategory(scenario.category) > 0) return null;
+    const video = pickBestVideo(scenario.category, videoCursor, usedVideos, maxUsesPerClip, minScore);
     if (!video) return null;
     videoCursor += 1;
     return asVideoCase(scenario, video);
@@ -215,7 +246,6 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
     const kind =
       scenario.mediaKind ??
       (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text");
-    const wanted = tagsForCategory(scenario.category);
     const minScore = minScoreForCategory(scenario.category);
     const preserveCaseStill = isAuthoredCaseStill(scenario.imageSrc);
 
@@ -225,16 +255,17 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
     }
 
     if (kind === "video") {
-      return takeVideo(scenario, true) ?? takeVideo(scenario, false) ?? asTextCase(scenario);
+      return takeVideo(scenario, true) ?? asTextCase(scenario);
     }
 
-    // Prefer a category-matched clip over a stock still when the tags align.
+    // Prefer a category-matched clip over a stock still when primary tags align.
+    // Never upgrade away from an authored /media/cases/* still.
     if (kind === "image" && !preserveCaseStill) {
       const upgraded = takeVideo(scenario, true);
       if (upgraded) return upgraded;
     }
 
-    const photo = pickBestPhoto(scenario.imageSrc, wanted, usedPhotos, photoQueue, minScore);
+    const photo = pickBestPhoto(scenario.imageSrc, scenario.category, usedPhotos, photoQueue, minScore);
     if (photo) return asImageCase(scenario, photo);
 
     // Specialty image with no matching still: try a matched clip, else text.

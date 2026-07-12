@@ -1,5 +1,5 @@
 import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
-import { scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
+import { matchesCategory, scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
 import type { OfficiatingCase } from "@/lib/types";
 
 export const FEED_BATCH_SIZE = 10;
@@ -120,8 +120,10 @@ export function pickRandomMedia(
 }
 
 /**
- * Give image-shaped cases without an authored asset a random library still.
+ * Give image-shaped cases without an authored asset a category-matched library still.
  * Text posts stay text. Video placeholders stay video (no forced backdrop).
+ * Specialty categories without a tag match stay image-shaped only if they already
+ * have media — we do not invent unrelated product/cleat stills here.
  */
 export function withLibraryBackdrop(
   scenario: OfficiatingCase,
@@ -134,7 +136,18 @@ export function withLibraryBackdrop(
   const hasAuthoredImage = Boolean(scenario.imageSrc || scenario.posterSrc);
   if (hasAuthoredImage) return scenario;
 
-  const pick = pickRandomMedia(random, scenario.imageSrc, tagsForCategory(scenario.category));
+  const category = scenario.category;
+  const preferred = tagsForCategory(category);
+  const matchedPool = mediaLibrary.filter((item) => matchesCategory(item.tags, category, 1));
+  if (matchedPool.length === 0 && preferred.length > 0) {
+    // No safe backdrop for specialty categories — leave without inventing media.
+    return scenario;
+  }
+
+  const pick =
+    matchedPool.length > 0
+      ? matchedPool[Math.min(matchedPool.length - 1, Math.floor(random() * matchedPool.length))]!
+      : pickRandomMedia(random, scenario.imageSrc, preferred);
   const mediaAlt = pick.alt;
   return {
     ...scenario,
