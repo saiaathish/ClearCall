@@ -1,16 +1,26 @@
 # Authorized demo media
 
-Openly licensed Mixkit **match-play** soccer clips live under `match/`
-(`clip-01.mp4` … `clip-14.mp4`) with matching posters from the same footage.
+Match-play soccer clips from [Mixkit free soccer stock](https://mixkit.co/free-stock-video/soccer/)
+live in `pitch/` as `pitch-01.mp4` … `pitch-14.mp4`, with posters extracted from
+the same files (`pitch-01.jpg` … `pitch-14.jpg`).
 
-These are live-game / semi-pro pitch clips only — no freestyle, agility-ladder
-drills, parking-garage juggling, empty-stadium B-roll, or beach stock. The
-`match/` folder path also busts stale CDN/browser caches of earlier wrong files
-that lived at `/media/demo/clip-*.mp4`.
+| file | Mixkit id | what it is |
+| --- | --- | --- |
+| pitch-01 | 43484 | one-on-one dribble / challenge |
+| pitch-02 | 43485 | semi-pro night match, pitch level |
+| pitch-03 | 43483 | breakaway + keeper save |
+| pitch-04 | 43499 | team move into a goal |
+| pitch-05 | 43495 | penalty from behind the net |
+| pitch-06 | 43494 | close penalty strike |
+| pitch-07 | 41372 | aerial live match on grass |
+| pitch-08 | 43481 | two teams contesting open play |
+| pitch-09 | 43482 | semi-pro night match |
+| pitch-10 | 43492 | penalty set + strike |
+| pitch-11 | 43496 | keeper in goal during play |
+| pitch-12 | 43497 | shot on goal |
+| pitch-13 | 43498 | throw-in restart |
+| pitch-14 | 43493 | set piece shot |
 
-Case catalog entries wire them through `videoSrc` / `posterSrc` via
-`data/assign-media.ts`, preferring clips whose action tags match the case
-category.
-
-Replace these with team-recorded or permission-cleared incident footage when
-you move beyond the prototype.
+Do **not** put freestyle / beach / empty-stadium B-roll here. Old paths
+`/media/demo/clip-*` and `/media/demo/match/*` are retired on purpose so
+stale CDN/browser caches of the beach drone files stop winning.

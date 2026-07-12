@@ -10,8 +10,8 @@ describe("media relevance", () => {
     const videos = cases.filter((item) => item.mediaKind === "video");
     expect(videos.length).toBeGreaterThan(0);
     for (const item of videos) {
-      expect(item.videoSrc).toMatch(/^\/media\/demo\/match\/clip-\d+\.mp4$/);
-      expect(item.posterSrc).toMatch(/^\/media\/demo\/match\/poster-\d+\.jpg$/);
+      expect(item.videoSrc).toMatch(/^\/media\/demo\/pitch\/pitch-\d+\.mp4$/);
+      expect(item.posterSrc).toMatch(/^\/media\/demo\/pitch\/pitch-\d+\.jpg$/);
       const clipNum = item.videoSrc!.match(/clip-(\d+)/)?.[1];
       const posterNum = item.posterSrc!.match(/poster-(\d+)/)?.[1];
       expect(posterNum).toBe(clipNum);
