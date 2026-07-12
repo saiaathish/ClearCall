@@ -20,7 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { cases } from "@/data/cases";
-import { findTeachingContrast, rankPersonalizedCases } from "@/lib/algorithms";
+import { rankPersonalizedCases } from "@/lib/algorithms";
 import {
   createDecisionDraft,
   createUserAnswer,
@@ -65,10 +65,6 @@ export function CaseCard({
   const savedAnswer = answers[scenario.id];
   const resultRef = useRef<HTMLElement>(null);
 
-  const contrast = useMemo(
-    () => findTeachingContrast(scenario, cases.filter((item) => item.id !== scenario.id)),
-    [scenario],
-  );
   const nextRanked = useMemo(
     () =>
       rankPersonalizedCases(cases, Object.values(answers), {
@@ -177,7 +173,6 @@ export function CaseCard({
         <ResultPanel
           scenario={scenario}
           answer={savedAnswer}
-          contrast={contrast}
           nextCase={nextRanked?.case}
           nextReason={nextRanked?.reason}
           resultRef={resultRef}
@@ -392,14 +387,12 @@ function DecisionForm({
 function ResultPanel({
   scenario,
   answer,
-  contrast,
   nextCase,
   nextReason,
   resultRef,
 }: {
   scenario: OfficiatingCase;
   answer: UserAnswer;
-  contrast: ReturnType<typeof findTeachingContrast>;
   nextCase?: OfficiatingCase;
   nextReason?: string;
   resultRef: RefObject<HTMLElement | null>;
@@ -544,11 +537,9 @@ function ResultPanel({
       </div>
 
       <div className="button-row">
-        {contrast && (
-          <Link className="button button--secondary" href={`/compare?a=${scenario.id}&b=${contrast.case.id}`}>
-            <GitCompareArrows aria-hidden="true" size={16} /> Compare a teaching contrast
-          </Link>
-        )}
+        <Link className="button button--secondary" href={`/compare?case=${scenario.id}`}>
+          <GitCompareArrows aria-hidden="true" size={16} /> Compare match vs expert
+        </Link>
         <Link className="button button--ghost" href={`/case/${scenario.id}`}>
           Open discussion <ArrowRight aria-hidden="true" size={16} />
         </Link>
