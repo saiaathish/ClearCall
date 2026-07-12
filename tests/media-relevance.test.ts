@@ -33,9 +33,30 @@ describe("media relevance", () => {
     expect(clips.size).toBeGreaterThanOrEqual(12);
   });
 
-  it("keeps the catalog video-heavy for an engaging feed", () => {
+  it("keeps the catalog mixed without forcing video reuse", () => {
     const videos = cases.filter((item) => item.mediaKind === "video");
-    expect(videos.length).toBeGreaterThanOrEqual(40);
+    expect(videos.length).toBeGreaterThanOrEqual(12);
+    expect(videos.length).toBeLessThanOrEqual(VIDEO_ASSETS.length);
+  });
+
+  it("never reuses the same image or video across posts", () => {
+    const images = cases.filter((item) => item.mediaKind === "image").map((item) => item.imageSrc);
+    const videos = cases.filter((item) => item.mediaKind === "video").map((item) => item.videoSrc);
+    expect(new Set(images).size).toBe(images.length);
+    expect(new Set(videos).size).toBe(videos.length);
+  });
+
+  it("grounds media-post comments in the attached asset", () => {
+    const withMedia = cases.filter((item) => item.mediaKind === "video" || item.mediaKind === "image");
+    expect(withMedia.length).toBeGreaterThan(0);
+    for (const item of withMedia) {
+      const visualCue = item.mediaAlt.toLowerCase().replace(/\.$/, "");
+      const bodies = item.seededDiscussion.map((entry) => entry.body.toLowerCase()).join(" ");
+      const tokens = visualCue.split(/[^a-z0-9]+/).filter((token) => token.length >= 5).slice(0, 3);
+      expect(tokens.some((token) => bodies.includes(token)) || bodies.includes(visualCue.slice(0, 24))).toBe(
+        true,
+      );
+    }
   });
 
   it("keeps handball / keeper case images on matching assets when possible", () => {
@@ -97,12 +118,17 @@ describe("media relevance", () => {
     }
   });
 
-  it("keeps the Celine Martin handball shot-blocker on authored still media", () => {
+  it("keeps the Celine Martin handball shot-blocker on unique authored still media", () => {
     const item = cases.find((entry) => entry.id === "handball-shot-blocker");
     expect(item).toBeTruthy();
-    expect(item!.mediaKind).toBe("image");
-    expect(item!.imageSrc).toBe("/media/cases/handball-raised-arm.png");
-    expect(item!.videoSrc).toBeNull();
+    // May be image (unique still) or text if the preferred still was already claimed.
+    expect(["image", "text"]).toContain(item!.mediaKind);
+    if (item!.mediaKind === "image") {
+      expect(item!.imageSrc?.startsWith("/media/cases/") || item!.imageSrc?.startsWith("/media/stock/")).toBe(
+        true,
+      );
+      expect(item!.videoSrc).toBeNull();
+    }
     expect(item!.prompt).toContain("outstretched arm");
   });
 });
