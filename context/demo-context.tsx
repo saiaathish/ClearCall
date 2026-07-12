@@ -28,6 +28,9 @@ import {
   type DemoState,
 } from "@/lib/storage";
 import { persistReputationScore } from "@/lib/reputation";
+import type { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 interface DemoContextValue extends DemoState {
   hydrated: boolean;
@@ -35,7 +38,7 @@ interface DemoContextValue extends DemoState {
   submitAnswer: (answer: UserAnswer) => void;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
-  publishDraft: (draft: PublishedCaseDraft) => void;
+  publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
   reportCase: (input: {
     caseId: string;
     reason: ReportReason;
@@ -174,6 +177,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     },
     [requireAuth, supabase, user],
   );
+
+  const update = setState;
+
+  const completeOnboarding = useCallback(() => {
+    setState((current) => ({ ...current, onboardingComplete: true }));
+    if (user) void completeOnboardingRemote(supabase, user.id);
+  }, [supabase, user]);
 
   const reportCase = useCallback(
     (input: { caseId: string; reason: ReportReason; details?: string }) => {

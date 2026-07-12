@@ -24,6 +24,9 @@ import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
 import { StatusBadge } from "@/components/status-badge";
 import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
+import { createClient } from "@/lib/supabase/client";
+import { fetchLiveDistribution, withLiveOverride } from "@/lib/voting";
+import { toggleHelpfulVote } from "@/lib/reputation";
 
 function optionLabel(scenario: OfficiatingCase, id: string) {
   return scenario.answerOptions.find((option) => option.id === id)?.shortLabel ?? id;

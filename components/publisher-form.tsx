@@ -520,20 +520,6 @@ export function PublisherForm() {
     if (submissionAttempted) setErrors(validateForm(next, null, ""));
   }
 
-  function selectMediaKind(mediaKind: MediaKind) {
-    clearSelectedFile(false);
-    const next = {
-      ...form,
-      mediaKind,
-      clipEndTime: mediaKind === "video" ? form.clipEndTime : "",
-      posterFrameLabel: mediaKind === "video"
-        ? form.posterFrameLabel || "Poster frame selected during expert review"
-        : "",
-    };
-    setForm(next);
-    if (submissionAttempted) setErrors(validateForm(next, null, null, ""));
-  }
-
   function updateAnswer(uid: string, label: string) {
     updateField(
       "answers",
