@@ -194,10 +194,11 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
   const photoQueue = [...PHOTO_ASSETS];
   const usedVideos = new Map<string, number>();
   let videoCursor = 0;
-  const maxUsesPerClip = 4;
+  // Fewer unique match clips → allow more reuse so the mix stays clip-heavy.
+  const maxUsesPerClip = 5;
   const maxVideos = Math.min(
     VIDEO_ASSETS.length * maxUsesPerClip,
-    Math.max(24, Math.floor(catalog.length * 0.55)),
+    Math.max(24, Math.floor(catalog.length * 0.6)),
   );
 
   const takeVideo = (scenario: OfficiatingCase, requireMatch: boolean): OfficiatingCase | null => {

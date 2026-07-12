@@ -723,6 +723,12 @@ select:focus {
     border-color 140ms ease;
 }
 
+/* Keep video posts fully laid out so muted autoplay + IO stay reliable. */
+.feed-post[data-media="video"] {
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
 .feed-post:hover {
   transform: translateY(-7px);
   box-shadow: 9px 14px 0 rgb(16 23 19 / 0.24);
@@ -1195,23 +1201,96 @@ select:focus {
   border-color: var(--line);
 }
 
+.confidence-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 14px 16px;
+  border: 2px solid var(--line);
+  background: var(--paper-deep);
+}
+
 .confidence-value {
-  color: var(--green);
+  display: inline-flex;
+  min-width: 3.4rem;
+  justify-content: center;
+  border: 2px solid var(--ink);
+  background: var(--yellow);
+  color: var(--ink);
   font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0.45rem 0.55rem;
 }
 
 .range-input {
-  accent-color: var(--green);
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 28px;
+  margin: 2px 0 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  accent-color: var(--yellow);
+}
+
+.range-input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
 }
 
 .range-input::-webkit-slider-runnable-track {
-  background: linear-gradient(90deg, var(--green) var(--range-progress, 50%), var(--line) var(--range-progress, 50%));
+  height: 10px;
+  border: 2px solid var(--ink);
+  background: linear-gradient(
+    90deg,
+    var(--green) 0 var(--range-progress, 0%),
+    var(--surface) var(--range-progress, 0%) 100%
+  );
 }
 
 .range-input::-webkit-slider-thumb {
-  border-color: var(--ink);
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  appearance: none;
+  border: 2px solid var(--ink);
   background: var(--yellow);
-  box-shadow: 0 0 0 1px var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.range-input::-moz-range-track {
+  height: 10px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+}
+
+.range-input::-moz-range-progress {
+  height: 10px;
+  border: 2px solid var(--ink);
+  background: var(--green);
+}
+
+.range-input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--yellow);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.range-labels {
+  grid-column: 1 / -1;
+  margin-top: -2px;
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .result-panel {

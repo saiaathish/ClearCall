@@ -84,14 +84,18 @@ export const PHOTO_ASSETS: readonly MediaAsset[] = [
   { src: "/media/cases/goalkeeper-tall.png", width: 742, height: 754, alt: "Tall still of a goalkeeper handling near the area", tags: ["keeper", "goal", "handball"] },
 ] as const;
 
-/** Mixkit Free License soccer clips — posters extracted from the same footage. */
+/**
+ * Mixkit Free License match-play soccer clips only — no freestyle, ladder
+ * drills, parking-garage juggling, or empty-stadium B-roll. Posters are
+ * extracted from the same footage.
+ */
 export const VIDEO_ASSETS: readonly VideoAsset[] = [
   {
     videoSrc: "/media/demo/clip-01.mp4",
     posterSrc: "/media/demo/poster-01.jpg",
     width: 1280,
     height: 720,
-    alt: "One-on-one dribble and challenge on the pitch",
+    alt: "One-on-one dribble and challenge during a match",
     tags: ["challenge", "duel", "tackle", "breakaway"],
   },
   {
@@ -99,7 +103,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     posterSrc: "/media/demo/poster-02.jpg",
     width: 1280,
     height: 720,
-    alt: "Semi-pro match play at pitch level",
+    alt: "Semi-pro match play filmed at pitch level",
     tags: ["match", "open-play", "advantage", "duel"],
   },
   {
@@ -115,7 +119,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     posterSrc: "/media/demo/poster-04.jpg",
     width: 1280,
     height: 720,
-    alt: "Team move finishing with a goal",
+    alt: "Team move finishing with a goal in open play",
     tags: ["goal", "attack", "advantage", "open-play"],
   },
   {
@@ -139,7 +143,7 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     posterSrc: "/media/demo/poster-07.jpg",
     width: 1280,
     height: 720,
-    alt: "Aerial view of a soccer match on grass",
+    alt: "Aerial view of a live soccer match on grass",
     tags: ["offside", "match", "open-play", "attack"],
   },
   {
@@ -147,104 +151,56 @@ export const VIDEO_ASSETS: readonly VideoAsset[] = [
     posterSrc: "/media/demo/poster-08.jpg",
     width: 1280,
     height: 720,
-    alt: "Striker shoots and the goalkeeper stops the shot",
-    tags: ["keeper", "goal", "dogso", "breakaway"],
+    alt: "Two teams contesting the ball in open match play",
+    tags: ["match", "duel", "open-play", "challenge"],
   },
   {
     videoSrc: "/media/demo/clip-09.mp4",
     posterSrc: "/media/demo/poster-09.jpg",
     width: 1280,
     height: 720,
-    alt: "Two teams battling through open match play",
-    tags: ["match", "duel", "open-play", "challenge"],
+    alt: "Semi-professional night match on synthetic turf",
+    tags: ["match", "open-play", "advantage", "attack"],
   },
   {
     videoSrc: "/media/demo/clip-10.mp4",
     posterSrc: "/media/demo/poster-10.jpg",
     width: 1280,
     height: 720,
-    alt: "Semi-professional match action at night",
-    tags: ["match", "open-play", "advantage", "attack"],
+    alt: "Player setting the ball and striking a penalty",
+    tags: ["set-piece", "goal", "simulation", "challenge"],
   },
   {
     videoSrc: "/media/demo/clip-11.mp4",
     posterSrc: "/media/demo/poster-11.jpg",
     width: 1280,
     height: 720,
-    alt: "Player setting the ball and striking a penalty",
-    tags: ["set-piece", "goal", "simulation", "challenge"],
+    alt: "Goalkeeper set in the goal during live play",
+    tags: ["keeper", "goal", "dogso", "handball"],
   },
   {
     videoSrc: "/media/demo/clip-12.mp4",
     posterSrc: "/media/demo/poster-12.jpg",
     width: 1280,
     height: 720,
-    alt: "Penalty kick saved by the goalkeeper",
-    tags: ["keeper", "set-piece", "goal", "dogso"],
+    alt: "Attacker controlling the ball and shooting on goal",
+    tags: ["attack", "goal", "breakaway", "open-play"],
   },
   {
     videoSrc: "/media/demo/clip-13.mp4",
     posterSrc: "/media/demo/poster-13.jpg",
     width: 1280,
     height: 720,
-    alt: "Free-kick strike toward goal",
-    tags: ["set-piece", "goal", "attack", "advantage"],
+    alt: "Throw-in restart during a semi-pro match",
+    tags: ["set-piece", "match", "open-play", "advantage"],
   },
   {
     videoSrc: "/media/demo/clip-14.mp4",
     posterSrc: "/media/demo/poster-14.jpg",
     width: 1280,
     height: 720,
-    alt: "Players practicing crosses and shots",
-    tags: ["attack", "goal", "open-play", "advantage"],
-  },
-  {
-    videoSrc: "/media/demo/clip-15.mp4",
-    posterSrc: "/media/demo/poster-15.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Street soccer duel on a hard court",
-    tags: ["duel", "challenge", "simulation", "open-play"],
-  },
-  {
-    videoSrc: "/media/demo/clip-16.mp4",
-    posterSrc: "/media/demo/poster-16.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Skillful one-touch passing in tight space",
-    tags: ["open-play", "advantage", "attack", "match"],
-  },
-  {
-    videoSrc: "/media/demo/clip-17.mp4",
-    posterSrc: "/media/demo/poster-17.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Athletic jump challenge during training",
-    tags: ["challenge", "duel", "tackle", "simulation"],
-  },
-  {
-    videoSrc: "/media/demo/clip-18.mp4",
-    posterSrc: "/media/demo/poster-18.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Aerial sweep over a soccer stadium",
-    tags: ["match", "offside", "open-play", "goal"],
-  },
-  {
-    videoSrc: "/media/demo/clip-19.mp4",
-    posterSrc: "/media/demo/poster-19.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Close control and ball juggling on the pitch",
-    tags: ["ball", "open-play", "attack", "match"],
-  },
-  {
-    videoSrc: "/media/demo/clip-20.mp4",
-    posterSrc: "/media/demo/poster-20.jpg",
-    width: 1280,
-    height: 720,
-    alt: "Freestyle soccer skills in motion",
-    tags: ["ball", "open-play", "attack", "match"],
+    alt: "Player places the ball and drives a shot at goal",
+    tags: ["set-piece", "goal", "attack", "challenge"],
   },
 ] as const;
 

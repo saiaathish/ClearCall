@@ -203,9 +203,23 @@ const TIME_LABELS = [
  * Short-form discussion bodies (protocol: Reddit/Discord mode).
  * Vary structure per comment. Contractions. Fragments ok. No em-dashes.
  * Do not stitch the same opener+middle+closer skeleton every time.
+ * Light emoji only — roughly 1 in 3 thread replies (and sometimes the lead ref), never stacks, never on pinned educator takes.
  */
 function pick<T>(list: readonly T[], random: () => number): T {
   return list[Math.floor(random() * list.length)]!;
+}
+
+function maybeSpiceBody(body: string, agrees: boolean, random: () => number): string {
+  // Keep most replies clean; a minority get one small react.
+  if (random() > 0.34) return body;
+  const spice = agrees
+    ? pick(["👍", "👀", "✅", "🟨"], random)
+    : pick(["🤔", "👀", "😅", "🟥"], random);
+  // Prefer trailing react; occasional lead-in for short takes.
+  if (body.length < 70 && random() > 0.55) {
+    return `${spice} ${body}`;
+  }
+  return `${body} ${spice}`;
 }
 
 function composeThreadBody(input: {
@@ -275,14 +289,15 @@ function composeThreadBody(input: {
   ];
 
   for (let attempt = 0; attempt < 28; attempt += 1) {
-    const body = pick(builds, random)()
+    const plain = pick(builds, random)()
       .replaceAll("—", ",")
       .replaceAll(/\s+/g, " ")
       .trim();
-    if (!usedBodies.has(body)) {
-      usedBodies.add(body);
-      return body;
-    }
+    if (usedBodies.has(plain)) continue;
+    usedBodies.add(plain);
+    const body = maybeSpiceBody(plain, agrees, random);
+    usedBodies.add(body);
+    return body;
   }
 
   const fallback = `On “${shortTitle}” (${caseId}/${slot}): ${agrees ? "same call" : "different call"}. ${factor}.`;
@@ -346,8 +361,14 @@ export function makeDiscussion(
 
   const titleHint = context.title ? ` Looking at “${context.title}”.` : "";
   const pinnedEducator = `${educatorBody.trim()}${titleHint}`.replaceAll("—", ",");
-  const pinnedReferee = `${refereeBody.trim()}${titleHint ? ` Same clip, “${context.title}”.` : ""}`.replaceAll("—", ",");
+  // Educators stay clean; match-day refs get a light react sometimes.
+  const refereePlain = `${refereeBody.trim()}${titleHint ? ` Same clip, “${context.title}”.` : ""}`.replaceAll(
+    "—",
+    ",",
+  );
+  const pinnedReferee = maybeSpiceBody(refereePlain, true, random);
   usedBodies.add(pinnedEducator);
+  usedBodies.add(refereePlain);
   usedBodies.add(pinnedReferee);
 
   return assignedPeople.map((person, slot) => {
