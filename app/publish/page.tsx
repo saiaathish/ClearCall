@@ -12,12 +12,11 @@ export default function PublishPage() {
     <div className="page-shell">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Verified creator flow · frontend prototype</p>
+          <p className="eyebrow">Creator flow</p>
           <h1 className="page-title">Publish a case</h1>
           <p className="page-description">
-            Pair a clear incident description or rights-documented media with a decision, rule path,
-            and structured factors. This demo stores the draft in your browser; it does not publish or verify it.
-            Add the incident, the decision question, and answer choices. Stored in this browser only.
+            Drop in a clip or describe the incident, add answer choices, and submit. Experts fill in
+            the rest during review.
           </p>
         </div>
         <span className="status-badge status-badge--pending">Local demo only</span>
