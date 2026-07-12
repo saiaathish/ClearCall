@@ -6,6 +6,7 @@ import {
   appendFeedBatch,
   pickRandomMedia,
   shuffleCases,
+  shuffleCasesForMix,
   upcomingMediaSrcs,
   withLibraryBackdrop,
   type FeedItem,
@@ -92,6 +93,15 @@ describe("feed stream", () => {
   it("picks media from the library", () => {
     const pick = pickRandomMedia(() => 0.99);
     expect(mediaLibrary.some((item) => item.id === pick.id)).toBe(true);
+  });
+  it("shuffles the mix so video clips surface early", () => {
+    const mixed = shuffleCasesForMix(cases, sequentialRandom([0.2, 0.8, 0.1, 0.9, 0.4, 0.6, 0.3]));
+    expect(mixed).toHaveLength(cases.length);
+    const firstEight = mixed.slice(0, 8);
+    const videoCount = firstEight.filter(
+      (item) => item.mediaKind === "video" || Boolean(item.videoSrc),
+    ).length;
+    expect(videoCount).toBeGreaterThanOrEqual(3);
   });
 });
 

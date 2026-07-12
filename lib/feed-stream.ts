@@ -38,6 +38,51 @@ export function shuffleCases(
   return next;
 }
 
+function isVideoCase(scenario: OfficiatingCase): boolean {
+  return scenario.mediaKind === "video" || Boolean(scenario.videoSrc);
+}
+
+/**
+ * Shuffle so clips surface early and often in the mix — video, other, video…
+ * instead of long text/image streaks from a pure random deck.
+ */
+export function shuffleCasesForMix(
+  pool: readonly OfficiatingCase[],
+  random: RandomFn = defaultRandom,
+): OfficiatingCase[] {
+  const videos = shuffleCases(
+    pool.filter((scenario) => isVideoCase(scenario)),
+    random,
+  );
+  const rest = shuffleCases(
+    pool.filter((scenario) => !isVideoCase(scenario)),
+    random,
+  );
+  if (videos.length === 0 || rest.length === 0) {
+    return videos.length > 0 ? videos : rest;
+  }
+
+  const next: OfficiatingCase[] = [];
+  let videoIndex = 0;
+  let restIndex = 0;
+  while (videoIndex < videos.length || restIndex < rest.length) {
+    if (videoIndex < videos.length) {
+      next.push(videos[videoIndex]!);
+      videoIndex += 1;
+      // Occasionally stack a second clip so the feed feels clip-heavy.
+      if (videoIndex < videos.length && random() < 0.4) {
+        next.push(videos[videoIndex]!);
+        videoIndex += 1;
+      }
+    }
+    if (restIndex < rest.length) {
+      next.push(rest[restIndex]!);
+      restIndex += 1;
+    }
+  }
+  return next;
+}
+
 export function pickRandomMedia(
   random: RandomFn = defaultRandom,
   excludeSrc?: string | null,
@@ -136,7 +181,7 @@ export function appendFeedBatch(
     appearanceCounts.set(item.scenario.id, (appearanceCounts.get(item.scenario.id) ?? 0) + 1);
   }
 
-  let deck = shuffleCases(pool, random);
+  let deck = shuffleCasesForMix(pool, random);
   let deckIndex = 0;
 
   const draw = (): OfficiatingCase | null => {
@@ -144,7 +189,7 @@ export function appendFeedBatch(
     for (let attempt = 0; attempt < pool.length * 2; attempt += 1) {
       if (deckIndex >= deck.length) {
         cycle += 1;
-        deck = shuffleCases(pool, random);
+        deck = shuffleCasesForMix(pool, random);
         deckIndex = 0;
       }
       const candidate = deck[deckIndex]!;

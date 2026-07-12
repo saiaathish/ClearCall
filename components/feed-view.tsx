@@ -76,7 +76,7 @@ export function FeedView() {
 
   const appendNext = useCallback(() => {
     const pool = filteredCasesRef.current;
-    if (pool.length === 0) return;
+    if (pool.length === 0) return false;
     setFeedItems((current) => {
       const expanded = appendFeedBatch(pool, current, { batchSize: FEED_BATCH_SIZE });
       getMediaPreloadCache().preload(
@@ -88,78 +88,98 @@ export function FeedView() {
       );
       return expanded;
     });
+    return true;
   }, []);
 
   // Infinite scroll: IntersectionObserver + scroll/resize fallback.
-  // Must re-bind after hydration — the loading skeleton has no sentinel node.
+  // After a hard refresh the skeleton has no sentinel — wait until it mounts,
+  // then keep loading while the loader stays near the viewport. IO alone will
+  // not re-fire if the sentinel never left the rootMargin after an append.
   useEffect(() => {
-    if (!hydrated) return;
-    const sentinel = sentinelRef.current;
-    if (!sentinel || filteredCases.length === 0) return;
+    if (!hydrated || filteredCases.length === 0) return;
 
     let cancelled = false;
     let settleTimer: number | null = null;
+    let attachTimer: number | null = null;
+    let observer: IntersectionObserver | null = null;
+    let attachTries = 0;
 
-    const nearBottom = () => {
+    const nearBottom = (sentinel: HTMLElement) => {
       const rect = sentinel.getBoundingClientRect();
-      return rect.top <= window.innerHeight + 1600;
+      return rect.top <= window.innerHeight + 2400;
     };
 
-    const pageNeedsFill = () =>
-      document.documentElement.scrollHeight < window.innerHeight * 2.4;
-
-    const finishLoad = () => {
+    const finishLoad = (sentinel: HTMLElement) => {
       if (settleTimer != null) window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
         if (cancelled) return;
         loadingRef.current = false;
         setIsAppending(false);
-        // Fill short first paints without runaway appending once the page scrolls.
-        if (pageNeedsFill() && nearBottom()) {
+        if (nearBottom(sentinel)) {
           window.requestAnimationFrame(() => {
-            if (!cancelled) loadMore();
+            if (!cancelled) loadMore(sentinel);
           });
         }
-      }, 100);
+      }, 60);
     };
 
-    const loadMore = () => {
+    const loadMore = (sentinel: HTMLElement) => {
       if (cancelled || loadingRef.current) return;
-      if (!nearBottom()) return;
+      if (!nearBottom(sentinel)) return;
       loadingRef.current = true;
       setIsAppending(true);
-      appendNext();
-      finishLoad();
+      if (!appendNext()) {
+        loadingRef.current = false;
+        setIsAppending(false);
+        return;
+      }
+      finishLoad(sentinel);
     };
-
-    const observer =
-      typeof IntersectionObserver !== "undefined"
-        ? new IntersectionObserver(
-            (entries) => {
-              if (entries.some((entry) => entry.isIntersecting)) loadMore();
-            },
-            { root: null, rootMargin: "1600px 0px", threshold: 0 },
-          )
-        : null;
-
-    observer?.observe(sentinel);
 
     const onScrollOrResize = () => {
-      if (nearBottom()) loadMore();
+      const sentinel = sentinelRef.current;
+      if (sentinel) loadMore(sentinel);
     };
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
 
-    window.requestAnimationFrame(() => {
-      if (!cancelled) loadMore();
-    });
+    const attach = () => {
+      if (cancelled) return;
+      const sentinel = sentinelRef.current;
+      if (!sentinel) {
+        if (attachTries >= 40) return;
+        attachTries += 1;
+        attachTimer = window.setTimeout(attach, 50);
+        return;
+      }
+
+      observer =
+        typeof IntersectionObserver !== "undefined"
+          ? new IntersectionObserver(
+              (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) loadMore(sentinel);
+              },
+              { root: null, rootMargin: "2400px 0px", threshold: 0 },
+            )
+          : null;
+
+      observer?.observe(sentinel);
+      window.addEventListener("scroll", onScrollOrResize, { passive: true });
+      document.addEventListener("scroll", onScrollOrResize, { passive: true, capture: true });
+      window.addEventListener("resize", onScrollOrResize);
+      window.requestAnimationFrame(() => {
+        if (!cancelled) loadMore(sentinel);
+      });
+    };
+
+    attach();
 
     return () => {
       cancelled = true;
       loadingRef.current = false;
       if (settleTimer != null) window.clearTimeout(settleTimer);
+      if (attachTimer != null) window.clearTimeout(attachTimer);
       observer?.disconnect();
       window.removeEventListener("scroll", onScrollOrResize);
+      document.removeEventListener("scroll", onScrollOrResize, true);
       window.removeEventListener("resize", onScrollOrResize);
     };
   }, [appendNext, filteredCases.length, hydrated, poolKey]);
@@ -196,6 +216,8 @@ export function FeedView() {
           <div className="loading-skeleton" />
           <div className="loading-skeleton" />
         </div>
+        {/* Keep a sentinel node so the scroll effect can attach immediately after hydrate. */}
+        <div className="feed-loader" ref={sentinelRef} aria-hidden="true" />
       </div>
     );
   }

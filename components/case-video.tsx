@@ -39,22 +39,26 @@ export function CaseVideo({
     if (!video || typeof IntersectionObserver === "undefined") return;
     video.muted = true;
 
+    const tryPlay = () => {
+      void video.play().catch(() => {
+        /* Autoplay can be blocked; poster still shows. */
+      });
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.35);
-        if (visible) {
-          void video.play().catch(() => {
-            /* Autoplay can be blocked; poster still shows. */
-          });
-        } else {
-          video.pause();
-        }
+        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.2);
+        if (visible) tryPlay();
+        else video.pause();
       },
-      { threshold: [0, 0.35, 0.7], rootMargin: "80px 0px" },
+      { threshold: [0, 0.2, 0.5, 0.75], rootMargin: "120px 0px" },
     );
     observer.observe(video);
+    video.addEventListener("loadeddata", tryPlay);
+    tryPlay();
     return () => {
       observer.disconnect();
+      video.removeEventListener("loadeddata", tryPlay);
       video.pause();
     };
   }, [compact, hasVideo, scenario.videoSrc]);
