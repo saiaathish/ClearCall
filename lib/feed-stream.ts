@@ -2,13 +2,13 @@ import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
 import { scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
 import type { OfficiatingCase } from "@/lib/types";
 
-export const FEED_BATCH_SIZE = 8;
+export const FEED_BATCH_SIZE = 10;
 /** First paint batch — large enough that the stream feels full immediately. */
-export const FEED_SEED_SIZE = 12;
+export const FEED_SEED_SIZE = 16;
 /** How many media URLs to warm ahead of the last visible item. */
-export const FEED_PRELOAD_AHEAD = 6;
+export const FEED_PRELOAD_AHEAD = 8;
 /** Prefer not to resurface the same case within this many recent slots. */
-export const FEED_RECENT_WINDOW = 4;
+export const FEED_RECENT_WINDOW = 5;
 
 export interface FeedItem {
   /** Stable React key for this appearance (case can repeat across cycles). */
@@ -90,13 +90,17 @@ export function withLibraryBackdrop(
   if (hasAuthoredImage) return scenario;
 
   const pick = pickRandomMedia(random, scenario.imageSrc, tagsForCategory(scenario.category));
+  const mediaAlt = pick.alt;
   return {
     ...scenario,
     mediaKind: "image",
     imageSrc: pick.src,
     mediaWidth: pick.width,
     mediaHeight: pick.height,
-    mediaAlt: `${scenario.mediaAlt} · ambient: ${pick.alt}`,
+    mediaAlt,
+    description: scenario.description.toLowerCase().includes(mediaAlt.toLowerCase())
+      ? scenario.description
+      : `${scenario.description.replace(/\s·\sambient:.*$/i, "").trim()} The attached still shows ${mediaAlt.charAt(0).toLowerCase()}${mediaAlt.slice(1)}.`,
   };
 }
 

@@ -30,8 +30,10 @@ function seedFeed(pool: readonly OfficiatingCase[]): FeedItem[] {
   return appendFeedBatch(pool, [], { batchSize: FEED_SEED_SIZE });
 }
 
-function poolKeyFor(category: CaseCategory | "all", pool: readonly OfficiatingCase[]): string {
-  return `${category}::${pool.length}::${pool[0]?.id ?? "empty"}::${pool.at(-1)?.id ?? "empty"}`;
+/** Stable identity for when the feed should reshuffle — not ranking order. */
+function poolIdentityFor(category: CaseCategory | "all", removedIds: ReadonlySet<string>): string {
+  const removed = [...removedIds].sort().join(",");
+  return `${category}::${removed}`;
 }
 
 export function FeedView() {
@@ -57,16 +59,16 @@ export function FeedView() {
     return [...ranked, ...available.filter((scenario) => !rankedIds.has(scenario.id))];
   }, [answerList, removedIds]);
   const filteredCases = useMemo(
-    () => activeCategory === "all"
-      ? orderedCases
-      : orderedCases.filter((scenario) => scenario.category === activeCategory),
+    () =>
+      activeCategory === "all"
+        ? orderedCases
+        : orderedCases.filter((scenario) => scenario.category === activeCategory),
     [activeCategory, orderedCases],
   );
-  const poolKey = poolKeyFor(activeCategory, filteredCases);
+  const poolKey = poolIdentityFor(activeCategory, removedIds);
   filteredCasesRef.current = filteredCases;
 
-  // Reset the mix when the foul filter or available catalog changes.
-  // (React-recommended "adjust state while rendering" pattern — not an effect.)
+  // Reset only when foul filter or removed-case set changes — not when ranking reorders.
   if (hydrated && boundPoolKey !== poolKey) {
     setBoundPoolKey(poolKey);
     setFeedItems(seedFeed(filteredCases));
@@ -88,45 +90,79 @@ export function FeedView() {
     });
   }, []);
 
-  // Keep filling while the bottom sentinel is near the viewport.
-  // Re-observe after each batch so IntersectionObserver re-fires (it often
-  // will not when the sentinel stays on-screen after a load).
+  // Infinite scroll: IntersectionObserver + scroll/resize fallback.
+  // Must re-bind after hydration — the loading skeleton has no sentinel node.
   useEffect(() => {
+    if (!hydrated) return;
     const sentinel = sentinelRef.current;
-    if (!sentinel || filteredCases.length === 0 || typeof IntersectionObserver === "undefined") return;
+    if (!sentinel || filteredCases.length === 0) return;
 
     let cancelled = false;
+    let settleTimer: number | null = null;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (cancelled || loadingRef.current) return;
-        if (!entries.some((entry) => entry.isIntersecting)) return;
+    const nearBottom = () => {
+      const rect = sentinel.getBoundingClientRect();
+      return rect.top <= window.innerHeight + 1600;
+    };
 
-        loadingRef.current = true;
-        setIsAppending(true);
-        appendNext();
+    const pageNeedsFill = () =>
+      document.documentElement.scrollHeight < window.innerHeight * 2.4;
 
-        window.requestAnimationFrame(() => {
+    const finishLoad = () => {
+      if (settleTimer != null) window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        if (cancelled) return;
+        loadingRef.current = false;
+        setIsAppending(false);
+        // Fill short first paints without runaway appending once the page scrolls.
+        if (pageNeedsFill() && nearBottom()) {
           window.requestAnimationFrame(() => {
-            if (cancelled) return;
-            loadingRef.current = false;
-            setIsAppending(false);
-            // Force a fresh intersection check after layout.
-            observer.unobserve(sentinel);
-            observer.observe(sentinel);
+            if (!cancelled) loadMore();
           });
-        });
-      },
-      { rootMargin: "1400px 0px", threshold: 0 },
-    );
+        }
+      }, 100);
+    };
 
-    observer.observe(sentinel);
+    const loadMore = () => {
+      if (cancelled || loadingRef.current) return;
+      if (!nearBottom()) return;
+      loadingRef.current = true;
+      setIsAppending(true);
+      appendNext();
+      finishLoad();
+    };
+
+    const observer =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              if (entries.some((entry) => entry.isIntersecting)) loadMore();
+            },
+            { root: null, rootMargin: "1600px 0px", threshold: 0 },
+          )
+        : null;
+
+    observer?.observe(sentinel);
+
+    const onScrollOrResize = () => {
+      if (nearBottom()) loadMore();
+    };
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    window.requestAnimationFrame(() => {
+      if (!cancelled) loadMore();
+    });
+
     return () => {
       cancelled = true;
       loadingRef.current = false;
-      observer.disconnect();
+      if (settleTimer != null) window.clearTimeout(settleTimer);
+      observer?.disconnect();
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
     };
-  }, [appendNext, filteredCases.length, poolKey]);
+  }, [appendNext, filteredCases.length, hydrated, poolKey]);
 
   useEffect(() => {
     if (feedItems.length === 0) return;
@@ -180,14 +216,20 @@ export function FeedView() {
               value={activeCategory}
             >
               <option value="all">All incidents</option>
-              {categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}
+              {categoryOptions.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </select>
           </label>
         </div>
       </header>
 
       <Link className="feed-composer" href="/publish">
-        <span className="profile-avatar" aria-hidden="true">JL</span>
+        <span className="profile-avatar" aria-hidden="true">
+          JL
+        </span>
         <span>
           <strong>Publish a case</strong>
         </span>
@@ -217,14 +259,22 @@ export function FeedView() {
       )}
 
       <div className="feed-loader" ref={sentinelRef} aria-hidden={filteredCases.length === 0}>
-        {filteredCases.length > 0 && isAppending ? (
+        {filteredCases.length > 0 ? (
           <div className="feed-loader__status" aria-live="polite">
-            <LoaderCircle className="spin" aria-hidden="true" size={17} />
-            <span>Loading…</span>
+            {isAppending ? (
+              <>
+                <LoaderCircle className="spin" aria-hidden="true" size={17} />
+                <span>Loading more cases…</span>
+              </>
+            ) : (
+              <span>Scroll for more cases</span>
+            )}
           </div>
         ) : null}
       </div>
-      <p className="sr-only" aria-live="polite">{announcement}</p>
+      <p className="sr-only" aria-live="polite">
+        {announcement}
+      </p>
     </div>
   );
 }
