@@ -137,9 +137,15 @@ export function SavedView() {
   const [status, setStatus] = useState<"" | ScenarioStatus>("");
 
   const savedCases = useMemo(() => {
-    const savedIds = new Set(savedCaseIds);
     const removedIds = new Set(removedCaseIds);
-    return cases.filter((item) => savedIds.has(item.id) && !removedIds.has(item.id));
+    const byId = new Map(cases.map((item) => [item.id, item]));
+    // Resolve in save order (newest first) so a just-saved case is visible
+    // at the top of the Saved tab instead of catalog order.
+    return [...savedCaseIds]
+      .reverse()
+      .filter((id) => !removedIds.has(id))
+      .map((id) => byId.get(id))
+      .filter((item): item is (typeof cases)[number] => Boolean(item));
   }, [removedCaseIds, savedCaseIds]);
 
   const filteredCases = useMemo(() => {

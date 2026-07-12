@@ -20,7 +20,12 @@ export function SaveButton({ caseId, showLabel = false }: { caseId: string; show
   const saved = savedCaseIds.includes(caseId);
 
   const handleSave = () => {
+    const wasSaved = saved;
     const didSave = toggleSaved(caseId);
+    if (didSave === wasSaved) {
+      // Auth gate blocked the toggle (guest redirected to /auth).
+      return;
+    }
     showToast(didSave ? "Case saved for later review." : "Case removed from saved.", "success");
   };
 

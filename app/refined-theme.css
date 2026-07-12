@@ -327,8 +327,10 @@ dd {
   color: var(--ink);
 }
 
-.auth-shell {
-  max-width: 440px;
+/* Must beat `.page-shell { max-width: var(--max) }` (1460px). */
+.page-shell.auth-shell {
+  width: min(100% - 36px, 420px);
+  max-width: 420px;
 }
 
 .auth-tabs {
@@ -1921,6 +1923,11 @@ select:focus {
   .feed-page {
     width: min(100% - 24px, var(--max));
     padding-top: 24px;
+  }
+
+  .page-shell.auth-shell {
+    width: min(100% - 24px, 420px);
+    max-width: 420px;
   }
 
   .feed-page {

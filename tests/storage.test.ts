@@ -1,12 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   addCommentRemote,
+  clearDemoState,
   completeOnboardingRemote,
   fetchDemoState,
   initialDemoState,
   publishDraftRemote,
+  readDemoState,
   submitAnswerRemote,
   toggleSavedRemote,
+  writeDemoState,
 } from "@/lib/storage";
 import type { DiscussionResponse, PublishedCaseDraft, UserAnswer } from "@/lib/types";
 
@@ -138,6 +141,34 @@ describe("demo storage (Supabase-backed)", () => {
     expect(initialDemoState.savedCaseIds.length).toBeGreaterThan(0);
     expect(initialDemoState.publishedDrafts).toEqual([]);
     expect(initialDemoState.onboardingComplete).toBe(false);
+  });
+
+  it("persists and restores demo state through localStorage", () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal("window", {
+      localStorage: {
+        getItem: (key: string) => store.get(key) ?? null,
+        setItem: (key: string, value: string) => {
+          store.set(key, value);
+        },
+        removeItem: (key: string) => {
+          store.delete(key);
+        },
+      },
+    });
+
+    const next = {
+      ...initialDemoState,
+      savedCaseIds: ["handball-raised-arm", "advantage-quick-breakdown"],
+    };
+    expect(writeDemoState(next)).toBe(true);
+    expect(readDemoState().savedCaseIds).toEqual([
+      "handball-raised-arm",
+      "advantage-quick-breakdown",
+    ]);
+    clearDemoState();
+    expect(readDemoState().savedCaseIds).toEqual(initialDemoState.savedCaseIds);
+    vi.unstubAllGlobals();
   });
 
   it("fetchDemoState reshapes rows from every table into DemoState", async () => {
