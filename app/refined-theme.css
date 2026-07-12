@@ -127,8 +127,7 @@ dd {
   flex: 0 0 auto;
   width: auto;
   height: 44px;
-  border: 2px solid var(--ink);
-  background: #000;
+  background: transparent;
   object-fit: contain;
 }
 
@@ -142,19 +141,6 @@ dd {
   display: none;
   width: 44px;
   height: 44px;
-}
-
-.brand-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  line-height: 1.05;
-}
-
-.brand-copy > span {
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
 }
 
 .desktop-nav {
@@ -1825,7 +1811,6 @@ select:focus {
   }
 
   .desktop-sidebar .brand-logo--full,
-  .desktop-sidebar .brand-copy,
   .desktop-nav .nav-link span,
   .profile-control > span:last-child,
   .about-link span {
@@ -2032,10 +2017,6 @@ select:focus {
 @media (max-width: 600px) {
   .brand {
     padding-left: 0;
-  }
-
-  .brand-copy {
-    display: none;
   }
 
   .page-shell,

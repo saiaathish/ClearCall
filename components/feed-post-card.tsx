@@ -52,14 +52,17 @@ export function FeedPostCard({
       aria-labelledby={titleId}
     >
       <header className="feed-post__header">
-        <PublisherLink publisher={scenario.publisher}>
+        <div className="publisher-row">
+          <PublisherLink publisher={scenario.publisher} />
           <div className="publisher">
-            <div className="publisher__name">{scenario.publisher.displayName}</div>
+            <PublisherNameLink className="publisher__name" publisher={scenario.publisher}>
+              {scenario.publisher.displayName}
+            </PublisherNameLink>
             <div className="publisher__meta">
               {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
             </div>
           </div>
-        </PublisherLink>
+        </div>
         <div className="feed-post__actions" aria-label={`Actions for ${scenario.title}`}>
           <SaveButton caseId={scenario.id} />
           <ShareButton caseId={scenario.id} />

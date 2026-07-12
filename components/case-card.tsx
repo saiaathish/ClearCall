@@ -34,7 +34,7 @@ import { useDemo, type SubmitAnswerResult } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
 import { CaseVideo } from "@/components/case-video";
 import { DistributionBars } from "@/components/distribution-bars";
-import { PublisherLink } from "@/components/publisher-link";
+import { PublisherLink, PublisherNameLink } from "@/components/publisher-link";
 import { SaveButton, ShareButton } from "@/components/case-actions";
 import { StatusBadge } from "@/components/status-badge";
 
@@ -113,19 +113,20 @@ export function CaseCard({
       aria-labelledby={`case-${scenario.id}-title`}
     >
       <header className="case-card__header">
-        <PublisherLink publisher={scenario.publisher}>
+        <div className="publisher-row">
+          <PublisherLink publisher={scenario.publisher} />
           <div className="publisher">
-            <div className="publisher__name">
+            <PublisherNameLink className="publisher__name" publisher={scenario.publisher}>
               {scenario.publisher.displayName}
               {scenario.publisher.isVerified && (
                 <BadgeCheck className="verified-icon" aria-label="Verified referee" size={15} />
               )}
-            </div>
+            </PublisherNameLink>
             <div className="publisher__meta">
               {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
             </div>
           </div>
-        </PublisherLink>
+        </div>
         <div className="case-card__actions">
           <SaveButton caseId={scenario.id} />
           <ShareButton caseId={scenario.id} />
