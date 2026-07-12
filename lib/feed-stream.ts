@@ -4,10 +4,15 @@ import type { OfficiatingCase } from "@/lib/types";
 export const FEED_BATCH_SIZE = 5;
 /** How many media URLs to warm ahead of the last visible item. */
 export const FEED_PRELOAD_AHEAD = 3;
-/** Cap rendered feed nodes so infinite reshuffles do not grow the DOM forever. */
-export const FEED_MAX_RENDERED = 40;
+/**
+ * Keep only a small sliding window mounted (X-style). Older posts are unloaded
+ * from the DOM so the feed cannot grow without bound.
+ */
+export const FEED_MAX_RENDERED = 12;
 /** Prefer not to resurface the same case within this many recent slots. */
-export const FEED_RECENT_WINDOW = 3;
+export const FEED_RECENT_WINDOW = 4;
+/** Fallback height used when measuring unloaded posts for the top spacer. */
+export const FEED_ITEM_ESTIMATE_PX = 460;
 
 export interface FeedItem {
   /** Stable React key for this appearance (case can repeat across cycles). */
@@ -150,6 +155,15 @@ export function trimFeedItems(
 ): FeedItem[] {
   if (items.length <= maxRendered) return [...items];
   return items.slice(items.length - maxRendered);
+}
+
+/** Items that will leave the DOM when trimming to the sliding window. */
+export function feedItemsToUnload(
+  items: readonly FeedItem[],
+  maxRendered: number = FEED_MAX_RENDERED,
+): FeedItem[] {
+  if (items.length <= maxRendered) return [];
+  return items.slice(0, items.length - maxRendered);
 }
 
 export function collectMediaSrcs(items: readonly FeedItem[]): string[] {
