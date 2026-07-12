@@ -173,31 +173,9 @@ export function ProfileView() {
             </div>
           </section>
 
-          <section className="content-section" aria-labelledby="calibration-heading">
-            <div className="content-section__header">
-              <div><h2 className="section-title" id="calibration-heading">Confidence vs. alignment</h2><p className="section-description">Lime shows observed recommendation alignment; amber markers represent the confidence band.</p></div>
-            </div>
-            <CalibrationPlot answers={answerList} />
-            <div className="demo-notice" style={{ marginTop: 15 }}>
-              <CircleAlert aria-hidden="true" size={15} />
-              <span>Calibration uses the brief’s Brier-loss formula. Because these are open-discussion demos, the score measures alignment with the authored recommendation—not official correctness.</span>
-            </div>
-          </section>
+        
 
-          <section className="content-section" aria-labelledby="trend-heading">
-            <div className="content-section__header">
-              <div><h2 className="section-title" id="trend-heading">Recent performance</h2><p className="section-description">Cumulative authored-recommendation alignment across up to seven recent sessions.</p></div>
-            </div>
-            {trend.length ? (
-              <svg className="trend-chart" viewBox="0 0 100 68" role="img" aria-label={`Recent alignment trend ending at ${trend.at(-1)} percent`}>
-                <line className="trend-chart__grid" x1="0" y1="8" x2="100" y2="8" />
-                <line className="trend-chart__grid" x1="0" y1="35" x2="100" y2="35" />
-                <line className="trend-chart__grid" x1="0" y1="62" x2="100" y2="62" />
-                <path className="trend-chart__area" d={`${trendPath(trend)} L100,62 L0,62 Z`} />
-                <path className="trend-chart__line" d={trendPath(trend)} />
-              </svg>
-            ) : <p className="muted">Complete a case to start the trend.</p>}
-          </section>
+          
         </div>
 
         <aside className="profile-column" aria-label="Learning insights">
