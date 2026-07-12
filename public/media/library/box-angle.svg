@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1050" role="img" aria-label="Ambient penalty area angle">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#245f3f"/>
+      <stop offset="100%" stop-color="#163d29"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="1050" fill="url(#bg)"/>
+  <g fill="none" stroke="#f2f7f4" stroke-opacity="0.5" stroke-width="5">
+    <path d="M120 180 H1280 V870 H120 Z"/>
+    <path d="M120 320 H420 V730 H120"/>
+    <path d="M120 430 H250 V620 H120"/>
+    <path d="M420 525 A180 180 0 0 1 420 525" />
+    <path d="M420 380 A160 160 0 0 1 420 670"/>
+  </g>
+  <circle cx="560" cy="520" r="16" fill="#f4d35e"/>
+  <circle cx="780" cy="470" r="16" fill="#f7faf8" fill-opacity="0.9"/>
+  <circle cx="900" cy="610" r="16" fill="#f7faf8" fill-opacity="0.7"/>
+</svg>
