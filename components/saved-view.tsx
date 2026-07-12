@@ -128,7 +128,7 @@ function SavedCaseCard({
 }
 
 export function SavedView() {
-  const { hydrated, savedCaseIds, toggleSaved } = useDemo();
+  const { hydrated, savedCaseIds, removedCaseIds, toggleSaved } = useDemo();
   const { showToast } = useToast();
   const [view, setView] = useState<ViewMode>("grid");
   const [query, setQuery] = useState("");
@@ -138,8 +138,9 @@ export function SavedView() {
 
   const savedCases = useMemo(() => {
     const savedIds = new Set(savedCaseIds);
-    return cases.filter((item) => savedIds.has(item.id));
-  }, [savedCaseIds]);
+    const removedIds = new Set(removedCaseIds);
+    return cases.filter((item) => savedIds.has(item.id) && !removedIds.has(item.id));
+  }, [removedCaseIds, savedCaseIds]);
 
   const filteredCases = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();

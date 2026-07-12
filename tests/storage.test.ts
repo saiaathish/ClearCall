@@ -273,4 +273,111 @@ describe("demo storage (Supabase-backed)", () => {
     });
     await expect(publishDraftRemote(supabase, "user-1", validDraft, null)).rejects.toThrow();
   });
+
+  it("preserves text posts without file metadata and normalizes legacy video drafts", () => {
+    const storage = installWindow();
+    const textDraft: PublishedCaseDraft = {
+      ...validDraft,
+      id: "draft-text",
+      mediaKind: "text",
+      mediaAlt: validDraft.description,
+      mediaFileName: undefined,
+      mediaFileSize: undefined,
+      mediaFileType: undefined,
+      clipFileName: undefined,
+      clipFileSize: undefined,
+      clipFileType: undefined,
+      clipStartTime: undefined,
+      clipEndTime: undefined,
+      posterFrameLabel: undefined,
+    };
+    const legacyVideoDraft: Partial<PublishedCaseDraft> = { ...validDraft };
+    delete legacyVideoDraft.mediaKind;
+    delete legacyVideoDraft.mediaAlt;
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({ publishedDrafts: [textDraft, legacyVideoDraft] }),
+    );
+
+    const drafts = readDemoState().publishedDrafts;
+    expect(drafts[0]).toEqual(textDraft);
+    expect(drafts[1]).toMatchObject({
+      id: validDraft.id,
+      mediaKind: "video",
+      mediaAlt: validDraft.posterFrameLabel,
+    });
+  });
+
+  it("hydrates only complete case reports and removed case ids", () => {
+    const storage = installWindow();
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({
+        version: 1,
+        state: {
+          reports: [
+            {
+              id: "report-a",
+              caseId: "case-a",
+              reason: "copyright",
+              details: "Suspected unauthorized broadcast clip.",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "open",
+            },
+            {
+              id: "bad-reason",
+              caseId: "case-b",
+              reason: "not-a-reason",
+              details: "",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "open",
+            },
+            {
+              id: "bad-status",
+              caseId: "case-c",
+              reason: "spam",
+              details: "",
+              reportedAt: "2026-07-11T12:00:00.000Z",
+              status: "pending",
+            },
+          ],
+          removedCaseIds: ["case-a", 42, null],
+        },
+      }),
+    );
+
+    expect(readDemoState().reports).toEqual([
+      {
+        id: "report-a",
+        caseId: "case-a",
+        reason: "copyright",
+        details: "Suspected unauthorized broadcast clip.",
+        reportedAt: "2026-07-11T12:00:00.000Z",
+        status: "open",
+      },
+    ]);
+    expect(readDemoState().removedCaseIds).toEqual(["case-a"]);
+  });
+
+  it("defaults missing report fields for older envelopes", () => {
+    const storage = installWindow();
+    storage.setItem(
+      "clearcall-demo-v1",
+      JSON.stringify({
+        version: 1,
+        state: {
+          answers: {},
+          savedCaseIds: [],
+          currentStreak: 0,
+          temporaryComments: {},
+          publishedDrafts: [],
+          onboardingComplete: true,
+        },
+      }),
+    );
+    const state = readDemoState();
+    expect(state.reports).toEqual([]);
+    expect(state.removedCaseIds).toEqual([]);
+    expect(state.onboardingComplete).toBe(true);
+  });
 });

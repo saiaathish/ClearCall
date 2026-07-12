@@ -10,10 +10,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
-import type { User } from "@supabase/supabase-js";
-import type { DiscussionResponse, PublishedCaseDraft, UserAnswer } from "@/lib/types";
-import { createClient } from "@/lib/supabase/client";
+import type {
+  CaseReport,
+  DiscussionResponse,
+  PublishedCaseDraft,
+  ReportReason,
+  UserAnswer,
+} from "@/lib/types";
 import {
   addCommentRemote,
   completeOnboardingRemote,
@@ -32,7 +35,14 @@ interface DemoContextValue extends DemoState {
   submitAnswer: (answer: UserAnswer) => void;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
-  publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
+  publishDraft: (draft: PublishedCaseDraft) => void;
+  reportCase: (input: {
+    caseId: string;
+    reason: ReportReason;
+    details?: string;
+  }) => CaseReport | null;
+  removeFlaggedCase: (caseId: string) => void;
+  restoreFlaggedCase: (caseId: string) => void;
   completeOnboarding: () => void;
   resetDemo: () => void;
   signOut: () => Promise<void>;
@@ -165,11 +175,59 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [requireAuth, supabase, user],
   );
 
-  const completeOnboarding = useCallback(() => {
-    if (!requireAuth() || !user) return;
-    setState((current) => ({ ...current, onboardingComplete: true }));
-    void completeOnboardingRemote(supabase, user.id);
-  }, [requireAuth, supabase, user]);
+  const reportCase = useCallback(
+    (input: { caseId: string; reason: ReportReason; details?: string }) => {
+      if (state.removedCaseIds.includes(input.caseId)) return null;
+      const alreadyOpen = state.reports.some(
+        (report) => report.caseId === input.caseId && report.status === "open",
+      );
+      if (alreadyOpen) return null;
+
+      const report: CaseReport = {
+        id: `report-${input.caseId}-${Date.now()}`,
+        caseId: input.caseId,
+        reason: input.reason,
+        details: (input.details ?? "").trim().slice(0, 500),
+        reportedAt: new Date().toISOString(),
+        status: "open",
+      };
+
+      update((current) => ({
+        ...current,
+        reports: [report, ...current.reports],
+      }));
+      return report;
+    },
+    [state.removedCaseIds, state.reports, update],
+  );
+
+  const removeFlaggedCase = useCallback(
+    (caseId: string) => {
+      update((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.includes(caseId)
+          ? current.removedCaseIds
+          : [...current.removedCaseIds, caseId],
+        reports: current.reports.map((report) =>
+          report.caseId === caseId && report.status === "open"
+            ? { ...report, status: "removed" as const }
+            : report,
+        ),
+        savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [update],
+  );
+
+  const restoreFlaggedCase = useCallback(
+    (caseId: string) => {
+      update((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [update],
+  );
 
   const resetDemo = useCallback(() => {
     void supabase.auth.signOut();
@@ -189,6 +247,9 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       toggleSaved,
       addComment,
       publishDraft,
+      reportCase,
+      removeFlaggedCase,
+      restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
       signOut,
@@ -196,14 +257,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [
       state,
       hydrated,
-      user,
       submitAnswer,
       toggleSaved,
       addComment,
       publishDraft,
+      reportCase,
+      removeFlaggedCase,
+      restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
-      signOut,
     ],
   );
 

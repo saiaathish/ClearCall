@@ -1440,11 +1440,21 @@ select:focus {
 
 .publish-progress {
   border-color: var(--line-dark);
+  border-radius: 0;
 }
 
 .publish-progress button[aria-current="step"] {
   background: var(--yellow);
   color: var(--ink);
+}
+
+.publish-progress button:not(:disabled):hover {
+  border-color: var(--line-dark);
+}
+
+.factor-card,
+.review-checklist {
+  border-radius: 0;
 }
 
 .publish-success {

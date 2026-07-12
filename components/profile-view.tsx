@@ -46,21 +46,67 @@ function trendPath(values: readonly number[]) {
 }
 
 export function ProfileView() {
-  const { answers, savedCaseIds, currentStreak, hydrated, resetDemo } = useDemo();
+  const {
+    answers,
+    savedCaseIds,
+    currentStreak,
+    hydrated,
+    reports,
+    removedCaseIds,
+    removeFlaggedCase,
+    restoreFlaggedCase,
+    resetDemo,
+  } = useDemo();
   const { showToast } = useToast();
   const answerList = useMemo(() => Object.values(answers), [answers]);
   const profile = useMemo(
     () => deriveLearnerProfile(answerList, cases, { savedCaseIds, currentStreak }),
     [answerList, currentStreak, savedCaseIds],
   );
-  const recommended = cases.find((item) => item.id === profile.recommendedCaseId);
+  const recommended = cases.find(
+    (item) => item.id === profile.recommendedCaseId && !removedCaseIds.includes(item.id),
+  );
   const trend = makeTrend(answerList);
   const recentActivity = [...answerList].sort((a, b) => b.answeredAt.localeCompare(a.answeredAt)).slice(0, 5);
+  const openReports = useMemo(
+    () => reports.filter((report) => report.status === "open"),
+    [reports],
+  );
+  const moderationItems = useMemo(() => {
+    const byCase = new Map<string, typeof reports>();
+    for (const report of reports) {
+      const existing = byCase.get(report.caseId) ?? [];
+      existing.push(report);
+      byCase.set(report.caseId, existing);
+    }
+    return [...byCase.entries()].map(([caseId, caseReports]) => ({
+      caseId,
+      scenario: cases.find((item) => item.id === caseId),
+      reports: caseReports,
+      removed: removedCaseIds.includes(caseId),
+      openCount: caseReports.filter((report) => report.status === "open").length,
+    }));
+  }, [removedCaseIds, reports]);
 
   const reset = () => {
-    if (!window.confirm("Reset answers, saves, comments, and local drafts to the seeded Jordan Lee demo?")) return;
+    if (!window.confirm("Reset answers, saves, comments, reports, and local drafts to the seeded Jordan Lee demo?")) return;
     resetDemo();
     showToast("Demo data restored to the seeded baseline.", "success");
+  };
+
+  const reasonLabel = (reason: string) => {
+    switch (reason) {
+      case "copyright":
+        return "Copyright / rights";
+      case "inaccurate":
+        return "Inaccurate";
+      case "inappropriate":
+        return "Inappropriate";
+      case "spam":
+        return "Spam / abuse";
+      default:
+        return "Other";
+    }
   };
 
   if (!hydrated) {
@@ -196,10 +242,76 @@ export function ProfileView() {
             </ul>
           </section>
 
+          <section className="content-section" aria-labelledby="moderation-heading">
+            <div className="content-section__header">
+              <div>
+                <h2 className="section-title" id="moderation-heading">Local moderation queue</h2>
+                <p className="section-description">
+                  Report cases from the feed, then remove flagged content from this browser-only demo.
+                </p>
+              </div>
+            </div>
+            {moderationItems.length === 0 ? (
+              <p className="muted">No reports yet. Use Report on a case to flag copyright or other concerns.</p>
+            ) : (
+              <ul className="moderation-list">
+                {moderationItems.map((item) => (
+                  <li key={item.caseId}>
+                    <div>
+                      <strong>{item.scenario?.title ?? item.caseId}</strong>
+                      <span>
+                        {item.openCount > 0
+                          ? `${item.openCount} open report${item.openCount === 1 ? "" : "s"}`
+                          : "Resolved"}
+                        {" · "}
+                        {item.reports.map((report) => reasonLabel(report.reason)).join(", ")}
+                      </span>
+                      {item.reports[0]?.details ? <em>{item.reports[0].details}</em> : null}
+                    </div>
+                    <div className="button-row">
+                      {item.removed ? (
+                        <button
+                          className="button button--ghost"
+                          type="button"
+                          onClick={() => {
+                            restoreFlaggedCase(item.caseId);
+                            showToast("Case restored to the local feed.", "success");
+                          }}
+                        >
+                          Restore
+                        </button>
+                      ) : (
+                        <button
+                          className="button button--danger"
+                          type="button"
+                          onClick={() => {
+                            removeFlaggedCase(item.caseId);
+                            showToast("Flagged case removed from the local feed.", "success");
+                          }}
+                        >
+                          Remove content
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {openReports.length > 0 && (
+              <div className="permission-notice" style={{ marginTop: 14 }} role="note">
+                <CircleAlert aria-hidden="true" size={15} />
+                <span>
+                  Copyright and rights reports are local prototypes only. Removing content hides the
+                  case from this browser&apos;s feed; it does not contact a rights holder or platform team.
+                </span>
+              </div>
+            )}
+          </section>
+
           <details className="settings-panel">
             <summary><Settings aria-hidden="true" size={16} /> Profile settings</summary>
             <div className="settings-panel__body">
-              <p>Reset all browser-local answers, saves, comments, and drafts to Jordan Lee’s seeded demonstration baseline.</p>
+              <p>Reset all browser-local answers, saves, comments, reports, and drafts to Jordan Lee’s seeded demonstration baseline.</p>
               <button className="button button--danger button--wide" type="button" onClick={reset}><RotateCcw aria-hidden="true" size={15} /> Reset demo data</button>
             </div>
           </details>

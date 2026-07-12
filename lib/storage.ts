@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
+  AnswerOption,
+  CaseReport,
   DiscussionResponse,
   PublishedCaseDraft,
   Publisher,
@@ -13,6 +15,8 @@ export interface DemoState {
   currentStreak: number;
   temporaryComments: Record<string, DiscussionResponse[]>;
   publishedDrafts: PublishedCaseDraft[];
+  reports: CaseReport[];
+  removedCaseIds: string[];
   onboardingComplete: boolean;
 }
 
@@ -63,6 +67,8 @@ export const initialDemoState: DemoState = {
   currentStreak: 4,
   temporaryComments: {},
   publishedDrafts: [],
+  reports: [],
+  removedCaseIds: [],
   onboardingComplete: false,
 };
 
@@ -168,12 +174,67 @@ function rowToPublishedDraft(row: {
 // Reads
 // ---------------------------------------------------------------------------
 
-export interface ProfileMeta {
-  currentStreak: number;
-  onboardingComplete: boolean;
-  displayName: string;
-  avatarInitials: string;
-  role: string;
+const SCENARIO_STATUSES = new Set([
+  "VERIFIED_RULING",
+  "EXPERT_CONSENSUS",
+  "OPEN_DISCUSSION",
+]);
+
+const SOURCE_TYPES = new Set([
+  "authored-demo",
+  "team-recorded",
+  "used-with-permission",
+  "open-license",
+  "external-embed",
+]);
+
+const PERMISSION_STATUSES = new Set([
+  "demo-only",
+  "confirmed",
+  "pending-review",
+]);
+
+const MEDIA_KINDS = new Set(["text", "image", "video"]);
+
+const REPORT_REASONS = new Set([
+  "copyright",
+  "inaccurate",
+  "inappropriate",
+  "spam",
+  "other",
+]);
+
+const REPORT_STATUSES = new Set(["open", "removed"]);
+
+function isOneOf(value: unknown, allowed: ReadonlySet<string>): value is string {
+  return typeof value === "string" && allowed.has(value);
+}
+
+function isUserAnswer(value: unknown): value is UserAnswer {
+  return (
+    isRecord(value) &&
+    typeof value.caseId === "string" &&
+    typeof value.selectedOptionId === "string" &&
+    isFiniteNumber(value.confidence) &&
+    value.confidence >= 50 &&
+    value.confidence <= 100 &&
+    isStringArray(value.selectedFactorKeys) &&
+    typeof value.answeredAt === "string"
+  );
+}
+
+function isPublisher(value: unknown): value is Publisher {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.displayName === "string" &&
+    isOneOf(value.role, USER_ROLES) &&
+    isOptionalString(value.organization) &&
+    typeof value.avatarInitials === "string" &&
+    typeof value.isVerified === "boolean" &&
+    typeof value.isSynthetic === "boolean" &&
+    typeof value.disclosure === "string"
+  );
 }
 
 export async function fetchProfileMeta(
@@ -334,37 +395,121 @@ export async function addCommentRemote(
   return data ? rowToDiscussionResponse(data, comment.author) : null;
 }
 
-export async function completeOnboardingRemote(
-  supabase: TypedClient,
-  userId: string,
-): Promise<void> {
-  await supabase
-    .from("profiles")
-    .update({ onboarding_complete: true })
-    .eq("id", userId);
+function isCaseReport(value: unknown): value is CaseReport {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.caseId === "string" &&
+    isOneOf(value.reason, REPORT_REASONS) &&
+    typeof value.details === "string" &&
+    typeof value.reportedAt === "string" &&
+    isOneOf(value.status, REPORT_STATUSES)
+  );
 }
 
-/**
- * Uploads optional media to the `case-media` bucket under the user's own
- * auth uid (required by storage RLS) and inserts a published_drafts row.
- */
-export async function publishDraftRemote(
-  supabase: TypedClient,
-  userId: string,
-  draft: PublishedCaseDraft,
-  file: File | null,
-): Promise<PublishedCaseDraft> {
-  if (typeof window !== "undefined") {
-    const form = new FormData();
-    form.set("sport", "soccer"); form.set("incident", draft.description);
-    form.set("rule category", draft.category); form.set("original decision", draft.originalDecision);
-    form.set("description", draft.description); form.set("options", JSON.stringify(draft.answerOptions));
-    form.set("difficulty", draft.difficulty === "beginner" ? "0.25" : draft.difficulty === "advanced" ? "0.75" : "0.5");
-    if (file) form.set("clip", file);
-    const response = await fetch("/api/cases", { method: "POST", body: form });
-    if (!response.ok) throw new Error("Case creation failed");
-    const result = await response.json() as { case?: { id?: string } };
-    return { ...draft, id: result.case?.id ?? draft.id, status: "locally-published" };
+function readReports(value: unknown): CaseReport[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(isCaseReport);
+}
+
+function readPublishedDraft(value: unknown): PublishedCaseDraft | null {
+  if (!isRecord(value)) return null;
+  const mediaKind = isOneOf(value.mediaKind, MEDIA_KINDS)
+    ? value.mediaKind as PublishedCaseDraft["mediaKind"]
+    : typeof value.clipFileName === "string"
+      ? "video"
+      : "text";
+  const mediaAlt = typeof value.mediaAlt === "string"
+    ? value.mediaAlt
+    : typeof value.posterFrameLabel === "string"
+      ? value.posterFrameLabel
+      : typeof value.description === "string"
+        ? value.description
+        : "";
+
+  const valid = (
+    typeof value.id === "string" &&
+    isOptionalString(value.mediaFileName) &&
+    (value.mediaFileSize === undefined || isNonNegativeInteger(value.mediaFileSize)) &&
+    isOptionalString(value.mediaFileType) &&
+    (value.mediaWidth === undefined || isNonNegativeInteger(value.mediaWidth)) &&
+    (value.mediaHeight === undefined || isNonNegativeInteger(value.mediaHeight)) &&
+    isOptionalString(value.clipFileName) &&
+    (value.clipFileSize === undefined || isNonNegativeInteger(value.clipFileSize)) &&
+    isOptionalString(value.clipFileType) &&
+    isOptionalString(value.clipStartTime) &&
+    isOptionalString(value.clipEndTime) &&
+    isOptionalString(value.posterFrameLabel) &&
+    typeof value.title === "string" &&
+    typeof value.prompt === "string" &&
+    typeof value.description === "string" &&
+    typeof value.competitionLevel === "string" &&
+    isOneOf(value.difficulty, DIFFICULTIES) &&
+    isOneOf(value.category, CASE_CATEGORIES) &&
+    typeof value.originalDecision === "string" &&
+    isOneOf(value.scenarioStatus, SCENARIO_STATUSES) &&
+    Array.isArray(value.answerOptions) &&
+    value.answerOptions.every(isAnswerOption) &&
+    typeof value.recommendedDecision === "string" &&
+    Array.isArray(value.factors) &&
+    value.factors.every(isRuleFactor) &&
+    typeof value.criticalFactor === "string" &&
+    isStringArray(value.rulePath) &&
+    typeof value.ruleReference === "string" &&
+    typeof value.expertExplanation === "string" &&
+    typeof value.ruleset === "string" &&
+    typeof value.rulesetVersion === "string" &&
+    isOneOf(value.sourceType, SOURCE_TYPES) &&
+    typeof value.sourceAttribution === "string" &&
+    isOneOf(value.permissionStatus, PERMISSION_STATUSES) &&
+    typeof value.permissionConfirmed === "boolean" &&
+    typeof value.createdAt === "string" &&
+    (value.status === "draft" || value.status === "locally-published") &&
+    value.reviewStatus === "PENDING_EXPERT_REVIEW"
+  );
+  if (!valid) return null;
+  return { ...value, mediaKind, mediaAlt } as unknown as PublishedCaseDraft;
+}
+
+export function readDemoState(): DemoState {
+  if (typeof window === "undefined") return initialDemoState;
+
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return initialDemoState;
+    const parsed: unknown = JSON.parse(raw);
+    if (!isRecord(parsed)) return initialDemoState;
+    const candidate =
+      parsed.version === STORAGE_VERSION && isRecord(parsed.state)
+        ? parsed.state
+        : parsed;
+
+    return {
+      answers: readAnswers(candidate.answers),
+      savedCaseIds: Array.isArray(candidate.savedCaseIds)
+        ? candidate.savedCaseIds.filter((id): id is string => typeof id === "string")
+        : [],
+      currentStreak:
+        typeof candidate.currentStreak === "number" && Number.isFinite(candidate.currentStreak)
+          ? Math.max(0, Math.floor(candidate.currentStreak))
+          : initialDemoState.currentStreak,
+      temporaryComments: readComments(candidate.temporaryComments),
+      publishedDrafts: Array.isArray(candidate.publishedDrafts)
+        ? candidate.publishedDrafts
+            .map(readPublishedDraft)
+            .filter((draft): draft is PublishedCaseDraft => Boolean(draft))
+        : [],
+      reports: readReports(candidate.reports),
+      removedCaseIds: Array.isArray(candidate.removedCaseIds)
+        ? candidate.removedCaseIds.filter((id): id is string => typeof id === "string")
+        : [],
+      onboardingComplete:
+        typeof candidate.onboardingComplete === "boolean"
+          ? candidate.onboardingComplete
+          : false,
+    };
+  } catch {
+    return initialDemoState;
   }
   let mediaPath: string | null = null;
 
