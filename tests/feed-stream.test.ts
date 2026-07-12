@@ -3,12 +3,9 @@ import { cases } from "@/data/cases";
 import { mediaLibrary } from "@/data/media-library";
 import {
   FEED_BATCH_SIZE,
-  FEED_MAX_RENDERED,
   appendFeedBatch,
-  feedItemsToUnload,
   pickRandomMedia,
   shuffleCases,
-  trimFeedItems,
   upcomingMediaSrcs,
   withLibraryBackdrop,
   type FeedItem,
@@ -73,19 +70,6 @@ describe("feed stream", () => {
     expect(imageCase).toBeTruthy();
     const enriched = withLibraryBackdrop(imageCase!, () => 0.9);
     expect(enriched.imageSrc).toBe(imageCase!.imageSrc);
-  });
-
-  it("trims from the front once the soft render cap is hit", () => {
-    const pool = cases.slice(0, 8);
-    let items: FeedItem[] = [];
-    while (items.length < FEED_MAX_RENDERED + FEED_BATCH_SIZE) {
-      items = appendFeedBatch(pool, items, { batchSize: FEED_BATCH_SIZE, random: () => 0.3 });
-    }
-    const unloaded = feedItemsToUnload(items, FEED_MAX_RENDERED);
-    const trimmed = trimFeedItems(items, FEED_MAX_RENDERED);
-    expect(trimmed).toHaveLength(FEED_MAX_RENDERED);
-    expect(unloaded.length).toBe(items.length - FEED_MAX_RENDERED);
-    expect(trimmed[0]!.key).not.toBe(items[0]!.key);
   });
 
   it("exposes upcoming media urls for lookahead preload", () => {

@@ -960,7 +960,10 @@ select:focus {
   padding: 28px 0;
 }
 
-.feed-loader p {
+.feed-loader__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
   font-size: 0.78rem;
 }

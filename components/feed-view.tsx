@@ -9,12 +9,8 @@ import type { CaseCategory, OfficiatingCase } from "@/lib/types";
 import { rankPersonalizedCases } from "@/lib/algorithms";
 import {
   FEED_BATCH_SIZE,
-  FEED_ITEM_ESTIMATE_PX,
-  FEED_MAX_RENDERED,
   FEED_PRELOAD_AHEAD,
   appendFeedBatch,
-  feedItemsToUnload,
-  trimFeedItems,
   upcomingMediaSrcs,
   type FeedItem,
 } from "@/lib/feed-stream";
@@ -30,10 +26,7 @@ function isCaseCategory(value: string | null): value is CaseCategory {
 
 function seedFeed(pool: readonly OfficiatingCase[]): FeedItem[] {
   if (pool.length === 0) return [];
-  return trimFeedItems(
-    appendFeedBatch(pool, [], { batchSize: FEED_BATCH_SIZE }),
-    FEED_MAX_RENDERED,
-  );
+  return appendFeedBatch(pool, [], { batchSize: FEED_BATCH_SIZE });
 }
 
 function poolKeyFor(category: CaseCategory | "all", pool: readonly OfficiatingCase[]): string {
@@ -50,10 +43,8 @@ export function FeedView() {
   const [boundPoolKey, setBoundPoolKey] = useState<string | null>(null);
   const [isAppending, setIsAppending] = useState(false);
   const [announcement, setAnnouncement] = useState("");
-  const [topSpacerPx, setTopSpacerPx] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
-  const itemElsRef = useRef(new Map<string, HTMLLIElement>());
 
   const answerList = useMemo(() => Object.values(answers), [answers]);
   const removedIds = useMemo(() => new Set(removedCaseIds), [removedCaseIds]);
@@ -76,8 +67,6 @@ export function FeedView() {
   if (hydrated && boundPoolKey !== poolKey) {
     setBoundPoolKey(poolKey);
     setFeedItems(seedFeed(filteredCases));
-    setTopSpacerPx(0);
-    itemElsRef.current.clear();
   }
 
   const loadMore = useCallback(() => {
@@ -90,29 +79,14 @@ export function FeedView() {
         const expanded = appendFeedBatch(filteredCases, current, {
           batchSize: FEED_BATCH_SIZE,
         });
-        const unloaded = feedItemsToUnload(expanded, FEED_MAX_RENDERED);
-        if (unloaded.length > 0) {
-          let removedHeight = 0;
-          for (const item of unloaded) {
-            removedHeight += itemElsRef.current.get(item.key)?.offsetHeight ?? FEED_ITEM_ESTIMATE_PX;
-            itemElsRef.current.delete(item.key);
-          }
-          setTopSpacerPx((value) => value + removedHeight);
-          setAnnouncement(
-            `Loaded ${FEED_BATCH_SIZE} more cases and unloaded ${unloaded.length} older posts from the page.`,
-          );
-        } else {
-          setAnnouncement(`${FEED_BATCH_SIZE} more cases loaded. Keep scrolling.`);
-        }
-
-        const trimmed = trimFeedItems(expanded, FEED_MAX_RENDERED);
         const warm = upcomingMediaSrcs(
-          trimmed,
-          Math.max(0, trimmed.length - FEED_BATCH_SIZE),
+          expanded,
+          Math.max(0, expanded.length - FEED_BATCH_SIZE),
           FEED_PRELOAD_AHEAD,
         );
         getMediaPreloadCache().preload(warm);
-        return trimmed;
+        setAnnouncement(`${FEED_BATCH_SIZE} more cases loaded. Keep scrolling.`);
+        return expanded;
       });
       setIsAppending(false);
       loadingRef.current = false;
@@ -173,7 +147,7 @@ export function FeedView() {
       <header className="feed-toolbar">
         <div className="feed-toolbar__title">
           <h1>Feed</h1>
-          <p>Loads 5 at a time and unloads older posts so the page stays light.</p>
+          <p>Keeps scrolling forever — cases reshuffle from the mix as you go.</p>
         </div>
         <div className="feed-toolbar__actions">
           <label className="feed-filter" htmlFor="foul-type-filter">
@@ -202,27 +176,14 @@ export function FeedView() {
 
       <div className="feed-result-line">
         <span>{filteredCases.length} {filteredCases.length === 1 ? "case" : "cases"} in mix</span>
-        <span>{feedItems.length} on screen · older posts unload as you scroll</span>
+        <span>{feedItems.length} loaded · scrolls forever</span>
         <span>{answerList.length}/{cases.length} reviewed</span>
       </div>
 
       {feedItems.length > 0 ? (
         <ol className="feed-stream" aria-label="Officiating case feed">
-          {topSpacerPx > 0 ? (
-            <li
-              aria-hidden="true"
-              className="feed-stream__spacer"
-              style={{ height: topSpacerPx, listStyle: "none", margin: 0, padding: 0, border: 0 }}
-            />
-          ) : null}
           {feedItems.map((item, index) => (
-            <li
-              key={item.key}
-              ref={(node) => {
-                if (node) itemElsRef.current.set(item.key, node);
-                else itemElsRef.current.delete(item.key);
-              }}
-            >
+            <li key={item.key}>
               <FeedPostCard
                 appearanceKey={item.key}
                 scenario={item.scenario}
@@ -241,12 +202,12 @@ export function FeedView() {
         </section>
       )}
 
-      <div className="feed-loader" ref={sentinelRef}>
+      <div className="feed-loader" ref={sentinelRef} aria-hidden={filteredCases.length === 0}>
         {filteredCases.length > 0 ? (
-          <button className="button button--secondary" type="button" onClick={loadMore} disabled={isAppending}>
-            {isAppending ? <LoaderCircle className="spin" aria-hidden="true" size={17} /> : null}
-            {isAppending ? "Loading…" : "Load more cases"}
-          </button>
+          <div className="feed-loader__status" aria-live="polite">
+            <LoaderCircle className="spin" aria-hidden="true" size={17} />
+            <span>{isAppending ? "Loading…" : "Keep scrolling"}</span>
+          </div>
         ) : null}
       </div>
       <p className="sr-only" aria-live="polite">{announcement}</p>
