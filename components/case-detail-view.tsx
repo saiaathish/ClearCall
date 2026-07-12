@@ -213,11 +213,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                     <h2 className="section-title" id="discussion-heading">Discussion</h2>
                   </div>
                 </div>
-                <ul className="discussion-list">
-                  {comments.map((response) => (
-                    <DiscussionCard key={response.id} response={response} scenario={scenario} />
-                  ))}
-                </ul>
                 <form className="comment-form" onSubmit={submitComment} noValidate>
                   <div>
                     <label className="field-label" htmlFor="local-comment">Add your reasoning</label>
@@ -258,6 +253,11 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </div>
                   {commentError && <p className="field-error" id="local-comment-error" role="alert"><CircleAlert aria-hidden="true" size={14} /> Add reasoning and choose a decision.</p>}
                 </form>
+                <ul className="discussion-list">
+                  {comments.map((response) => (
+                    <DiscussionCard key={response.id} response={response} scenario={scenario} />
+                  ))}
+                </ul>
           </section>
         </div>
 
