@@ -187,51 +187,111 @@ export const goalkeeperOptions: readonly AnswerOption[] = [
 ];
 
 const TIME_LABELS = [
+  "just now",
   "2m ago",
   "8m ago",
   "21m ago",
+  "47m ago",
   "1h ago",
   "3h ago",
+  "6h ago",
   "Yesterday",
   "2d ago",
-  "Seeded demo response",
+  "4d ago",
 ] as const;
 
-const AGREE_BODIES = [
-  "Working the factors in order keeps me from jumping to the card color first.",
-  "The critical factor is doing the heavy lifting here — once that is settled, the restart becomes clearer.",
-  "I landed on the same call after replaying the sequence twice.",
-  "Agree with the pinned read. The geometry of the play matters more than the appeal.",
-  "This is a good teaching example of separating what you saw from what you assumed.",
-];
+const OPENERS = [
+  "Live, I sold",
+  "On replay I keep landing on",
+  "Match-day read:",
+  "Clinic note:",
+  "Honest take —",
+  "From the AR angle,",
+  "If I am writing the report,",
+  "Gut first, then factors:",
+  "This one is fiddly because",
+  "After the second look,",
+] as const;
 
-const DISSENT_BODIES = [
-  "I am still not sold — the contact looks marginal enough that I would want a second angle before committing.",
-  "Respectfully disagree on the disciplinary step. The foul is there; the card threshold feels soft.",
-  "I keep coming back to covering defenders / reaction time. That alone pulls me toward a different option.",
-  "If this is the only view, I would park it on insufficient evidence rather than force a label.",
-  "Close either way. My match-day bias would be to sell the softer restart and write a detailed report.",
-];
+const MIDDLES = [
+  "the critical factor is doing more work than the appeal",
+  "geometry beats volume every time",
+  "I refuse to name a card before the restart logic is clean",
+  "one missing angle still leaves doubt",
+  "the paired teaching contrast is what decides it for me",
+  "crowd noise is not evidence",
+  "the body language after contact is a trap",
+  "reaction time collapses half the handball debates",
+  "covering defenders change the whole disciplinary picture",
+  "advantage windows are shorter than people argue online",
+] as const;
 
-const LEARNER_BODIES = [
-  "I initially focused on the outcome of the play. Comparing the structured factors makes the decision process easier to explain.",
-  "New to this foul type — the factor checklist is what stopped me from guessing based on the crowd reaction.",
-  "Noted for my next assessment: identify the critical factor before naming the sanction.",
-  "Helpful thread. I changed my mind after reading the second response.",
-  "Saving this one. The paired contrast with the sibling case is what finally clicked.",
-];
+const CLOSERS = [
+  "I am locking that in.",
+  "Still open to a second angle.",
+  "Would love an assessor note on this.",
+  "Saving it for my next mentorship session.",
+  "That is the call I would sell.",
+  "Not my favourite, but it is coherent.",
+  "Changed my mind once, then came back.",
+  "Write it up carefully.",
+] as const;
 
-function pickBody(pool: readonly string[], random: () => number): string {
-  return pool[Math.min(pool.length - 1, Math.floor(random() * pool.length))]!;
+function composeThreadBody(input: {
+  caseId: string;
+  category: string;
+  criticalFactor: string;
+  ruleCitation: string;
+  slot: number;
+  agrees: boolean;
+  role: string;
+  random: () => number;
+  usedBodies: Set<string>;
+}): string {
+  const { caseId, category, criticalFactor, ruleCitation, slot, agrees, role, random, usedBodies } = input;
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const opener = OPENERS[Math.floor(random() * OPENERS.length)]!;
+    const middle = MIDDLES[Math.floor(random() * MIDDLES.length)]!;
+    const closer = CLOSERS[Math.floor(random() * CLOSERS.length)]!;
+    const stance = agrees
+      ? `I am with the pinned ${category.toLowerCase()} read`
+      : `I am pushing back on the pinned ${category.toLowerCase()} read`;
+    const factorBit = `Focus on ${criticalFactor.replaceAll("-", " ")}`;
+    const roleBit =
+      role === "learner"
+        ? "I am still building the checklist habit"
+        : role === "educator"
+          ? "Teaching point first"
+          : "On the pitch I need a sellable signal";
+    const body = [
+      `${opener} ${stance} on ${caseId}.`,
+      `${factorBit} — ${middle}.`,
+      `${roleBit}. ${ruleCitation.split("—")[0]?.trim() ?? ruleCitation}.`,
+      closer,
+    ].join(" ");
+    if (!usedBodies.has(body)) {
+      usedBodies.add(body);
+      return body;
+    }
+  }
+  const fallback = `On ${caseId} slot ${slot}: ${agrees ? "agree" : "dissent"} around ${criticalFactor} for ${category}.`;
+  usedBodies.add(fallback);
+  return fallback;
 }
 
 function publisherFromPerson(person: FeedPersonSeed, caseId: string, slot: number): Publisher {
   return personToPublisher(person, `${caseId}-slot-${slot}`);
 }
 
+export interface DiscussionContext {
+  category: string;
+  criticalFactor: string;
+  title?: string;
+}
+
 /**
- * Build a fuller social-style discussion with seeded-but-varied names and avatars.
- * Always pins an educator lead, then mixes referees/learners with agree + dissent takes.
+ * Build a social-style discussion with variable length, unique commentators,
+ * and case-specific bodies (no copy-paste comment spam).
  */
 export function makeDiscussion(
   caseId: string,
@@ -242,21 +302,11 @@ export function makeDiscussion(
   ruleCitation: string,
   alternateOptionId?: string,
   answerOptionIds: readonly string[] = [],
+  context: DiscussionContext = { category: "Incident", criticalFactor: factorKeys[0] ?? "factor" },
 ): readonly DiscussionResponse[] {
   const random = seededRandom(`discussion:${caseId}`);
-  const people = pickPeople(`people:${caseId}`, 7, []);
-  const educator = people[0] ?? {
-    displayName: "ClearCall demo desk",
-    role: "educator" as const,
-    organization: "Authored product prototype",
-    avatarIndex: 50,
-  };
-  const referee = people[1] ?? {
-    displayName: "Sam Rivera",
-    role: "referee" as const,
-    avatarIndex: 51,
-  };
-  const rest = people.slice(2);
+  const replyCount = 2 + Math.floor(random() * 10); // 2–11 total replies
+  const usedBodies = new Set<string>([educatorBody.trim(), refereeBody.trim()].filter(Boolean));
 
   const fallbackDissent =
     answerOptionIds.find((id) => id !== recommendedDecision) ?? recommendedDecision;
@@ -264,76 +314,70 @@ export function makeDiscussion(
     ? alternateOptionId
     : fallbackDissent;
 
-  const responses: DiscussionResponse[] = [
-    {
-      id: `${caseId}-response-pinned`,
-      caseId,
-      author: publisherFromPerson(educator, caseId, 0),
-      body: educatorBody,
-      selectedOptionId: recommendedDecision,
-      confidence: 78 + Math.floor(random() * 12),
-      selectedFactorKeys: factorKeys,
-      ruleCitation,
-      helpfulCount: 18 + Math.floor(random() * 20),
-      factorReactions: makeFactorReactions(factorKeys, 10 + Math.floor(random() * 8)),
-      postedAtLabel: TIME_LABELS[TIME_LABELS.length - 1]!,
-      isPinned: true,
-      isVerifiedExplanation: false,
-      isSynthetic: true,
-      disclosure: "Pinned authored demo rationale; it has not been independently verified.",
-    },
-    {
-      id: `${caseId}-response-referee`,
-      caseId,
-      author: publisherFromPerson(referee, caseId, 1),
-      body: refereeBody,
-      selectedOptionId: recommendedDecision,
-      confidence: 70 + Math.floor(random() * 14),
-      selectedFactorKeys: factorKeys.slice(0, Math.max(1, factorKeys.length - 1)),
-      ruleCitation,
-      helpfulCount: 8 + Math.floor(random() * 12),
-      factorReactions: makeFactorReactions(factorKeys, 6 + Math.floor(random() * 5)),
-      postedAtLabel: TIME_LABELS[Math.floor(random() * 4)]!,
-      isPinned: false,
-      isVerifiedExplanation: false,
-      isSynthetic: true,
-      disclosure: "Authored fictional discussion response.",
-    },
-  ];
+  const assignedPeople: FeedPersonSeed[] = [];
+  const drawPool = pickPeople(`people:${caseId}`, Math.max(replyCount + 4, 12), []);
+  while (assignedPeople.length < replyCount && drawPool.length > 0) {
+    const index = Math.min(drawPool.length - 1, Math.floor(random() * drawPool.length));
+    const [nextPerson] = drawPool.splice(index, 1);
+    if (!nextPerson) break;
+    if (assignedPeople.some((item) => item.displayName === nextPerson.displayName)) continue;
+    assignedPeople.push(nextPerson);
+  }
+  while (assignedPeople.length < replyCount) {
+    const more = pickPeople(
+      `people:${caseId}:pad:${assignedPeople.length}`,
+      1,
+      assignedPeople.map((person) => person.displayName),
+    );
+    if (!more[0]) break;
+    assignedPeople.push(more[0]);
+  }
 
-  rest.forEach((person, index) => {
-    const agrees = random() > 0.38;
-    const isLearner = person.role === "learner" || random() > 0.55;
-    const body = agrees
-      ? isLearner
-        ? pickBody(LEARNER_BODIES, random)
-        : pickBody(AGREE_BODIES, random)
-      : pickBody(DISSENT_BODIES, random);
-    const optionId = agrees ? recommendedDecision : dissentOption;
-    const keys = agrees
-      ? factorKeys.slice(0, Math.max(1, factorKeys.length - (index % 2)))
+  return assignedPeople.map((person, slot) => {
+    const isPinned = slot === 0;
+    const isLeadReferee = slot === 1 && replyCount > 1;
+    const agrees = isPinned || isLeadReferee ? true : random() > 0.42;
+    const selectedKeys = agrees
+      ? factorKeys.slice(0, Math.max(1, factorKeys.length - (slot % 2)))
       : factorKeys.slice(0, 1);
+    const body = isPinned
+      ? educatorBody
+      : isLeadReferee
+        ? refereeBody
+        : composeThreadBody({
+            caseId,
+            category: context.category,
+            criticalFactor: context.criticalFactor,
+            ruleCitation,
+            slot,
+            agrees,
+            role: person.role,
+            random,
+            usedBodies,
+          });
 
-    responses.push({
-      id: `${caseId}-response-${index + 2}`,
+    return {
+      id: `${caseId}-response-${slot}`,
       caseId,
-      author: publisherFromPerson(person, caseId, index + 2),
+      author: publisherFromPerson(person, caseId, slot),
       body,
-      selectedOptionId: optionId,
-      confidence: 58 + Math.floor(random() * 28),
-      selectedFactorKeys: keys,
-      ruleCitation: agrees && random() > 0.6 ? ruleCitation : undefined,
-      helpfulCount: 2 + Math.floor(random() * 16),
-      factorReactions: makeFactorReactions(keys, 3 + index),
-      postedAtLabel: TIME_LABELS[Math.min(TIME_LABELS.length - 2, Math.floor(random() * (TIME_LABELS.length - 1)))]!,
-      isPinned: false,
+      selectedOptionId: agrees ? recommendedDecision : dissentOption,
+      confidence: isPinned ? 78 + Math.floor(random() * 12) : 55 + Math.floor(random() * 35),
+      selectedFactorKeys: selectedKeys,
+      ruleCitation: isPinned || (agrees && random() > 0.55) ? ruleCitation : undefined,
+      helpfulCount: isPinned ? 12 + Math.floor(random() * 24) : 1 + Math.floor(random() * 18),
+      factorReactions: makeFactorReactions(selectedKeys, 3 + slot + Math.floor(random() * 6)),
+      postedAtLabel: isPinned
+        ? "Pinned demo response"
+        : TIME_LABELS[Math.min(TIME_LABELS.length - 1, Math.floor(random() * TIME_LABELS.length))]!,
+      isPinned,
       isVerifiedExplanation: false,
       isSynthetic: true,
-      disclosure: "Authored fictional discussion response.",
-    });
+      disclosure: isPinned
+        ? "Pinned authored demo rationale; it has not been independently verified."
+        : "Authored fictional discussion response.",
+    } satisfies DiscussionResponse;
   });
-
-  return responses;
 }
 
 export function pickPublisher(seed: string): Publisher {
@@ -444,6 +488,11 @@ export function buildCase(draft: CaseDraft): OfficiatingCase {
       draft.ruleCitation,
       draft.alternateOptionId,
       draft.answerOptions.map((item) => item.id),
+      {
+        category: draft.category,
+        criticalFactor: draft.criticalFactor,
+        title: draft.title,
+      },
     ),
   };
 }

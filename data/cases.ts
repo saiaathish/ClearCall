@@ -11,6 +11,7 @@ import {
   option,
 } from "@/data/case-builders";
 import { extraCases } from "@/data/extra-cases";
+import { buildGeneratedCases } from "@/data/generated-cases";
 
 export { DEMO_REVIEW_DISCLAIMER };
 
@@ -672,4 +673,8 @@ const seedCases: readonly OfficiatingCase[] = [
   },
 ];
 
-export const cases: readonly OfficiatingCase[] = [...seedCases, ...extraCases];
+export const cases: readonly OfficiatingCase[] = [
+  ...seedCases,
+  ...extraCases,
+  ...buildGeneratedCases(Math.max(0, 100 - seedCases.length - extraCases.length)),
+];

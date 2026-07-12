@@ -218,8 +218,8 @@ describe("deriveLearnerProfile", () => {
 describe("authored demo data integrity", () => {
   it("contains review-labelled cases with internally valid IDs and percentages", () => {
     const ids = new Set(cases.map((item) => item.id));
-    expect(cases.length).toBeGreaterThanOrEqual(50);
-    expect(ids.size).toBe(cases.length);
+    expect(cases).toHaveLength(100);
+    expect(ids.size).toBe(100);
 
     for (const item of cases) {
       const optionIds = new Set(item.answerOptions.map((option) => option.id));
