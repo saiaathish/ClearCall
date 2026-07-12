@@ -1705,27 +1705,12 @@ select:focus {
 
 .thread-header {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 18px;
   margin-bottom: 22px;
   border-bottom: 2px solid var(--ink);
   padding-bottom: 16px;
-}
-
-.thread-back {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: 8px;
-  color: var(--green);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.thread-back:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
 }
 
 .thread-header__title {
