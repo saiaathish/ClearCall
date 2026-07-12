@@ -13,6 +13,7 @@ import type {
   TeachingContrast,
   UserAnswer,
 } from "./types";
+import { getInitialAttempt, getScoredAnswer } from "./decision-draft";
 
 const DIFFICULTY_ORDER: readonly Difficulty[] = [
   "beginner",
@@ -86,7 +87,8 @@ const dedupeLatestAnswers = (
 
   return [...latestByCase.values()].sort(
     (first, second) =>
-      timestamp(first.answeredAt) - timestamp(second.answeredAt) ||
+      timestamp(getInitialAttempt(first).answeredAt) -
+        timestamp(getInitialAttempt(second).answeredAt) ||
       first.caseId.localeCompare(second.caseId),
   );
 };
@@ -100,17 +102,18 @@ const resolveAnswers = (
   return dedupeLatestAnswers(answers).flatMap((answer) => {
     const item = casesById.get(answer.caseId);
     if (!item) return [];
+    const scoredAnswer = getScoredAnswer(answer);
 
     const optionExists = item.answerOptions.some(
-      (option) => option.id === answer.selectedOptionId,
+      (option) => option.id === scoredAnswer.selectedOptionId,
     );
     if (!optionExists) return [];
 
     return [
       {
-        answer,
+        answer: scoredAnswer,
         case: item,
-        isCorrect: answer.selectedOptionId === item.recommendedDecision,
+        isCorrect: scoredAnswer.selectedOptionId === item.recommendedDecision,
       },
     ];
   });

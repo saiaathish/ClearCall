@@ -151,14 +151,21 @@ export interface OfficiatingCase {
   reviewDisclaimer: string;
 }
 
-export interface UserAnswer {
-  caseId: string;
+export interface DecisionAttempt {
   /** Stable AnswerOption.id; never the visible label. */
   selectedOptionId: string;
   confidence: number;
   /** Stable RuleFactor.key values; never the visible labels. */
   selectedFactorKeys: readonly string[];
   answeredAt: string;
+}
+
+export interface UserAnswer extends DecisionAttempt {
+  caseId: string;
+  /** Immutable first attempt used for calibration and learning metrics. */
+  initialAttempt?: DecisionAttempt;
+  /** Number of updates made after the first submitted attempt. */
+  revisionCount?: number;
 }
 
 export interface PerformanceBreakdown {

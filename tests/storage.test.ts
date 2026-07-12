@@ -159,6 +159,18 @@ describe("demo storage (Supabase-backed)", () => {
 
     const next = {
       ...initialDemoState,
+      answers: {
+        "case-a": {
+          ...validAnswer,
+          initialAttempt: {
+            selectedOptionId: "option-b",
+            confidence: 92,
+            selectedFactorKeys: ["control"],
+            answeredAt: "2026-07-09T00:00:00.000Z",
+          },
+          revisionCount: 2,
+        },
+      },
       savedCaseIds: ["handball-raised-arm", "advantage-quick-breakdown"],
     };
     expect(writeDemoState(next)).toBe(true);
@@ -166,6 +178,10 @@ describe("demo storage (Supabase-backed)", () => {
       "handball-raised-arm",
       "advantage-quick-breakdown",
     ]);
+    expect(readDemoState().answers["case-a"]?.initialAttempt?.selectedOptionId).toBe(
+      "option-b",
+    );
+    expect(readDemoState().answers["case-a"]?.revisionCount).toBe(2);
     clearDemoState();
     expect(readDemoState().savedCaseIds).toEqual(initialDemoState.savedCaseIds);
     vi.unstubAllGlobals();
@@ -177,10 +193,15 @@ describe("demo storage (Supabase-backed)", () => {
         data: [
           {
             case_id: "case-a",
-            selected_option_id: "option-a",
-            confidence: 80,
-            selected_factor_keys: ["speed"],
-            answered_at: "2026-07-10T00:00:00.000Z",
+            selected_option_id: "option-b",
+            confidence: 74,
+            selected_factor_keys: ["control"],
+            answered_at: "2026-07-10T00:05:00.000Z",
+            initial_selected_option_id: "option-a",
+            initial_confidence: 80,
+            initial_selected_factor_keys: ["speed"],
+            initial_answered_at: "2026-07-10T00:00:00.000Z",
+            revision_count: 1,
           },
         ],
         error: null,
@@ -231,7 +252,16 @@ describe("demo storage (Supabase-backed)", () => {
 
     const result = await fetchDemoState(supabase, "user-1");
 
-    expect(result.answers["case-a"]).toEqual(validAnswer);
+    expect(result.answers["case-a"]).toMatchObject({
+      caseId: "case-a",
+      selectedOptionId: "option-b",
+      confidence: 74,
+      revisionCount: 1,
+      initialAttempt: {
+        selectedOptionId: "option-a",
+        confidence: 80,
+      },
+    });
     expect(result.savedCaseIds).toEqual(["case-a"]);
     expect(result.currentStreak).toBe(3);
     expect(result.onboardingComplete).toBe(true);
@@ -256,12 +286,47 @@ describe("demo storage (Supabase-backed)", () => {
     expect(result).toEqual(initialDemoState);
   });
 
-  it("submitAnswerRemote upserts into user_answers", async () => {
-    const supabase = makeSupabaseMock({
-      profiles: { data: { current_streak: 1 }, error: null },
-    });
-    await submitAnswerRemote(supabase, "user-1", validAnswer, false);
-    expect(supabase.from).toHaveBeenCalledWith("user_answers");
+  it("submitAnswerRemote preserves first-attempt fields when updating", async () => {
+    const upsert = vi.fn(() => Promise.resolve({ data: null, error: null }));
+    const supabase = {
+      from: vi.fn(() => ({ upsert })),
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const revised: UserAnswer = {
+      ...validAnswer,
+      selectedOptionId: "option-b",
+      answeredAt: "2026-07-10T00:05:00.000Z",
+      initialAttempt: {
+        selectedOptionId: "option-a",
+        confidence: 80,
+        selectedFactorKeys: ["speed"],
+        answeredAt: "2026-07-10T00:00:00.000Z",
+      },
+      revisionCount: 1,
+    };
+
+    await submitAnswerRemote(supabase, "user-1", revised, false);
+    expect(upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        selected_option_id: "option-b",
+        initial_selected_option_id: "option-a",
+        initial_answered_at: "2026-07-10T00:00:00.000Z",
+        revision_count: 1,
+      }),
+      { onConflict: "user_id,case_id" },
+    );
+  });
+
+  it("submitAnswerRemote surfaces a rejected answer write", async () => {
+    const failure = new Error("write failed");
+    const supabase = {
+      from: vi.fn(() => ({
+        upsert: vi.fn(() => Promise.resolve({ data: null, error: failure })),
+      })),
+    } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    await expect(submitAnswerRemote(supabase, "user-1", validAnswer, false)).rejects.toBe(
+      failure,
+    );
   });
 
   it("toggleSavedRemote upserts when saving and deletes when unsaving", async () => {
