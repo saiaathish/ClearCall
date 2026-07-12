@@ -4,7 +4,7 @@
  * pinning the whole library in memory.
  */
 
-export const MEDIA_PRELOAD_CACHE_SIZE = 6;
+export const MEDIA_PRELOAD_CACHE_SIZE = 10;
 
 export class MediaPreloadCache {
   private readonly entries = new Map<string, HTMLImageElement>();
