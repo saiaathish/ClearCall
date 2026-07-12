@@ -60,7 +60,7 @@ export function CaseCard({
   scenario: OfficiatingCase;
   onSubmitted?: (caseId: string) => void;
 }) {
-  const { answers, isDemoSession, submitAnswer } = useDemo();
+  const { answers, submitAnswer } = useDemo();
   const { showToast } = useToast();
   const savedAnswer = answers[scenario.id];
   const resultRef = useRef<HTMLElement>(null);
@@ -163,7 +163,6 @@ export function CaseCard({
           key={`${scenario.id}:${answerVersion}`}
           scenario={scenario}
           savedAnswer={savedAnswer}
-          isDemoResponse={isDemoSession && Boolean(savedAnswer)}
           onSave={saveDecision}
         />
 
@@ -191,12 +190,10 @@ export function CaseCard({
 function DecisionForm({
   scenario,
   savedAnswer,
-  isDemoResponse,
   onSave,
 }: {
   scenario: OfficiatingCase;
   savedAnswer?: UserAnswer;
-  isDemoResponse: boolean;
   onSave: (draft: DecisionDraft) => Promise<SubmitAnswerResult>;
 }) {
   const initialDraft = createDecisionDraft(savedAnswer);
@@ -351,16 +348,12 @@ function DecisionForm({
         <p className="decision-privacy" aria-live="polite">
           <PencilLine aria-hidden="true" size={13} />
           {isSaving
-            ? "Saving your call…"
+            ? "Saving…"
             : savedAnswer
             ? hasChanges
-              ? "Unsaved changes. Update the call to refresh the result below."
-              : isDemoResponse
-                ? (savedAnswer.revisionCount ?? 0) > 0
-                  ? "Current demo profile call shown. Change any choice to reconsider it."
-                  : "Seeded demo profile call shown. Change any choice to reconsider it."
-                : "Current response shown. Change any choice to reconsider it."
-            : "Results stay hidden until you submit."}
+              ? "Unsaved changes"
+              : "You can revise anytime"
+            : "Submit to reveal the evidence"}
         </p>
         <div className="decision-action-buttons">
           {savedAnswer && hasChanges && (
@@ -454,12 +447,9 @@ function ResultPanel({
                 ? "Your call matched the reviewed decision"
                 : "This case challenges your weighting"}
           </h3>
-          <p>
-            {openDiscussion
-              ? "This is authored open-discussion material, not an official correctness judgment."
-              : "Compare your confidence and factors with the qualified-review pattern."}
-            {wasRevised ? " Your first attempt remains the calibration record." : ""}
-          </p>
+          {wasRevised ? (
+            <p>Your first attempt remains the calibration record.</p>
+          ) : null}
         </div>
       </div>
 
@@ -536,10 +526,7 @@ function ResultPanel({
 
       <div className="distribution-section">
         <div>
-          <h3 className="section-title">How the seeded groups responded</h3>
-          <p className="section-description">
-            Public patterns are shown separately from reviewer patterns and never treated as authority.
-          </p>
+          <h3 className="section-title">How others responded</h3>
         </div>
         <div className="distribution-grid">
           <DistributionBars
@@ -554,11 +541,6 @@ function ResultPanel({
             tone="verified"
           />
         </div>
-      </div>
-
-      <div className="demo-notice">
-        <CircleAlert aria-hidden="true" size={15} />
-        <span>{scenario.reviewDisclaimer}</span>
       </div>
 
       <div className="button-row">
