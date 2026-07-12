@@ -56,8 +56,13 @@ function pickBestPhoto(
   photoQueue: MediaAsset[],
   minScore: number,
 ): MediaAsset | null {
-  // Authored /media/cases/* stills are preserved even when reused across related posts.
-  if (preferred && isAuthoredCaseStill(preferred) && isRealPhoto(preferred)) {
+  // Preferred authored still only if unused (strict one-asset-per-post).
+  if (
+    preferred &&
+    isAuthoredCaseStill(preferred) &&
+    isRealPhoto(preferred) &&
+    !usedPhotos.has(preferred)
+  ) {
     const known = PHOTO_ASSETS.find((item) => item.src === preferred);
     usedPhotos.add(preferred);
     return (
@@ -71,7 +76,7 @@ function pickBestPhoto(
     );
   }
 
-  // Stock placeholders only stick when their tags actually match the category.
+  // Stock placeholders only stick when unused AND tags match.
   if (
     preferred &&
     isRealPhoto(preferred) &&
@@ -113,7 +118,7 @@ function pickBestPhoto(
     }
   }
 
-  // Only fall back to an unmatched still when the category is generic.
+  // Generic categories may take any unused still.
   if (minScore <= 0) {
     while (photoQueue.length > 0) {
       const next = photoQueue.shift()!;
@@ -125,20 +130,36 @@ function pickBestPhoto(
   return null;
 }
 
+function pickAnyUnusedPhoto(
+  usedPhotos: Set<string>,
+  photoQueue: MediaAsset[],
+): MediaAsset | null {
+  while (photoQueue.length > 0) {
+    const next = photoQueue.shift()!;
+    if (usedPhotos.has(next.src)) continue;
+    usedPhotos.add(next.src);
+    return next;
+  }
+  for (const candidate of PHOTO_ASSETS) {
+    if (usedPhotos.has(candidate.src)) continue;
+    usedPhotos.add(candidate.src);
+    return candidate;
+  }
+  return null;
+}
+
 function pickBestVideo(
   category: string,
-  videoCursor: number,
-  usedVideos: Map<string, number>,
-  maxUses: number,
+  usedVideos: Set<string>,
   minScore: number,
 ): VideoAsset | null {
-  const available = VIDEO_ASSETS.filter((video) => (usedVideos.get(video.videoSrc) ?? 0) < maxUses);
-  const pool = available.length > 0 ? available : [...VIDEO_ASSETS];
+  const available = VIDEO_ASSETS.filter((video) => !usedVideos.has(video.videoSrc));
+  if (available.length === 0) return null;
   const wanted = tagsForCategory(category);
 
   let bestScore = -1;
   const tied: VideoAsset[] = [];
-  for (const candidate of pool) {
+  for (const candidate of available) {
     if (!matchesCategory(candidate.tags, category, minScore)) continue;
     const score = scoreTagOverlap(candidate.tags, wanted);
     if (score > bestScore) {
@@ -150,10 +171,16 @@ function pickBestVideo(
     }
   }
 
-  if (tied.length === 0) return null;
+  // Specialty with no match: do not fall back to unrelated clips.
+  if (tied.length === 0) {
+    if (minScore > 0) return null;
+    const next = available[0]!;
+    usedVideos.add(next.videoSrc);
+    return next;
+  }
 
-  const best = tied[videoCursor % tied.length]!;
-  usedVideos.set(best.videoSrc, (usedVideos.get(best.videoSrc) ?? 0) + 1);
+  const best = tied[0]!;
+  usedVideos.add(best.videoSrc);
   return best;
 }
 
@@ -175,7 +202,6 @@ function asTextCase(scenario: OfficiatingCase): OfficiatingCase {
 }
 
 function asVideoCase(scenario: OfficiatingCase, video: VideoAsset): OfficiatingCase {
-  // Always describe the clip that is actually attached.
   const mediaAlt = video.alt;
   return alignCaseCopy(
     {
@@ -193,11 +219,8 @@ function asVideoCase(scenario: OfficiatingCase, video: VideoAsset): OfficiatingC
 }
 
 function asImageCase(scenario: OfficiatingCase, photo: MediaAsset): OfficiatingCase {
-  const keepAuthoredAlt =
-    scenario.imageSrc === photo.src &&
-    Boolean(scenario.mediaAlt) &&
-    !scenario.mediaAlt!.toLowerCase().includes("placeholder");
-  const mediaAlt = keepAuthoredAlt ? scenario.mediaAlt! : photo.alt;
+  // Always use the honest asset alt so copy matches what is on screen.
+  const mediaAlt = photo.alt;
   return alignCaseCopy(
     {
       ...scenario,
@@ -214,43 +237,36 @@ function asImageCase(scenario: OfficiatingCase, photo: MediaAsset): OfficiatingC
 }
 
 /**
- * Ensures every image/video post uses a real photo or demo clip — never SVG —
- * and that image posts do not share the same stock file across the catalog.
- * Specialty categories keep media only when primary tags match; otherwise the
- * post becomes text so copy never drifts from what is on screen.
+ * One post = one unique media file. No photo or video reuse across the catalog.
+ * Specialty categories prefer tag-matched media; leftover unused photos are
+ * backfilled onto text posts so the feed stays image-heavy.
+ * Descriptions and comments are aligned to the attached asset after assignment.
  */
 export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): OfficiatingCase[] {
   const usedPhotos = new Set<string>();
   const photoQueue = [...PHOTO_ASSETS];
-  const usedVideos = new Map<string, number>();
-  let videoCursor = 0;
-  // Fewer unique match clips → allow more reuse so the mix stays clip-heavy.
-  const maxUsesPerClip = 5;
-  const maxVideos = Math.min(
-    VIDEO_ASSETS.length * maxUsesPerClip,
-    Math.max(24, Math.floor(catalog.length * 0.6)),
-  );
+  const usedVideos = new Set<string>();
 
   const takeVideo = (scenario: OfficiatingCase, requireMatch: boolean): OfficiatingCase | null => {
-    if (videoCursor >= maxVideos) return null;
     const minScore = requireMatch ? minScoreForCategory(scenario.category) : 0;
-    // Specialty categories never accept unmatched clips.
     if (!requireMatch && minScoreForCategory(scenario.category) > 0) return null;
-    const video = pickBestVideo(scenario.category, videoCursor, usedVideos, maxUsesPerClip, minScore);
+    const video = pickBestVideo(scenario.category, usedVideos, minScore);
     if (!video) return null;
-    videoCursor += 1;
     return asVideoCase(scenario, video);
   };
 
-  return catalog.map((scenario) => {
+  const assigned = catalog.map((scenario) => {
     const kind =
       scenario.mediaKind ??
       (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text");
     const minScore = minScoreForCategory(scenario.category);
-    const preserveCaseStill = isAuthoredCaseStill(scenario.imageSrc);
+    const preserveCaseStill =
+      isAuthoredCaseStill(scenario.imageSrc) && !usedPhotos.has(scenario.imageSrc ?? "");
 
-    // Authored text posts stay text — never promote them into unrelated clips.
     if (kind === "text") {
+      // Try a category-matched still first so authored text posts can become images.
+      const photo = pickBestPhoto(null, scenario.category, usedPhotos, photoQueue, minScore);
+      if (photo) return asImageCase(scenario, photo);
       return asTextCase(scenario);
     }
 
@@ -258,8 +274,7 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
       return takeVideo(scenario, true) ?? asTextCase(scenario);
     }
 
-    // Prefer a category-matched clip over a stock still when primary tags align.
-    // Never upgrade away from an authored /media/cases/* still.
+    // Prefer unique matched clip for image drafts unless an unused authored still wins.
     if (kind === "image" && !preserveCaseStill) {
       const upgraded = takeVideo(scenario, true);
       if (upgraded) return upgraded;
@@ -268,9 +283,27 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
     const photo = pickBestPhoto(scenario.imageSrc, scenario.category, usedPhotos, photoQueue, minScore);
     if (photo) return asImageCase(scenario, photo);
 
-    // Specialty image with no matching still: try a matched clip, else text.
     const fallbackVideo = takeVideo(scenario, true);
     if (fallbackVideo) return fallbackVideo;
     return asTextCase(scenario);
   });
+
+  // Backfill: leftover unique photos go onto remaining text posts.
+  // Prefer a tag match; otherwise attach any unused still and ground the copy.
+  for (let index = 0; index < assigned.length; index += 1) {
+    const scenario = assigned[index]!;
+    if (scenario.mediaKind !== "text") continue;
+
+    const matched = pickBestPhoto(null, scenario.category, usedPhotos, photoQueue, 1);
+    if (matched) {
+      assigned[index] = asImageCase(scenario, matched);
+      continue;
+    }
+
+    const anyPhoto = pickAnyUnusedPhoto(usedPhotos, photoQueue);
+    if (!anyPhoto) break;
+    assigned[index] = asImageCase(scenario, anyPhoto);
+  }
+
+  return assigned;
 }
