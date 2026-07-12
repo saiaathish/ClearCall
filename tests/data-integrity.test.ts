@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { cases } from "@/data/cases";
 
 describe("seeded case integrity", () => {
-  it("ships ten fully disclosed demonstration cases", () => {
-    expect(cases).toHaveLength(10);
-    expect(new Set(cases.map((item) => item.id)).size).toBe(10);
+  it("ships a full disclosed demonstration catalog", () => {
+    expect(cases.length).toBeGreaterThanOrEqual(50);
+    expect(new Set(cases.map((item) => item.id)).size).toBe(cases.length);
     expect(cases.every((item) => item.isDemo)).toBe(true);
     expect(cases.every((item) => item.reviewState === "DEMO_REVIEW_REQUIRED")).toBe(true);
     expect(cases.every((item) => item.scenarioStatus === "OPEN_DISCUSSION")).toBe(true);
@@ -24,9 +24,9 @@ describe("seeded case integrity", () => {
     }
   });
 
-  it("includes the three deliberate teaching-pair categories", () => {
+  it("keeps the three deliberate teaching-pair categories", () => {
     for (const category of ["Serious foul play", "Handball", "Offside interference"]) {
-      expect(cases.filter((item) => item.category === category)).toHaveLength(2);
+      expect(cases.filter((item) => item.category === category).length).toBeGreaterThanOrEqual(2);
     }
   });
 
@@ -43,5 +43,18 @@ describe("seeded case integrity", () => {
         .every((item) => item.imageSrc && item.mediaWidth && item.mediaHeight && item.mediaAlt),
     ).toBe(true);
     expect(cases.filter((item) => item.mediaKind === "text").every((item) => !item.imageSrc)).toBe(true);
+  });
+
+  it("gives every case a fuller discussion with distinct authors and avatars", () => {
+    for (const scenario of cases) {
+      expect(scenario.seededDiscussion.length).toBeGreaterThanOrEqual(5);
+      const names = scenario.seededDiscussion.map((item) => item.author.displayName);
+      expect(new Set(names).size).toBe(names.length);
+      expect(
+        scenario.seededDiscussion.every(
+          (item) => item.author.avatarSrc && item.author.avatarInitials.length >= 1,
+        ),
+      ).toBe(true);
+    }
   });
 });

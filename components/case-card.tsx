@@ -32,6 +32,7 @@ import {
 import type { OfficiatingCase, UserAnswer } from "@/lib/types";
 import { useDemo, type SubmitAnswerResult } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
+import { Avatar } from "@/components/avatar";
 import { CaseVideo } from "@/components/case-video";
 import { DistributionBars } from "@/components/distribution-bars";
 import { SaveButton, ShareButton } from "@/components/case-actions";
@@ -116,9 +117,10 @@ export function CaseCard({
       aria-labelledby={`case-${scenario.id}-title`}
     >
       <header className="case-card__header">
-        <span className="avatar" aria-hidden="true">
-          {scenario.publisher.avatarInitials}
-        </span>
+        <Avatar
+          initials={scenario.publisher.avatarInitials}
+          src={scenario.publisher.avatarSrc}
+        />
         <div className="publisher">
           <div className="publisher__name">
             {scenario.publisher.displayName}

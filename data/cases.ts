@@ -1,252 +1,21 @@
-import type {
-  AnswerOption,
-  DiscussionResponse,
-  Distribution,
-  FactorReactionCounts,
-  OfficiatingCase,
-  Publisher,
-  RuleFactor,
-} from "../lib/types";
+import type { OfficiatingCase } from "@/lib/types";
+import {
+  DEMO_REVIEW_DISCLAIMER,
+  commonCaseFields,
+  factor,
+  foulOptions,
+  handballOptions,
+  makeDiscussion,
+  makeDistribution,
+  offsideOptions,
+  option,
+} from "@/data/case-builders";
+import { extraCases } from "@/data/extra-cases";
 
-export const DEMO_REVIEW_DISCLAIMER =
-  "Authored demonstration material only. The scenario, percentages, comments, and recommended decision require review by a qualified soccer officiating expert before production use; they are not official governing-body guidance.";
+export { DEMO_REVIEW_DISCLAIMER };
 
-const demoDesk: Publisher = {
-  id: "publisher-clearcall-demo-desk",
-  displayName: "ClearCall demo desk",
-  role: "educator",
-  organization: "Authored product prototype",
-  avatarInitials: "CD",
-  isVerified: false,
-  isSynthetic: true,
-  disclosure: "Fictional demo publisher; no credential or affiliation is claimed.",
-};
+const seedCases: readonly OfficiatingCase[] = [
 
-const demoReferee: Publisher = {
-  id: "publisher-sam-rivera-demo",
-  displayName: "Sam Rivera",
-  role: "referee",
-  avatarInitials: "SR",
-  isVerified: false,
-  isSynthetic: true,
-  disclosure: "Fictional demo participant; no credential is claimed.",
-};
-
-const demoLearner: Publisher = {
-  id: "publisher-nia-patel-demo",
-  displayName: "Nia Patel",
-  role: "learner",
-  avatarInitials: "NP",
-  isVerified: false,
-  isSynthetic: true,
-  disclosure: "Fictional demo participant.",
-};
-
-const makeDistribution = (
-  label: string,
-  percentages: Readonly<Record<string, number>>,
-): Distribution => ({
-  label,
-  percentages,
-  basis: "authored_demo",
-  isSynthetic: true,
-  disclaimer:
-    "Illustrative authored percentages, not responses collected from real users or verified officials.",
-});
-
-const makeFactorReactions = (
-  factorKeys: readonly string[],
-  seed: number,
-): Readonly<Record<string, FactorReactionCounts>> => {
-  const reactions: Record<string, FactorReactionCounts> = {};
-  factorKeys.forEach((key, index) => {
-    reactions[key] = {
-      agree: seed + index * 2,
-      disagree: Math.max(1, Math.floor(seed / 4) - index),
-    };
-  });
-  return reactions;
-};
-
-const makeDiscussion = (
-  caseId: string,
-  recommendedDecision: string,
-  factorKeys: readonly string[],
-  educatorBody: string,
-  refereeBody: string,
-  ruleCitation: string,
-): readonly DiscussionResponse[] => [
-  {
-    id: `${caseId}-response-demo-desk`,
-    caseId,
-    author: demoDesk,
-    body: educatorBody,
-    selectedOptionId: recommendedDecision,
-    confidence: 82,
-    selectedFactorKeys: factorKeys,
-    ruleCitation,
-    helpfulCount: 24,
-    factorReactions: makeFactorReactions(factorKeys, 12),
-    postedAtLabel: "Seeded demo response",
-    isPinned: true,
-    isVerifiedExplanation: false,
-    isSynthetic: true,
-    disclosure:
-      "Pinned authored demo rationale; it has not been independently verified.",
-  },
-  {
-    id: `${caseId}-response-referee`,
-    caseId,
-    author: demoReferee,
-    body: refereeBody,
-    selectedOptionId: recommendedDecision,
-    confidence: 74,
-    selectedFactorKeys: factorKeys.slice(0, Math.max(1, factorKeys.length - 1)),
-    ruleCitation,
-    helpfulCount: 11,
-    factorReactions: makeFactorReactions(factorKeys, 7),
-    postedAtLabel: "Seeded demo response",
-    isPinned: false,
-    isVerifiedExplanation: false,
-    isSynthetic: true,
-    disclosure: "Authored fictional discussion response.",
-  },
-  {
-    id: `${caseId}-response-learner`,
-    caseId,
-    author: demoLearner,
-    body: "I initially focused on the outcome of the play. Comparing the structured factors makes the decision process easier to explain.",
-    selectedOptionId: recommendedDecision,
-    confidence: 66,
-    selectedFactorKeys: factorKeys.slice(0, 1),
-    helpfulCount: 5,
-    factorReactions: makeFactorReactions(factorKeys.slice(0, 1), 4),
-    postedAtLabel: "Seeded demo response",
-    isPinned: false,
-    isVerifiedExplanation: false,
-    isSynthetic: true,
-    disclosure: "Authored fictional discussion response.",
-  },
-];
-
-const factor = (
-  key: string,
-  label: string,
-  value: string,
-  supportsRecommendation: boolean,
-  explanation: string,
-): RuleFactor => ({
-  key,
-  label,
-  value,
-  supportsRecommendation,
-  explanation,
-});
-
-const option = (
-  id: string,
-  label: string,
-  shortLabel: string,
-  description: string,
-): AnswerOption => ({ id, label, shortLabel, description });
-
-const foulOptions: readonly AnswerOption[] = [
-  option("play-on", "Play on", "Play on", "No punishable foul is identified."),
-  option(
-    "direct-free-kick-no-card",
-    "Direct free kick, no card",
-    "Foul only",
-    "Penalize the challenge without a disciplinary sanction.",
-  ),
-  option(
-    "direct-free-kick-yellow",
-    "Direct free kick and yellow card",
-    "Yellow card",
-    "Treat the challenge as reckless in this demo review.",
-  ),
-  option(
-    "direct-free-kick-red",
-    "Direct free kick and red card",
-    "Red card",
-    "Treat the challenge as serious foul play in this demo review.",
-  ),
-  option(
-    "insufficient-evidence",
-    "Not enough information",
-    "Need more angles",
-    "The supplied description is not enough to decide confidently.",
-  ),
-];
-
-const handballOptions: readonly AnswerOption[] = [
-  option("no-handball", "No handball offence", "Play on", "Allow play to continue."),
-  option(
-    "direct-free-kick-handball",
-    "Direct free kick for handball",
-    "Direct free kick",
-    "Penalize an offence outside the defender's penalty area.",
-  ),
-  option(
-    "penalty-kick-handball",
-    "Penalty kick for handball",
-    "Penalty kick",
-    "Penalize an offence by a defender inside their penalty area.",
-  ),
-  option(
-    "penalty-kick-yellow",
-    "Penalty kick and yellow card",
-    "Penalty + yellow",
-    "Award the penalty and add a caution in this demo review.",
-  ),
-  option(
-    "insufficient-evidence",
-    "Not enough information",
-    "Need more angles",
-    "Request a clearer view of arm position and ball movement.",
-  ),
-];
-
-const offsideOptions: readonly AnswerOption[] = [
-  option("goal-awarded", "Award the goal", "Goal", "No offside offence is identified."),
-  option(
-    "offside-indirect-free-kick",
-    "Offside offence — indirect free kick",
-    "Offside",
-    "Penalize active involvement by the attacker.",
-  ),
-  option(
-    "attacking-foul-direct-free-kick",
-    "Attacking foul — direct free kick",
-    "Attacking foul",
-    "Penalize a separate physical offence by the attacker.",
-  ),
-  option(
-    "insufficient-evidence",
-    "Not enough information",
-    "Need more angles",
-    "The available view does not establish position or involvement.",
-  ),
-];
-
-const commonCaseFields = {
-  sport: "soccer" as const,
-  publisher: demoDesk,
-  ruleset: "Soccer Laws of the Game — demo reference",
-  rulesetVersion: "Prototype snapshot — version review pending",
-  mediaKind: "video" as const,
-  imageSrc: null,
-  mediaWidth: 1600,
-  mediaHeight: 900,
-  videoSrc: null,
-  posterSrc: null,
-  sourceType: "authored-demo" as const,
-  permissionStatus: "demo-only" as const,
-  isDemo: true,
-  reviewState: "DEMO_REVIEW_REQUIRED" as const,
-  reviewDisclaimer: DEMO_REVIEW_DISCLAIMER,
-};
-
-export const cases: readonly OfficiatingCase[] = [
   {
     ...commonCaseFields,
     id: "sfp-controlled-lunge",
@@ -901,4 +670,6 @@ export const cases: readonly OfficiatingCase[] = [
       "Law 12 concept — goalkeeper handling restrictions",
     ),
   },
-] satisfies readonly OfficiatingCase[];
+];
+
+export const cases: readonly OfficiatingCase[] = [...seedCases, ...extraCases];

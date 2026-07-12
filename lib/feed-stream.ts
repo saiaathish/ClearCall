@@ -1,7 +1,7 @@
 import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
 import type { OfficiatingCase } from "@/lib/types";
 
-export const FEED_BATCH_SIZE = 4;
+export const FEED_BATCH_SIZE = 5;
 /** How many media URLs to warm ahead of the last visible item. */
 export const FEED_PRELOAD_AHEAD = 3;
 /** Cap rendered feed nodes so infinite reshuffles do not grow the DOM forever. */
@@ -54,16 +54,19 @@ export function pickRandomMedia(
 }
 
 /**
- * Give text / placeholder cases a random library still so the feed stays visual.
- * Authored image/video assets are kept as-is.
+ * Give image-shaped cases without an authored asset a random library still.
+ * Text posts stay text. Video placeholders stay video (no forced backdrop).
  */
 export function withLibraryBackdrop(
   scenario: OfficiatingCase,
   random: RandomFn = defaultRandom,
 ): OfficiatingCase {
+  const mediaKind = scenario.mediaKind
+    ?? (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text");
+  if (mediaKind === "text" || mediaKind === "video") return scenario;
+
   const hasAuthoredImage = Boolean(scenario.imageSrc || scenario.posterSrc);
-  const hasAuthoredVideo = Boolean(scenario.videoSrc);
-  if (hasAuthoredImage || hasAuthoredVideo) return scenario;
+  if (hasAuthoredImage) return scenario;
 
   const pick = pickRandomMedia(random, scenario.imageSrc);
   return {

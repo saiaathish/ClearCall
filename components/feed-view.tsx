@@ -91,7 +91,7 @@ export function FeedView() {
           FEED_PRELOAD_AHEAD,
         );
         getMediaPreloadCache().preload(warm);
-        setAnnouncement(`${FEED_BATCH_SIZE} more cases mixed in. Keep scrolling.`);
+        setAnnouncement(`${FEED_BATCH_SIZE} more cases loaded. Keep scrolling.`);
         return trimmed;
       });
       setIsAppending(false);
@@ -153,7 +153,7 @@ export function FeedView() {
       <header className="feed-toolbar">
         <div className="feed-toolbar__title">
           <h1>Feed</h1>
-          <p>Watch → decide → explain. Open a case to make the call.</p>
+          <p>Infinite mix of text, image, and video cases. Scroll for the next 5.</p>
         </div>
         <div className="feed-toolbar__actions">
           <label className="feed-filter" htmlFor="foul-type-filter">
@@ -211,7 +211,7 @@ export function FeedView() {
         {filteredCases.length > 0 ? (
           <button className="button button--secondary" type="button" onClick={loadMore} disabled={isAppending}>
             {isAppending ? <LoaderCircle className="spin" aria-hidden="true" size={17} /> : null}
-            {isAppending ? "Mixing cases…" : "Load more cases"}
+            {isAppending ? "Loading…" : "Load more cases"}
           </button>
         ) : null}
       </div>

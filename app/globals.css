@@ -307,6 +307,19 @@ svg {
   font-size: 11px;
   font-weight: 780;
   letter-spacing: 0.03em;
+  overflow: hidden;
+}
+
+.avatar--photo {
+  padding: 0;
+  background: transparent;
+}
+
+.avatar__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .avatar--lime {
