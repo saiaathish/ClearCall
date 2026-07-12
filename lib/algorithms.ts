@@ -195,6 +195,26 @@ export function calculateSimilarity(
   };
 }
 
+/** True when either case lists the other in its authored `similarCaseIds` teaching pair. */
+export function areComparablePair(a: OfficiatingCase, b: OfficiatingCase): boolean {
+  if (a.id === b.id) return false;
+  return a.similarCaseIds.includes(b.id) || b.similarCaseIds.includes(a.id);
+}
+
+/** Resolves the authored similar-case links for a source case into concrete peers. */
+export function getComparablePeers(
+  source: OfficiatingCase,
+  allCases: readonly OfficiatingCase[],
+): OfficiatingCase[] {
+  const byId = new Map(allCases.map((item) => [item.id, item] as const));
+  const peers: OfficiatingCase[] = [];
+  for (const id of source.similarCaseIds) {
+    const peer = byId.get(id);
+    if (peer && peer.id !== source.id) peers.push(peer);
+  }
+  return peers;
+}
+
 const factorDifferences = (
   first: OfficiatingCase,
   second: OfficiatingCase,

@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import { cases } from "../data/cases";
 import {
+  areComparablePair,
   calculateCalibrationScore,
   calculateSimilarity,
   deriveLearnerProfile,
   findTeachingContrast,
+  getComparablePeers,
   rankPersonalizedCases,
   DISAGREEMENT_WEIGHT,
   DIFFICULTY_WEIGHT,
@@ -233,5 +235,31 @@ describe("authored demo data integrity", () => {
       expect(first.recommendedDecision).not.toBe(second.recommendedDecision);
       expect(findTeachingContrast(first, cases)?.case.id).toBe(second.id);
     }
+  });
+
+  it("keeps teaching pairs bidirectional in similarCaseIds", () => {
+    const expectedPairs = [
+      ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
+      ["handball-supporting-arm", "handball-raised-arm"],
+      ["offside-line-of-vision", "offside-no-impact"],
+    ] as const;
+
+    for (const [firstId, secondId] of expectedPairs) {
+      const first = caseById(firstId);
+      const second = caseById(secondId);
+      expect(first.similarCaseIds).toContain(secondId);
+      expect(second.similarCaseIds).toContain(firstId);
+      expect(areComparablePair(first, second)).toBe(true);
+      expect(getComparablePeers(first, cases).map((item) => item.id)).toEqual([secondId]);
+      expect(getComparablePeers(second, cases).map((item) => item.id)).toEqual([firstId]);
+    }
+  });
+
+  it("does not treat unlinked cases as comparable pairs", () => {
+    const linked = caseById("sfp-controlled-lunge");
+    const unlinked = caseById("dogso-central-breakaway");
+    expect(areComparablePair(linked, unlinked)).toBe(false);
+    expect(getComparablePeers(unlinked, cases)).toEqual([]);
+    expect(areComparablePair(linked, linked)).toBe(false);
   });
 });
