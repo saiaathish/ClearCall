@@ -36,25 +36,32 @@ describe("feed stream", () => {
     expect(new Set(shuffled.map((item) => item.id))).toEqual(new Set(ids));
   });
 
-  it("stops once every unique case has appeared", () => {
+  it("keeps appending after the unique catalog is exhausted", () => {
     const pool = cases.slice(0, 5);
     let items: FeedItem[] = [];
-    for (let round = 0; round < 6; round += 1) {
+    for (let round = 0; round < 4; round += 1) {
       items = appendFeedBatch(pool, items, {
         batchSize: FEED_BATCH_SIZE,
         random: sequentialRandom([0.2, 0.7, 0.4, 0.9, 0.1, 0.55, 0.33]),
       });
     }
-    expect(items.length).toBe(pool.length);
+    expect(items.length).toBeGreaterThan(pool.length);
     expect(new Set(items.map((item) => item.scenario.id)).size).toBe(pool.length);
+    expect(new Set(items.map((item) => item.key)).size).toBe(items.length);
   });
 
-  it("never repeats a case id in the feed", () => {
+  it("avoids immediate repeats when the pool is large enough", () => {
+    const pool = cases.slice(0, Math.min(8, cases.length));
     let items: FeedItem[] = [];
-    items = appendFeedBatch(cases, items, { batchSize: cases.length, random: () => 0.1 });
-    items = appendFeedBatch(cases, items, { batchSize: cases.length, random: () => 0.1 });
-    expect(items.length).toBe(cases.length);
-    expect(new Set(items.map((item) => item.scenario.id)).size).toBe(cases.length);
+    items = appendFeedBatch(pool, items, {
+      batchSize: pool.length * 2,
+      recentWindow: 3,
+      random: sequentialRandom([0.15, 0.85, 0.35, 0.65, 0.25, 0.75, 0.45, 0.55]),
+    });
+    expect(items.length).toBe(pool.length * 2);
+    for (let index = 1; index < items.length; index += 1) {
+      expect(items[index]!.scenario.id).not.toBe(items[index - 1]!.scenario.id);
+    }
     expect(new Set(items.map((item) => item.key)).size).toBe(items.length);
   });
 

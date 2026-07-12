@@ -79,8 +79,11 @@ export function FeedView() {
   const appendNext = useCallback(() => {
     const pool = filteredCasesRef.current;
     if (pool.length === 0) return false;
+    let grew = false;
     setFeedItems((current) => {
       const expanded = appendFeedBatch(pool, current, { batchSize: FEED_BATCH_SIZE });
+      grew = expanded.length > current.length;
+      if (!grew) return current;
       getMediaPreloadCache().preload(
         upcomingMediaSrcs(
           expanded,
@@ -90,7 +93,7 @@ export function FeedView() {
       );
       return expanded;
     });
-    return true;
+    return grew;
   }, []);
 
   // Infinite scroll: IntersectionObserver + scroll/resize fallback.
