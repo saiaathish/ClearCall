@@ -164,12 +164,9 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   return (
     <div className="page-shell">
       <header className="thread-header">
-        <div className="thread-header__title">
-          <span>Case</span>
-          <h1>{scenario.title}</h1>
-        </div>
-        <Link className="button button--secondary" href="/">
-          <ArrowLeft aria-hidden="true" size={16} /> Back to feed
+        <h1 className="sr-only">{scenario.title}</h1>
+        <Link className="text-link" href="/">
+          <ArrowLeft aria-hidden="true" size={14} /> Back to feed
         </Link>
       </header>
 
