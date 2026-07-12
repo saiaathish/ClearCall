@@ -709,6 +709,7 @@ select:focus {
 }
 
 .feed-post {
+  position: relative;
   overflow: hidden;
   border: 2px solid var(--ink);
   background: var(--surface);
@@ -723,6 +724,20 @@ select:focus {
     border-color 140ms ease;
 }
 
+/* Stretch the title link across the card so any non-control click opens it. */
+.feed-post__hit::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+}
+
+.feed-post a:not(.feed-post__hit),
+.feed-post button {
+  position: relative;
+  z-index: 2;
+}
+
 /* Keep video posts fully laid out so muted autoplay + IO stay reliable. */
 .feed-post[data-media="video"] {
   content-visibility: visible;
@@ -734,13 +749,17 @@ select:focus {
   box-shadow: 9px 14px 0 rgb(16 23 19 / 0.24);
 }
 
-.feed-post:focus-visible {
-  outline: 3px solid var(--yellow);
-  outline-offset: 3px;
-}
-
 .feed-post:focus-within {
   border-color: var(--green-bright);
+}
+
+.feed-post__hit:focus-visible {
+  outline: none;
+}
+
+.feed-post:has(.feed-post__hit:focus-visible) {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
 }
 
 .feed-post:hover:focus-within,
