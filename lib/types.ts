@@ -269,8 +269,8 @@ export interface SimilarityResult {
 }
 
 export type ComparisonValue =
-  | "High teaching contrast"
-  | "Useful teaching contrast"
+  | "Strong contrast case"
+  | "Good contrast case"
   | "Similar outcome review";
 
 export interface TeachingContrast {
