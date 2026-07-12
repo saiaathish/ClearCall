@@ -90,13 +90,17 @@ export function withLibraryBackdrop(
   if (hasAuthoredImage) return scenario;
 
   const pick = pickRandomMedia(random, scenario.imageSrc, tagsForCategory(scenario.category));
+  const mediaAlt = pick.alt;
   return {
     ...scenario,
     mediaKind: "image",
     imageSrc: pick.src,
     mediaWidth: pick.width,
     mediaHeight: pick.height,
-    mediaAlt: `${scenario.mediaAlt} · ambient: ${pick.alt}`,
+    mediaAlt,
+    description: scenario.description.toLowerCase().includes(mediaAlt.toLowerCase())
+      ? scenario.description
+      : `${scenario.description.replace(/\s·\sambient:.*$/i, "").trim()} The attached still shows ${mediaAlt.charAt(0).toLowerCase()}${mediaAlt.slice(1)}.`,
   };
 }
 
