@@ -442,10 +442,22 @@ dd {
 }
 
 .button--danger {
-  border-color: var(--red);
-  background: var(--red-pale);
+  border-color: var(--ink);
+  background: var(--red);
   box-shadow: none;
-  color: var(--ink);
+  color: var(--white);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: #b33d2f;
+  box-shadow: none;
+  transform: none;
+}
+
+.button--danger:active:not(:disabled) {
+  background: #9f3428;
+  box-shadow: none;
+  transform: none;
 }
 
 .icon-button {
