@@ -23,7 +23,12 @@ describe("media relevance", () => {
     const clips = new Set(
       cases.filter((item) => item.mediaKind === "video").map((item) => item.videoSrc),
     );
-    expect(clips.size).toBeGreaterThanOrEqual(Math.min(6, VIDEO_ASSETS.length));
+    expect(clips.size).toBeGreaterThanOrEqual(12);
+  });
+
+  it("keeps the catalog video-heavy for an engaging feed", () => {
+    const videos = cases.filter((item) => item.mediaKind === "video");
+    expect(videos.length).toBeGreaterThanOrEqual(40);
   });
 
   it("keeps handball / keeper case images on matching assets when possible", () => {

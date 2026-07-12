@@ -465,15 +465,7 @@ export function buildGeneratedCases(needed: number, mediaStartIndex = 0): readon
     let mediaAlt = `Text-only teaching prompt: ${title}`;
 
     const slot = index % 5;
-    if (slot === 0 && photoCursor < PHOTO_ASSETS.length) {
-      const photo = photoAt(photoCursor);
-      photoCursor += 1;
-      mediaKind = "image";
-      imageSrc = photo.src;
-      mediaWidth = photo.width;
-      mediaHeight = photo.height;
-      mediaAlt = photo.alt;
-    } else if (slot === 1 && index < VIDEO_ASSETS.length * 4) {
+    if (slot === 0 || slot === 1) {
       const video = VIDEO_ASSETS[index % VIDEO_ASSETS.length]!;
       mediaKind = "video";
       videoSrc = video.videoSrc;
@@ -482,6 +474,14 @@ export function buildGeneratedCases(needed: number, mediaStartIndex = 0): readon
       mediaHeight = video.height;
       mediaAlt = video.alt;
     } else if (slot === 2 && photoCursor < PHOTO_ASSETS.length) {
+      const photo = photoAt(photoCursor);
+      photoCursor += 1;
+      mediaKind = "image";
+      imageSrc = photo.src;
+      mediaWidth = photo.width;
+      mediaHeight = photo.height;
+      mediaAlt = photo.alt;
+    } else if (slot === 3 && photoCursor < PHOTO_ASSETS.length) {
       const photo = photoAt(photoCursor);
       photoCursor += 1;
       mediaKind = "image";

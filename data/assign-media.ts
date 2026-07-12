@@ -19,6 +19,10 @@ function isRealPhoto(src: string | null | undefined): boolean {
   );
 }
 
+function isAuthoredCaseStill(src: string | null | undefined): boolean {
+  return Boolean(src?.startsWith("/media/cases/"));
+}
+
 function pickBestPhoto(
   preferred: string | null | undefined,
   wanted: readonly string[],
@@ -72,8 +76,8 @@ function pickBestVideo(
   wanted: readonly string[],
   videoCursor: number,
   usedVideos: Map<string, number>,
+  maxUses: number,
 ): VideoAsset {
-  const maxUses = 3;
   const available = VIDEO_ASSETS.filter((video) => (usedVideos.get(video.videoSrc) ?? 0) < maxUses);
   const pool = available.length > 0 ? available : [...VIDEO_ASSETS];
 
@@ -95,26 +99,85 @@ function pickBestVideo(
   return best;
 }
 
+function asVideoCase(
+  scenario: OfficiatingCase,
+  video: VideoAsset,
+): OfficiatingCase {
+  return {
+    ...scenario,
+    mediaKind: "video" as const,
+    imageSrc: null,
+    videoSrc: video.videoSrc,
+    posterSrc: video.posterSrc,
+    mediaWidth: video.width,
+    mediaHeight: video.height,
+    mediaAlt:
+      scenario.mediaAlt?.includes("placeholder") || !scenario.mediaAlt
+        ? video.alt
+        : scenario.mediaAlt,
+  };
+}
+
 /**
  * Ensures every image/video post uses a real photo or demo clip — never SVG —
  * and that image posts do not share the same file across the catalog.
  * Videos keep posters extracted from the same clip. Media is matched to the
- * case category when possible. Surplus media-shaped posts become text-only.
+ * case category when possible. Many stock image/text posts are upgraded to
+ * video so the feed stays clip-heavy and engaging.
  */
 export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): OfficiatingCase[] {
   const usedPhotos = new Set<string>();
   const photoQueue = [...PHOTO_ASSETS];
   const usedVideos = new Map<string, number>();
   let videoCursor = 0;
-  const maxVideos = VIDEO_ASSETS.length * 3;
+  const maxUsesPerClip = 4;
+  const maxVideos = Math.min(
+    VIDEO_ASSETS.length * maxUsesPerClip,
+    Math.max(24, Math.floor(catalog.length * 0.55)),
+  );
+
+  const takeVideo = (scenario: OfficiatingCase): OfficiatingCase | null => {
+    if (videoCursor >= maxVideos) return null;
+    const wanted = tagsForCategory(scenario.category);
+    const video = pickBestVideo(wanted, videoCursor, usedVideos, maxUsesPerClip);
+    videoCursor += 1;
+    return asVideoCase(scenario, video);
+  };
 
   return catalog.map((scenario) => {
     const kind =
       scenario.mediaKind ??
       (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text");
     const wanted = tagsForCategory(scenario.category);
+    const preserveCaseStill = isAuthoredCaseStill(scenario.imageSrc);
 
+    if (kind === "video") {
+      return takeVideo(scenario) ?? {
+        ...scenario,
+        mediaKind: "text" as const,
+        imageSrc: null,
+        videoSrc: null,
+        posterSrc: null,
+        mediaWidth: null,
+        mediaHeight: null,
+        mediaAlt: `Text-only teaching prompt: ${scenario.title}`,
+      };
+    }
+
+    // Prefer turning stock image posts into soccer clips while budget remains.
+    if (kind === "image" && !preserveCaseStill) {
+      const upgraded = takeVideo(scenario);
+      if (upgraded) return upgraded;
+    }
+
+    // Promote some (not all) text posts so the feed stays mixed.
     if (kind === "text") {
+      const promote =
+        [...scenario.id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3 !== 0;
+      if (promote) {
+        const upgraded = takeVideo(scenario);
+        if (upgraded) return upgraded;
+      }
       return {
         ...scenario,
         mediaKind: "text" as const,
@@ -126,37 +189,10 @@ export function assignUniqueRealMedia(catalog: readonly OfficiatingCase[]): Offi
       };
     }
 
-    if (kind === "video") {
-      if (videoCursor >= maxVideos) {
-        return {
-          ...scenario,
-          mediaKind: "text" as const,
-          imageSrc: null,
-          videoSrc: null,
-          posterSrc: null,
-          mediaWidth: null,
-          mediaHeight: null,
-          mediaAlt: `Text-only teaching prompt: ${scenario.title}`,
-        };
-      }
-      const video = pickBestVideo(wanted, videoCursor, usedVideos);
-      videoCursor += 1;
-      return {
-        ...scenario,
-        mediaKind: "video" as const,
-        imageSrc: null,
-        videoSrc: video.videoSrc,
-        posterSrc: video.posterSrc,
-        mediaWidth: video.width,
-        mediaHeight: video.height,
-        mediaAlt: scenario.mediaAlt?.includes("placeholder")
-          ? video.alt
-          : scenario.mediaAlt || video.alt,
-      };
-    }
-
     const photo = pickBestPhoto(scenario.imageSrc, wanted, usedPhotos, photoQueue);
     if (!photo) {
+      const fallbackVideo = takeVideo(scenario);
+      if (fallbackVideo) return fallbackVideo;
       return {
         ...scenario,
         mediaKind: "text" as const,
