@@ -28,20 +28,26 @@ function getMediaKind(scenario: OfficiatingCase): MediaKind {
 export function FeedPostCard({
   scenario,
   priority = false,
+  appearanceKey,
 }: {
   scenario: OfficiatingCase;
   priority?: boolean;
+  /** Unique per feed appearance so reshuffled repeats stay accessible. */
+  appearanceKey?: string;
 }) {
   const { answers, temporaryComments } = useDemo();
   const mediaKind = getMediaKind(scenario);
   const comments = [...scenario.seededDiscussion, ...(temporaryComments[scenario.id] ?? [])];
   const detailHref = `/case/${scenario.id}`;
+  const domId = (appearanceKey ?? scenario.id).replace(/[^a-zA-Z0-9_-]+/g, "-");
+  const titleId = `feed-post-${domId}-title`;
+  const discussionId = `feed-post-${domId}-discussion`;
 
   return (
     <article
       className="feed-post"
       data-media={mediaKind}
-      aria-labelledby={`feed-post-${scenario.id}-title`}
+      aria-labelledby={titleId}
     >
       <header className="feed-post__header">
         <span className="avatar" aria-hidden="true">{scenario.publisher.avatarInitials}</span>
@@ -72,7 +78,7 @@ export function FeedPostCard({
               <span className="meta-chip">{scenario.category}</span>
               <span className="meta-chip">{scenario.difficulty}</span>
             </div>
-            <h2 id={`feed-post-${scenario.id}-title`}>
+            <h2 id={titleId}>
               <Link href={detailHref}>{scenario.prompt}</Link>
             </h2>
             <p>{scenario.description}</p>
@@ -82,9 +88,9 @@ export function FeedPostCard({
             </div>
           </div>
 
-          <section className="comment-preview" aria-labelledby={`feed-post-${scenario.id}-discussion`}>
+          <section className="comment-preview" aria-labelledby={discussionId}>
             <div className="comment-preview__header">
-              <h3 id={`feed-post-${scenario.id}-discussion`}>
+              <h3 id={discussionId}>
                 <MessageCircle aria-hidden="true" size={15} /> Discussion
               </h3>
               <span>{comments.length} {comments.length === 1 ? "response" : "responses"}</span>
