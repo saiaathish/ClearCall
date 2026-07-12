@@ -226,6 +226,7 @@ function isPublisher(value: unknown): value is Publisher {
     isOneOf(value.role, USER_ROLES) &&
     isOptionalString(value.organization) &&
     typeof value.avatarInitials === "string" &&
+    (value.avatarSrc === undefined || value.avatarSrc === null || typeof value.avatarSrc === "string") &&
     typeof value.isVerified === "boolean" &&
     typeof value.isSynthetic === "boolean" &&
     typeof value.disclosure === "string"

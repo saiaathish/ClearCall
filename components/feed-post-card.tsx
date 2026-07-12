@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, BookOpen, Clock3, MessageCircle } from "lucide-react";
 import type { MediaKind, OfficiatingCase } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
+import { Avatar } from "@/components/avatar";
 import { CaseVideo } from "@/components/case-video";
 import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
 import { StatusBadge } from "@/components/status-badge";
@@ -42,6 +43,7 @@ export function FeedPostCard({
   const domId = (appearanceKey ?? scenario.id).replace(/[^a-zA-Z0-9_-]+/g, "-");
   const titleId = `feed-post-${domId}-title`;
   const discussionId = `feed-post-${domId}-discussion`;
+  const previewComments = comments.slice(0, 3);
 
   return (
     <article
@@ -50,7 +52,10 @@ export function FeedPostCard({
       aria-labelledby={titleId}
     >
       <header className="feed-post__header">
-        <span className="avatar" aria-hidden="true">{scenario.publisher.avatarInitials}</span>
+        <Avatar
+          initials={scenario.publisher.avatarInitials}
+          src={scenario.publisher.avatarSrc}
+        />
         <div className="publisher">
           <div className="publisher__name">{scenario.publisher.displayName}</div>
           <div className="publisher__meta">
@@ -77,6 +82,7 @@ export function FeedPostCard({
               <StatusBadge status={scenario.scenarioStatus} />
               <span className="meta-chip">{scenario.category}</span>
               <span className="meta-chip">{scenario.difficulty}</span>
+              <span className="meta-chip meta-chip--media">{mediaKind}</span>
             </div>
             <h2 id={titleId}>
               <Link href={detailHref}>{scenario.prompt}</Link>
@@ -95,11 +101,15 @@ export function FeedPostCard({
               </h3>
               <span>{comments.length} {comments.length === 1 ? "response" : "responses"}</span>
             </div>
-            {comments.length > 0 ? (
+            {previewComments.length > 0 ? (
               <ul>
-                {comments.slice(0, 2).map((comment) => (
+                {previewComments.map((comment) => (
                   <li key={comment.id}>
-                    <span className="avatar avatar--small" aria-hidden="true">{comment.author.avatarInitials}</span>
+                    <Avatar
+                      initials={comment.author.avatarInitials}
+                      size="sm"
+                      src={comment.author.avatarSrc}
+                    />
                     <span>
                       <strong>{comment.author.displayName}</strong>
                       <span>{comment.body}</span>

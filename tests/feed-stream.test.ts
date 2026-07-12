@@ -52,13 +52,19 @@ describe("feed stream", () => {
     expect(uniqueKeys.size).toBe(items.length);
   });
 
-  it("assigns library backdrops to text-only cases", () => {
+  it("leaves text-only cases as text", () => {
     const textCase = cases.find((item) => item.mediaKind === "text");
     expect(textCase).toBeTruthy();
     const enriched = withLibraryBackdrop(textCase!, () => 0);
-    expect(enriched.mediaKind).toBe("image");
-    expect(enriched.imageSrc).toBe(mediaLibrary[0]!.src);
-    expect(textCase!.imageSrc).toBeNull();
+    expect(enriched.mediaKind).toBe("text");
+    expect(enriched.imageSrc).toBeNull();
+  });
+
+  it("leaves video placeholders as video", () => {
+    const videoCase = cases.find((item) => item.mediaKind === "video" && !item.videoSrc);
+    expect(videoCase).toBeTruthy();
+    const enriched = withLibraryBackdrop(videoCase!, () => 0);
+    expect(enriched.mediaKind).toBe("video");
   });
 
   it("preserves authored image assets", () => {

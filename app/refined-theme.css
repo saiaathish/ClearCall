@@ -885,6 +885,24 @@ select:focus {
   font-size: 0.58rem;
 }
 
+.avatar--large {
+  width: 68px;
+  height: 68px;
+  font-size: 0.9rem;
+}
+
+.avatar--photo {
+  padding: 0;
+  background: transparent;
+}
+
+.avatar__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .comment-preview li > span:last-child {
   display: grid;
   min-width: 0;

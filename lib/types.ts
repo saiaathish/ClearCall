@@ -71,6 +71,8 @@ export interface Publisher {
   role: UserRole;
   organization?: string;
   avatarInitials: string;
+  /** Optional profile image; when absent, UI falls back to initials. */
+  avatarSrc?: string | null;
   isVerified: boolean;
   isSynthetic: boolean;
   disclosure: string;

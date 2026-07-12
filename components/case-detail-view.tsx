@@ -20,6 +20,7 @@ import { cases } from "@/data/cases";
 import type { DiscussionResponse, Distribution, OfficiatingCase, PublishedCaseDraft } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
+import { Avatar } from "@/components/avatar";
 import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
 import { StatusBadge } from "@/components/status-badge";
@@ -359,7 +360,10 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
     <li className="discussion-card">
       <div className="discussion-card__header">
         <div className="discussion-author">
-          <span className="avatar" aria-hidden="true">{response.author.avatarInitials}</span>
+          <Avatar
+            initials={response.author.avatarInitials}
+            src={response.author.avatarSrc}
+          />
           <span className="discussion-author__copy">
             <strong>
               {response.author.displayName}

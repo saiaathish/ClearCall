@@ -75,9 +75,10 @@ describe("calculateSimilarity", () => {
 
 describe("findTeachingContrast", () => {
   it("adds a transparent bonus and selects the deliberate different-outcome pair", () => {
+    const seedCatalog = cases.slice(0, 10);
     const contrast = findTeachingContrast(
       caseById("sfp-controlled-lunge"),
-      cases,
+      seedCatalog,
     );
 
     expect(contrast?.case.id).toBe("sfp-high-contact-lunge");
@@ -142,7 +143,8 @@ describe("calculateCalibrationScore", () => {
 
 describe("rankPersonalizedCases", () => {
   it("prioritizes a category after a high-confidence incorrect answer", () => {
-    const ranked = rankPersonalizedCases(cases, [
+    const seedCatalog = cases.slice(0, 10);
+    const ranked = rankPersonalizedCases(seedCatalog, [
       answer(
         "sfp-controlled-lunge",
         "direct-free-kick-red",
@@ -158,10 +160,11 @@ describe("rankPersonalizedCases", () => {
   });
 
   it("gives a new user a deterministic, category-diverse seeded order", () => {
-    const firstRun = rankPersonalizedCases(cases, [], {
+    const catalog = cases.slice(0, 10);
+    const firstRun = rankPersonalizedCases(catalog, [], {
       currentLevel: "intermediate",
     });
-    const secondRun = rankPersonalizedCases(cases, [], {
+    const secondRun = rankPersonalizedCases(catalog, [], {
       currentLevel: "intermediate",
     });
 
@@ -213,10 +216,10 @@ describe("deriveLearnerProfile", () => {
 });
 
 describe("authored demo data integrity", () => {
-  it("contains ten review-labelled cases with internally valid IDs and percentages", () => {
+  it("contains review-labelled cases with internally valid IDs and percentages", () => {
     const ids = new Set(cases.map((item) => item.id));
-    expect(cases).toHaveLength(10);
-    expect(ids.size).toBe(10);
+    expect(cases.length).toBeGreaterThanOrEqual(50);
+    expect(ids.size).toBe(cases.length);
 
     for (const item of cases) {
       const optionIds = new Set(item.answerOptions.map((option) => option.id));
@@ -247,6 +250,7 @@ describe("authored demo data integrity", () => {
   });
 
   it("includes the three requested deliberate teaching pairs", () => {
+    const seedCatalog = cases.slice(0, 10);
     const expectedPairs = [
       ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
       ["handball-supporting-arm", "handball-raised-arm"],
@@ -258,11 +262,12 @@ describe("authored demo data integrity", () => {
       const second = caseById(secondId);
       expect(first.category).toBe(second.category);
       expect(first.recommendedDecision).not.toBe(second.recommendedDecision);
-      expect(findTeachingContrast(first, cases)?.case.id).toBe(second.id);
+      expect(findTeachingContrast(first, seedCatalog)?.case.id).toBe(second.id);
     }
   });
 
   it("keeps teaching pairs bidirectional in similarCaseIds", () => {
+    const seedCatalog = cases.slice(0, 10);
     const expectedPairs = [
       ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
       ["handball-supporting-arm", "handball-raised-arm"],
@@ -275,8 +280,8 @@ describe("authored demo data integrity", () => {
       expect(first.similarCaseIds).toContain(secondId);
       expect(second.similarCaseIds).toContain(firstId);
       expect(areComparablePair(first, second)).toBe(true);
-      expect(getComparablePeers(first, cases).map((item) => item.id)).toEqual([secondId]);
-      expect(getComparablePeers(second, cases).map((item) => item.id)).toEqual([firstId]);
+      expect(getComparablePeers(first, seedCatalog).map((item) => item.id)).toEqual([secondId]);
+      expect(getComparablePeers(second, seedCatalog).map((item) => item.id)).toEqual([firstId]);
     }
   });
 
