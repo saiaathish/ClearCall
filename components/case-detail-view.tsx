@@ -17,12 +17,13 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { cases } from "@/data/cases";
+import { FEED_PEOPLE, personToPublisher } from "@/data/feed-people";
 import type { DiscussionResponse, Distribution, OfficiatingCase, PublishedCaseDraft } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
-import { Avatar } from "@/components/avatar";
 import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
+import { PublisherLink } from "@/components/publisher-link";
 import { StatusBadge } from "@/components/status-badge";
 import { SaveButton, ShareButton } from "@/components/case-actions";
 import { createClient } from "@/lib/supabase/client";
@@ -131,15 +132,14 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       });
       return;
     }
+    const jordan =
+      FEED_PEOPLE.find((person) => person.displayName === "Jordan Lee") ??
+      FEED_PEOPLE[0]!;
     const localComment: DiscussionResponse = {
       id: `local-${scenario.id}-${Date.now()}`,
       caseId: scenario.id,
       author: {
-        id: "jordan-lee-local",
-        displayName: "Jordan Lee",
-        role: "learner",
-        avatarInitials: "JL",
-        isVerified: false,
+        ...personToPublisher(jordan),
         isSynthetic: false,
         disclosure: "Local demo-user response stored only in this browser.",
       },
@@ -348,11 +348,7 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
   return (
     <li className="discussion-card">
       <div className="discussion-card__header">
-        <div className="discussion-author">
-          <Avatar
-            initials={response.author.avatarInitials}
-            src={response.author.avatarSrc}
-          />
+        <PublisherLink className="discussion-author" publisher={response.author}>
           <span className="discussion-author__copy">
             <strong>
               {response.author.displayName}
@@ -360,7 +356,7 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
             </strong>
             <span>{response.author.role.replaceAll("_", " ")} · {response.postedAtLabel}</span>
           </span>
-        </div>
+        </PublisherLink>
         <span className="decision-badge">{optionLabel(scenario, response.selectedOptionId)}</span>
       </div>
       <p className="discussion-card__body">{response.body}</p>

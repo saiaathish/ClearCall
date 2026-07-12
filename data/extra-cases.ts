@@ -38,8 +38,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-yellow",
     expertExplanation:
-      "Authored demo rationale: side-on ankle contact with recoverable control leans caution rather than red in this teaching frame.",
-    ruleReference: "Law 12 concept — reckless challenges",
+      "Side-on ankle contact with recoverable control leans caution rather than red.",
+    ruleReference: "Law 12 concept: reckless challenges",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "Medium", true, "Approach speed is elevated but not sprinting."),
@@ -49,13 +49,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "Moderate", true, "Force is present without endangering excess."),
     ],
     criticalFactor: "contact-height",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 5, "direct-free-kick-no-card": 14, "direct-free-kick-yellow": 48, "direct-free-kick-red": 26, "insufficient-evidence": 7,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 2, "direct-free-kick-no-card": 8, "direct-free-kick-yellow": 64, "direct-free-kick-red": 21, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 8, "direct-free-kick-no-card": 16, "direct-free-kick-yellow": 40, "direct-free-kick-red": 28, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.58,
@@ -69,7 +69,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["sfp-controlled-lunge"],
     educatorBody: "Ankle height alone does not decide the card. Pair it with control and whether the sole was driven through the ball.",
     refereeBody: "I would sell the yellow loudly and record stud angle for the assessor notes.",
-    ruleCitation: "Law 12 concept — reckless challenges",
+    ruleCitation: "Law 12 concept: reckless challenges",
     publisherSeed: "sfp-side-tackle-ankle",
   }),
   buildCase({
@@ -86,8 +86,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: continued downward force after missing the ball supports a serious-foul-play teaching recommendation.",
-    ruleReference: "Law 12 concept — serious foul play",
+      "Continued downward force after missing the ball I'm landing on serious-foul-play.",
+    ruleReference: "Law 12 concept: serious foul play",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "High", true, "The challenge arrives at pace."),
@@ -97,13 +97,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "High", true, "Downward force continues after the ball leaves."),
     ],
     criticalFactor: "force",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 1, "direct-free-kick-no-card": 4, "direct-free-kick-yellow": 22, "direct-free-kick-red": 68, "insufficient-evidence": 5,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 2, "direct-free-kick-yellow": 10, "direct-free-kick-red": 84, "insufficient-evidence": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3, "direct-free-kick-no-card": 6, "direct-free-kick-yellow": 30, "direct-free-kick-red": 54, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.44,
@@ -111,9 +111,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     publishedAt: "2026-07-07T15:30:00.000Z",
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of an over-the-ball stamp challenge.",
-    educatorBody: "Watch for the second beat after the miss — that is where force and intent separate from a clumsy miss.",
+    educatorBody: "Watch for the second beat after the miss, that is where force and intent separate from a clumsy miss.",
     refereeBody: "If I am not sure about the downward pressure, I stay on yellow and write the doubt clearly.",
-    ruleCitation: "Law 12 concept — serious foul play",
+    ruleCitation: "Law 12 concept: serious foul play",
     alternateOptionId: "direct-free-kick-yellow",
     publisherSeed: "sfp-over-the-ball",
   }),
@@ -131,8 +131,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-no-card",
     expertExplanation:
-      "Authored demo rationale: late but upright medium contact without endangering force supports foul-only teaching guidance.",
-    ruleReference: "Law 12 concept — careless challenges",
+      "Late, upright, medium contact. Foul, no card.",
+    ruleReference: "Law 12 concept: careless challenges",
     rulePath: ["Law 12", "Fouls and misconduct", "Careless"],
     factors: [
       factor("speed", "Speed", "Low-medium", true, "Neither player is at full sprint."),
@@ -142,13 +142,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "Moderate", true, "Enough to foul, not enough for a card in this demo."),
     ],
     criticalFactor: "force",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 8, "direct-free-kick-no-card": 54, "direct-free-kick-yellow": 28, "direct-free-kick-red": 4, "insufficient-evidence": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 3, "direct-free-kick-no-card": 71, "direct-free-kick-yellow": 20, "direct-free-kick-red": 1, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 10, "direct-free-kick-no-card": 46, "direct-free-kick-yellow": 34, "direct-free-kick-red": 4, "insufficient-evidence": 6,
     }),
     disagreementScore: 0.41,
@@ -158,7 +158,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only description of a late shoulder charge after a pass.",
     educatorBody: "Late is not automatically yellow. Ask whether the force endangered the opponent or only interrupted play.",
     refereeBody: "I would stop play quickly, explain the lateness, and keep cards holstered unless there is history.",
-    ruleCitation: "Law 12 concept — careless challenges",
+    ruleCitation: "Law 12 concept: careless challenges",
     alternateOptionId: "direct-free-kick-yellow",
     publisherSeed: "sfp-late-shoulder",
   }),
@@ -176,8 +176,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: leaving the ground with both feet into an opponent typically supports a sending-off recommendation.",
-    ruleReference: "Law 12 concept — serious foul play",
+      "Both feet off the ground into an opponent. I'm going red.",
+    ruleReference: "Law 12 concept: serious foul play",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "High", true, "Players arrive at pace into the duel."),
@@ -187,13 +187,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "High", true, "Body weight travels through the opponent."),
     ],
     criticalFactor: "control",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 0, "direct-free-kick-no-card": 2, "direct-free-kick-yellow": 18, "direct-free-kick-red": 75, "insufficient-evidence": 5,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 1, "direct-free-kick-yellow": 8, "direct-free-kick-red": 88, "insufficient-evidence": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 1, "direct-free-kick-no-card": 4, "direct-free-kick-yellow": 24, "direct-free-kick-red": 64, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.33,
@@ -204,9 +204,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(7).width,
     mediaHeight: imageAt(7).height,
     mediaAlt: "Diagram of a two-footed midfield challenge.",
-    educatorBody: "Leaving the ground with both feet is the headline factor — contact location confirms rather than creates the red.",
+    educatorBody: "Leaving the ground with both feet is the headline factor, contact location confirms rather than creates the red.",
     refereeBody: "I show the red early and manage the reaction; debate belongs in the report, not on the pitch.",
-    ruleCitation: "Law 12 concept — serious foul play",
+    ruleCitation: "Law 12 concept: serious foul play",
     publisherSeed: "sfp-scissor-challenge",
   }),
   buildCase({
@@ -223,8 +223,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-yellow",
     expertExplanation:
-      "Authored demo rationale: a tactical trip after being beaten often supports a caution for stopping a promising attack / reckless trip depending on context.",
-    ruleReference: "Law 12 concept — reckless challenges",
+      "A tactical trip after being beaten often supports a caution for stopping a promising attack / reckless trip depending on context.",
+    ruleReference: "Law 12 concept: reckless challenges",
     rulePath: ["Law 12", "Fouls and misconduct", "Reckless"],
     factors: [
       factor("speed", "Speed", "Medium", true, "Attacker is accelerating away."),
@@ -234,13 +234,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "Low-moderate", true, "Force trips rather than endangers."),
     ],
     criticalFactor: "control",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 4, "direct-free-kick-no-card": 22, "direct-free-kick-yellow": 58, "direct-free-kick-red": 8, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 1, "direct-free-kick-no-card": 14, "direct-free-kick-yellow": 74, "direct-free-kick-red": 5, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 6, "direct-free-kick-no-card": 28, "direct-free-kick-yellow": 50, "direct-free-kick-red": 8, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.52,
@@ -250,7 +250,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Demo clip placeholder of a trailing-leg trip after a turn.",
     educatorBody: "Ask whether the defender was playing the ball or the player. Trailing-leg trips after being beaten usually answer themselves.",
     refereeBody: "Quick whistle, yellow for the tactical nature, and restart before tempers rise.",
-    ruleCitation: "Law 12 concept — reckless challenges",
+    ruleCitation: "Law 12 concept: reckless challenges",
     alternateOptionId: "direct-free-kick-no-card",
     publisherSeed: "sfp-trailing-leg",
   }),
@@ -268,8 +268,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "no-handball",
     expertExplanation:
-      "Authored demo rationale: proximity plus a natural tucked arm after an unexpected deflection leans no offence.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Proximity plus a natural tucked arm after an unexpected deflection leans no offence.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Tucked to body", true, "Arm is not making the body unnaturally bigger."),
@@ -279,13 +279,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "Immediate teammate block", true, "Unexpected change of path."),
     ],
     criticalFactor: "proximity",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 62, "direct-free-kick-handball": 8, "penalty-kick-handball": 18, "penalty-kick-yellow": 4, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 81, "direct-free-kick-handball": 4, "penalty-kick-handball": 8, "penalty-kick-yellow": 2, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 51, "direct-free-kick-handball": 10, "penalty-kick-handball": 26, "penalty-kick-yellow": 5, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.47,
@@ -299,7 +299,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["handball-supporting-arm"],
     educatorBody: "Start with reaction time. If the arm never leaves a natural position, ball-to-hand after a deflection is usually play on.",
     refereeBody: "I stay big and sell play on immediately so both benches know I saw the contact.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     alternateOptionId: "penalty-kick-handball",
     publisherSeed: "handball-accidental-deflection",
   }),
@@ -317,8 +317,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "direct-free-kick-handball",
     expertExplanation:
-      "Authored demo rationale: deliberate handling outside the area supports a direct free kick; carding depends on DOGSO analysis which is borderline here.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Deliberate handling outside the area supports a direct free kick; carding depends on DOGSO analysis which is borderline here.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Extended to ball", true, "Arm clearly moves to the ball."),
@@ -328,13 +328,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "None", true, "Direct shot."),
     ],
     criticalFactor: "arm-movement",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 3, "direct-free-kick-handball": 71, "penalty-kick-handball": 8, "penalty-kick-yellow": 12, "insufficient-evidence": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 1, "direct-free-kick-handball": 82, "penalty-kick-handball": 4, "penalty-kick-yellow": 8, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 5, "direct-free-kick-handball": 62, "penalty-kick-handball": 10, "penalty-kick-yellow": 16, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.39,
@@ -343,8 +343,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of a defender batting a shot outside the area.",
     educatorBody: "Deliberateness is obvious. The harder teaching point is whether a card is required once the free kick is awarded.",
-    refereeBody: "Free kick first, then decide the card with the DOGSO checklist — do not invent a penalty outside the area.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    refereeBody: "Free kick first, then decide the card with the DOGSO checklist, do not invent a penalty outside the area.",
+    ruleCitation: "Law 12 concept: handling the ball",
     publisherSeed: "handball-deliberate-handle",
   }),
   buildCase({
@@ -361,8 +361,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "no-handball",
     expertExplanation:
-      "Authored demo rationale: chest-first contact with incidental follow-on arm brush typically remains no offence when the arm is not making the body bigger.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Chest-first contact with incidental follow-on arm brush typically remains no offence when the arm is not making the body bigger.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Beside torso", true, "Arm is not raised into an unnatural position."),
@@ -372,13 +372,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "Own chest", true, "Immediate continuation from legal contact."),
     ],
     criticalFactor: "arm-position",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 44, "direct-free-kick-handball": 6, "penalty-kick-handball": 38, "penalty-kick-yellow": 5, "insufficient-evidence": 7,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 66, "direct-free-kick-handball": 3, "penalty-kick-handball": 22, "penalty-kick-yellow": 3, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 36, "direct-free-kick-handball": 7, "penalty-kick-handball": 44, "penalty-kick-yellow": 6, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.72,
@@ -388,7 +388,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only sequence describing chest-then-arm contact in the box.",
     educatorBody: "Sequence matters. Legal chest contact followed by an unavoidable brush is not the same as a raised-arm block.",
     refereeBody: "I need to be sure the arm did not push the ball. Without that, I am playing on.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     alternateOptionId: "penalty-kick-handball",
     publisherSeed: "handball-chest-then-arm",
   }),
@@ -406,24 +406,24 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "no-handball",
     expertExplanation:
-      "Authored demo rationale: arms used for self-protection in a wall jump are commonly taught as non-offences when not making the body clearly bigger beyond that purpose.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Arms up to protect yourself in a wall jump? Usually play on, unless they're clearly making the body bigger on purpose.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Protective in front", true, "Arms cover the body during the jump."),
       factor("arm-movement", "Movement toward ball", "None beyond jump", true, "No separate bat."),
       factor("proximity", "Ball proximity", "Free-kick distance", true, "Expected contact zone."),
-      factor("silhouette", "Body silhouette", "Slightly enlarged", true, "Protection can enlarge silhouette — context matters."),
+      factor("silhouette", "Body silhouette", "Slightly enlarged", true, "Protection can enlarge silhouette, context matters."),
       factor("deflection", "Prior deflection", "None", true, "Direct strike."),
     ],
     criticalFactor: "arm-position",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 55, "direct-free-kick-handball": 28, "penalty-kick-handball": 6, "penalty-kick-yellow": 3, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 74, "direct-free-kick-handball": 16, "penalty-kick-handball": 3, "penalty-kick-yellow": 1, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 42, "direct-free-kick-handball": 38, "penalty-kick-handball": 8, "penalty-kick-yellow": 4, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.61,
@@ -434,9 +434,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(2).width,
     mediaHeight: imageAt(2).height,
     mediaAlt: "Still of a defensive wall jump with arms protecting the torso.",
-    educatorBody: "Protective position is not a free pass if the arms are clearly making a barrier wider than the body — judge the silhouette honestly.",
+    educatorBody: "Protective position is not a free pass if the arms are clearly making a barrier wider than the body, judge the silhouette honestly.",
     refereeBody: "I look at whether the arms stayed in front of the torso or flared wide. That single detail decides my call.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     alternateOptionId: "direct-free-kick-handball",
     publisherSeed: "handball-wall-jump",
   }),
@@ -454,8 +454,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "direct-free-kick-handball",
     expertExplanation:
-      "Authored demo rationale: a goalkeeper handling outside their area is treated as a standard handling offence by an outfield player.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "A goalkeeper handling outside their area is treated as a standard handling offence by an outfield player.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Gathering the ball", true, "Clear hand contact."),
@@ -465,13 +465,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "None", true, "Direct under-hit pass."),
     ],
     criticalFactor: "arm-movement",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 4, "direct-free-kick-handball": 78, "penalty-kick-handball": 8, "penalty-kick-yellow": 5, "insufficient-evidence": 5,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 1, "direct-free-kick-handball": 90, "penalty-kick-handball": 4, "penalty-kick-yellow": 2, "insufficient-evidence": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 8, "direct-free-kick-handball": 70, "penalty-kick-handball": 10, "penalty-kick-yellow": 6, "insufficient-evidence": 6,
     }),
     disagreementScore: 0.22,
@@ -482,9 +482,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(6).width,
     mediaHeight: imageAt(6).height,
     mediaAlt: "Tall still of a goalkeeper gathering the ball outside the area.",
-    educatorBody: "Location first. Once you are sure the hands were outside, the offence is ordinary handling — not a keeper privilege.",
+    educatorBody: "Location first. Once you are sure the hands were outside, the offence is ordinary handling, not a keeper privilege.",
     refereeBody: "I check my AR for the line, then award the free kick without inventing a card unless DOGSO applies.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     publisherSeed: "handball-keeper-outside",
   }),
   buildCase({
@@ -501,8 +501,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "offside-indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: clearly impacting the goalkeeper’s ability to play the ball supports active interference.",
-    ruleReference: "Law 11 concept — interfering with an opponent",
+      "Clearly impacting the goalkeeper’s ability to play the ball supports active interference.",
+    ruleReference: "Law 11 concept: interfering with an opponent",
     rulePath: ["Law 11", "Offside", "Interfering with an opponent"],
     factors: [
       factor("position", "Position at shot", "Offside", true, "Position is established."),
@@ -512,13 +512,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch", false, "Touch not required for this route."),
     ],
     criticalFactor: "line-of-vision",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 28, "offside-indirect-free-kick": 62, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 12, "offside-indirect-free-kick": 80, "attacking-foul-direct-free-kick": 1, "insufficient-evidence": 7,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 36, "offside-indirect-free-kick": 50, "attacking-foul-direct-free-kick": 4, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.64,
@@ -532,7 +532,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["offside-line-of-vision"],
     educatorBody: "If the keeper’s first step is delayed because of the screen, involvement is active even without a touch.",
     refereeBody: "I need my AR’s read on whether the keeper truly had a blocked sightline, not just a nearby body.",
-    ruleCitation: "Law 11 concept — interfering with an opponent",
+    ruleCitation: "Law 11 concept: interfering with an opponent",
     alternateOptionId: "goal-awarded",
     publisherSeed: "offside-interfering-shot",
   }),
@@ -550,8 +550,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "offside-indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: drawing a defender through a deceptive run can constitute interfering with an opponent.",
-    ruleReference: "Law 11 concept — interfering with an opponent",
+      "Drawing a defender through a deceptive run can constitute interfering with an opponent.",
+    ruleReference: "Law 11 concept: interfering with an opponent",
     rulePath: ["Law 11", "Offside", "Interfering with an opponent"],
     factors: [
       factor("position", "Position at pass", "Offside", true, "Starts offside."),
@@ -561,13 +561,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch", false, "Touch not required."),
     ],
     criticalFactor: "opponent-impact",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 32, "offside-indirect-free-kick": 55, "attacking-foul-direct-free-kick": 3, "insufficient-evidence": 10,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 18, "offside-indirect-free-kick": 72, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 40, "offside-indirect-free-kick": 44, "attacking-foul-direct-free-kick": 4, "insufficient-evidence": 12,
     }),
     disagreementScore: 0.7,
@@ -577,7 +577,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Demo clip placeholder of an offside dummy run pulling a defender.",
     educatorBody: "The question is whether the defender’s movement was caused by the offside attacker’s action. If yes, involvement is live.",
     refereeBody: "This is hard live. I rely on AR communication about who the defender was tracking.",
-    ruleCitation: "Law 11 concept — interfering with an opponent",
+    ruleCitation: "Law 11 concept: interfering with an opponent",
     alternateOptionId: "goal-awarded",
     publisherSeed: "offside-dummy-run",
   }),
@@ -595,8 +595,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "goal-awarded",
     expertExplanation:
-      "Authored demo rationale: position alone without involvement does not complete an offside offence.",
-    ruleReference: "Law 11 concept — offside position and offence",
+      "Position alone without involvement does not complete an offside offence.",
+    ruleReference: "Law 11 concept: offside position and offence",
     rulePath: ["Law 11", "Offside", "Offside position"],
     factors: [
       factor("position", "Position", "Offside, far side", true, "Position is offside."),
@@ -606,13 +606,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch", true, "Never plays the ball."),
     ],
     criticalFactor: "opponent-impact",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 72, "offside-indirect-free-kick": 18, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 88, "offside-indirect-free-kick": 7, "attacking-foul-direct-free-kick": 1, "insufficient-evidence": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 61, "offside-indirect-free-kick": 26, "attacking-foul-direct-free-kick": 3, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.35,
@@ -623,7 +623,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["offside-no-impact"],
     educatorBody: "Position is a flag condition, not an automatic offence. No involvement means no whistle.",
     refereeBody: "I keep the flag down and stay ready if that attacker later becomes involved.",
-    ruleCitation: "Law 11 concept — offside position and offence",
+    ruleCitation: "Law 11 concept: offside position and offence",
     alternateOptionId: "offside-indirect-free-kick",
     publisherSeed: "offside-waiting-far",
   }),
@@ -641,8 +641,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "offside-indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: becoming involved by playing the ball after being in an offside position supports an offence.",
-    ruleReference: "Law 11 concept — interfering with play",
+      "Becoming involved by playing the ball after being in an offside position supports an offence.",
+    ruleReference: "Law 11 concept: interfering with play",
     rulePath: ["Law 11", "Offside", "Interfering with play"],
     factors: [
       factor("position", "Position at shot", "Offside", true, "Offside at the moment of the shot."),
@@ -652,13 +652,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "Scores from rebound", true, "Clear involvement with the ball."),
     ],
     criticalFactor: "touch",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 16, "offside-indirect-free-kick": 74, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 6, "offside-indirect-free-kick": 88, "attacking-foul-direct-free-kick": 1, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 22, "offside-indirect-free-kick": 66, "attacking-foul-direct-free-kick": 3, "insufficient-evidence": 9,
     }),
     disagreementScore: 0.31,
@@ -669,9 +669,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(4).width,
     mediaHeight: imageAt(4).height,
     mediaAlt: "Freeze frame of a rebound scramble after a shot hits the bar.",
-    educatorBody: "Rebound involvement is the classic 'interfering with play' path — position plus touch finishes the offence.",
+    educatorBody: "Rebound involvement is the classic 'interfering with play' path, position plus touch finishes the offence.",
     refereeBody: "Flag goes up as soon as that attacker plays the rebound. The goal celebration does not change the timing.",
-    ruleCitation: "Law 11 concept — interfering with play",
+    ruleCitation: "Law 11 concept: interfering with play",
     publisherSeed: "offside-rebound-touch",
   }),
   buildCase({
@@ -688,8 +688,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "goal-awarded",
     expertExplanation:
-      "Authored demo rationale: a deliberate play by a defender can create a new phase; teaching guidance awards the goal when that deliberate play is clear.",
-    ruleReference: "Law 11 concept — deliberate play by a defender",
+      "Clear deliberate play by a defender starts a new phase. Goal stands when that's clear.",
+    ruleReference: "Law 11 concept: deliberate play by a defender",
     rulePath: ["Law 11", "Offside", "Deliberate play"],
     factors: [
       factor("position", "Position at original pass", "Offside", true, "Was offside on the first phase."),
@@ -699,13 +699,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "Scores after reset", true, "Finishes the new phase."),
     ],
     criticalFactor: "opponent-impact",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 48, "offside-indirect-free-kick": 40, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 10,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 69, "offside-indirect-free-kick": 22, "attacking-foul-direct-free-kick": 1, "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 41, "offside-indirect-free-kick": 46, "attacking-foul-direct-free-kick": 3, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.76,
@@ -715,7 +715,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only description of a deliberate defender header before an offside attacker scores.",
     educatorBody: "Separate deflection from deliberate play. A chosen header under control usually restarts the offside calculation.",
     refereeBody: "If the header looks panicked and accidental, I stay with offside. If it is a composed play, I allow the goal.",
-    ruleCitation: "Law 11 concept — deliberate play by a defender",
+    ruleCitation: "Law 11 concept: deliberate play by a defender",
     alternateOptionId: "offside-indirect-free-kick",
     publisherSeed: "offside-teammate-pass-back",
   }),
@@ -733,8 +733,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: dogsoOptions,
     recommendedDecision: "direct-free-kick-yellow",
     expertExplanation:
-      "Authored demo rationale: wide location and recovering cover lean SPA (yellow) rather than DOGSO (red).",
-    ruleReference: "Law 12 concept — stopping a promising attack",
+      "Wide location and recovering cover lean SPA (yellow) rather than DOGSO (red).",
+    ruleReference: "Law 12 concept: stopping a promising attack",
     rulePath: ["Law 12", "Disciplinary action", "Stopping a promising attack"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "About 30 metres", true, "Still far for DOGSO."),
@@ -744,13 +744,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Hold", true, "Tactical foul."),
     ],
     criticalFactor: "direction",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "direct-free-kick-no-card": 8, "direct-free-kick-yellow": 64, "direct-free-kick-red": 26,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 4, "direct-free-kick-yellow": 78, "direct-free-kick-red": 18,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3, "direct-free-kick-no-card": 10, "direct-free-kick-yellow": 55, "direct-free-kick-red": 32,
     }),
     disagreementScore: 0.5,
@@ -763,7 +763,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Landscape still of a wide-channel hold near the touchline.",
     educatorBody: "Run the four DOGSO checks. Wide + recovering cover usually means yellow for SPA, not red.",
     refereeBody: "I sell the yellow as tactical and restart quickly before the debate becomes about red.",
-    ruleCitation: "Law 12 concept — stopping a promising attack",
+    ruleCitation: "Law 12 concept: stopping a promising attack",
     alternateOptionId: "direct-free-kick-red",
     publisherSeed: "dogso-wide-channel",
   }),
@@ -781,8 +781,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: dogsoOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: distance, direction, control, and no cover all support DOGSO.",
-    ruleReference: "Law 12 concept — denial of an obvious goal-scoring opportunity",
+      "Distance, direction, control, and no cover all support DOGSO.",
+    ruleReference: "Law 12 concept: denial of an obvious goal-scoring opportunity",
     rulePath: ["Law 12", "Disciplinary action", "Denial of an obvious goal-scoring opportunity"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "About 18 metres", true, "Close enough."),
@@ -792,13 +792,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Trip from behind", true, "Ends the chance."),
     ],
     criticalFactor: "defenders",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 1, "direct-free-kick-no-card": 3, "direct-free-kick-yellow": 20, "direct-free-kick-red": 76,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 1, "direct-free-kick-yellow": 9, "direct-free-kick-red": 90,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 2, "direct-free-kick-no-card": 5, "direct-free-kick-yellow": 28, "direct-free-kick-red": 65,
     }),
     disagreementScore: 0.28,
@@ -808,8 +808,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Demo clip placeholder of a last-defender trip on a central breakaway.",
     similarCaseIds: ["dogso-central-breakaway"],
     educatorBody: "All four DOGSO considerations are satisfied. The teaching trap is hesitating because the foul looks 'soft.'",
-    refereeBody: "Red card, free kick, manage the benches — do not negotiate the colour on the field.",
-    ruleCitation: "Law 12 concept — denial of an obvious goal-scoring opportunity",
+    refereeBody: "Red card, free kick, manage the benches, do not negotiate the colour on the field.",
+    ruleCitation: "Law 12 concept: denial of an obvious goal-scoring opportunity",
     publisherSeed: "dogso-last-defender-trip",
   }),
   buildCase({
@@ -831,8 +831,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "penalty-yellow",
     expertExplanation:
-      "Authored demo rationale: a genuine attempt to play the ball on a DOGSO foul inside the area typically reduces the red to a yellow under current teaching guidance.",
-    ruleReference: "Law 12 concept — DOGSO and attempting to play the ball",
+      "DOGSO foul in the area but a genuine attempt for the ball. Yellow, not red, under current guidance.",
+    ruleReference: "Law 12 concept: DOGSO and attempting to play the ball",
     rulePath: ["Law 12", "Disciplinary action", "Denial of an obvious goal-scoring opportunity"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "Inside the area", true, "DOGSO geography is met."),
@@ -842,13 +842,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Mistimed attempt to play ball", true, "Attempt changes the card."),
     ],
     criticalFactor: "foul-type",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "penalty-no-card": 10, "penalty-yellow": 58, "penalty-red": 30,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "penalty-no-card": 5, "penalty-yellow": 74, "penalty-red": 21,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3, "penalty-no-card": 12, "penalty-yellow": 48, "penalty-red": 37,
     }),
     disagreementScore: 0.55,
@@ -858,7 +858,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only DOGSO case focused on attempting to play the ball inside the area.",
     educatorBody: "Geography says DOGSO; the attempt-to-play-the-ball exception is what changes red to yellow after the penalty.",
     refereeBody: "I award the penalty, then ask myself whether the defender was genuinely playing the ball. If yes, yellow.",
-    ruleCitation: "Law 12 concept — DOGSO and attempting to play the ball",
+    ruleCitation: "Law 12 concept: DOGSO and attempting to play the ball",
     alternateOptionId: "penalty-red",
     publisherSeed: "dogso-challenge-for-ball",
   }),
@@ -876,8 +876,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: dogsoOptions,
     recommendedDecision: "direct-free-kick-yellow",
     expertExplanation:
-      "Authored demo rationale: a rapidly closing goalkeeper can remove the 'obvious' element even when outfield cover is poor.",
-    ruleReference: "Law 12 concept — denial of an obvious goal-scoring opportunity",
+      "A rapidly closing goalkeeper can remove the 'obvious' element even when outfield cover is poor.",
+    ruleReference: "Law 12 concept: denial of an obvious goal-scoring opportunity",
     rulePath: ["Law 12", "Disciplinary action", "Denial of an obvious goal-scoring opportunity"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "About 20 metres", true, "Close."),
@@ -887,13 +887,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Trip", true, "Ends the attack."),
     ],
     criticalFactor: "defenders",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "direct-free-kick-no-card": 6, "direct-free-kick-yellow": 60, "direct-free-kick-red": 32,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 1, "direct-free-kick-no-card": 4, "direct-free-kick-yellow": 72, "direct-free-kick-red": 23,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 4, "direct-free-kick-no-card": 8, "direct-free-kick-yellow": 50, "direct-free-kick-red": 38,
     }),
     disagreementScore: 0.59,
@@ -904,9 +904,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(11).width,
     mediaHeight: imageAt(11).height,
     mediaAlt: "Ambient box-angle diagram used for a closing-goalkeeper DOGSO debate.",
-    educatorBody: "Do not ignore the keeper. An obvious chance requires a realistic path to goal — a rushing keeper can erase that.",
+    educatorBody: "Do not ignore the keeper. An obvious chance requires a realistic path to goal, a rushing keeper can erase that.",
     refereeBody: "I glance at the keeper’s starting point before choosing red or yellow.",
-    ruleCitation: "Law 12 concept — denial of an obvious goal-scoring opportunity",
+    ruleCitation: "Law 12 concept: denial of an obvious goal-scoring opportunity",
     alternateOptionId: "direct-free-kick-red",
     publisherSeed: "dogso-double-chance",
   }),
@@ -924,8 +924,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: advantageOptions,
     recommendedDecision: "continue-play",
     expertExplanation:
-      "Authored demo rationale: once the advantage window has clearly passed, bringing the foul back is usually no longer available.",
-    ruleReference: "Law 5 concept — advantage",
+      "Once the advantage window has clearly passed, bringing the foul back is usually no longer available.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "About three seconds", true, "Outside the immediate window."),
@@ -935,13 +935,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Careless", true, "Still a foul originally."),
     ],
     criticalFactor: "time-elapsed",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 58, "return-original-foul": 30, "drop-ball": 4, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 74, "return-original-foul": 18, "drop-ball": 2, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 49, "return-original-foul": 38, "drop-ball": 5, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.57,
@@ -952,7 +952,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["advantage-quick-breakdown"],
     educatorBody: "Advantage is a short door. Once it closes, you live with the decision and manage the next phase.",
     refereeBody: "I would rather whistle early than invent a late bring-back after three seconds.",
-    ruleCitation: "Law 5 concept — advantage",
+    ruleCitation: "Law 5 concept: advantage",
     alternateOptionId: "return-original-foul",
     publisherSeed: "advantage-delayed-whistle",
   }),
@@ -970,8 +970,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: advantageOptions,
     recommendedDecision: "continue-play",
     expertExplanation:
-      "Authored demo rationale: a clear attacking benefit means advantage stands; disciplinary action can wait for the next stoppage.",
-    ruleReference: "Law 5 concept — advantage",
+      "A clear attacking benefit means advantage stands; disciplinary action can wait for the next stoppage.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "Immediate", true, "Benefit appears at once."),
@@ -981,13 +981,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Reckless", true, "Card still due later."),
     ],
     criticalFactor: "possession",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 70, "return-original-foul": 18, "drop-ball": 3, "insufficient-evidence": 9,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 86, "return-original-foul": 8, "drop-ball": 1, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 61, "return-original-foul": 26, "drop-ball": 4, "insufficient-evidence": 9,
     }),
     disagreementScore: 0.34,
@@ -995,9 +995,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     publishedAt: "2026-06-30T12:35:00.000Z",
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of advantage leading to an immediate shot.",
-    educatorBody: "When the benefit is obvious, keep playing — then come back for the card at the next stoppage.",
+    educatorBody: "When the benefit is obvious, keep playing, then come back for the card at the next stoppage.",
     refereeBody: "I shout 'advantage, I saw that' so the fouler knows the card is coming.",
-    ruleCitation: "Law 5 concept — advantage",
+    ruleCitation: "Law 5 concept: advantage",
     publisherSeed: "advantage-clear-benefit",
   }),
   buildCase({
@@ -1014,8 +1014,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: advantageOptions,
     recommendedDecision: "return-original-foul",
     expertExplanation:
-      "Authored demo rationale: when advantage never materializes and play is stopped for a subsequent foul, teaching often returns to the more advantageous original restart — expert review required for local guidance.",
-    ruleReference: "Law 5 concept — advantage",
+      "Advantage never shows and you stop for something else. Often you go back to the original foul if that restart is better.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "Under two seconds", true, "Still inside the window."),
@@ -1025,13 +1025,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Careless then reckless", true, "Second foul is more severe."),
     ],
     criticalFactor: "time-elapsed",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 12, "return-original-foul": 58, "drop-ball": 18, "insufficient-evidence": 12,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 8, "return-original-foul": 70, "drop-ball": 12, "insufficient-evidence": 10,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 18, "return-original-foul": 48, "drop-ball": 20, "insufficient-evidence": 14,
     }),
     disagreementScore: 0.69,
@@ -1041,7 +1041,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only case about a second foul during an unrealized advantage.",
     educatorBody: "Advantage failed. Stop, pick the restart that best reflects the first offence unless competition guidance says otherwise, and still deal with the reckless act.",
     refereeBody: "I stop for the reckless challenge, show the yellow, and explain which free kick I am giving.",
-    ruleCitation: "Law 5 concept — advantage",
+    ruleCitation: "Law 5 concept: advantage",
     alternateOptionId: "continue-play",
     publisherSeed: "advantage-foul-escalates",
   }),
@@ -1059,8 +1059,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: simulationOptions,
     recommendedDecision: "indirect-free-kick-yellow-simulation",
     expertExplanation:
-      "Authored demo rationale: exaggerated fall and mismatched contact location support a simulation teaching recommendation.",
-    ruleReference: "Law 12 concept — simulation",
+      "Exaggerated fall and mismatched contact location I'm landing on simulation.",
+    ruleReference: "Law 12 concept: simulation",
     rulePath: ["Law 12", "Disciplinary action", "Unsporting behaviour", "Simulation"],
     factors: [
       factor("initiator", "Contact initiator", "Slight defender brush", true, "Contact is minimal."),
@@ -1070,13 +1070,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Clear authored angle", true, "Mismatch is visible."),
     ],
     criticalFactor: "fall-pattern",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 24, "play-on": 20, "indirect-free-kick-yellow-simulation": 48, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 10, "play-on": 18, "indirect-free-kick-yellow-simulation": 64, "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 32, "play-on": 22, "indirect-free-kick-yellow-simulation": 36, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.74,
@@ -1090,7 +1090,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["simulation-initiated-contact"],
     educatorBody: "Match the contact location to the appeal. A face clutch after a hip brush is a classic simulation tell.",
     refereeBody: "I am not guessing from the crowd. The mismatch is enough for me to caution and restart with an IFK.",
-    ruleCitation: "Law 12 concept — simulation",
+    ruleCitation: "Law 12 concept: simulation",
     alternateOptionId: "penalty-kick",
     publisherSeed: "simulation-minimal-contact",
   }),
@@ -1108,8 +1108,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: simulationOptions,
     recommendedDecision: "penalty-kick",
     expertExplanation:
-      "Authored demo rationale: clear clip with a natural fall supports a penalty rather than simulation.",
-    ruleReference: "Law 12 concept — fouls inside the penalty area",
+      "Clear clip with a natural fall supports a penalty rather than simulation.",
+    ruleReference: "Law 12 concept: fouls inside the penalty area",
     rulePath: ["Law 12", "Fouls and misconduct", "Direct free kick"],
     factors: [
       factor("initiator", "Contact initiator", "Defender trailing foot", true, "Defender makes the contact."),
@@ -1119,13 +1119,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Clear", true, "Contact is visible."),
     ],
     criticalFactor: "initiator",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 66, "play-on": 14, "indirect-free-kick-yellow-simulation": 12, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 82, "play-on": 8, "indirect-free-kick-yellow-simulation": 5, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 58, "play-on": 18, "indirect-free-kick-yellow-simulation": 16, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.4,
@@ -1133,9 +1133,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     publishedAt: "2026-07-05T19:50:00.000Z",
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of a trailing-foot clip inside the box.",
-    educatorBody: "Do not overcorrect against diving. When contact initiates the fall, it is a foul — point to the spot.",
+    educatorBody: "Do not overcorrect against diving. When contact initiates the fall, it is a foul, point to the spot.",
     refereeBody: "Penalty. I ignore the theatrical noise and trust the contact I saw.",
-    ruleCitation: "Law 12 concept — fouls inside the penalty area",
+    ruleCitation: "Law 12 concept: fouls inside the penalty area",
     alternateOptionId: "indirect-free-kick-yellow-simulation",
     publisherSeed: "simulation-genuine-clip",
   }),
@@ -1153,8 +1153,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: simulationOptions,
     recommendedDecision: "indirect-free-kick-yellow-simulation",
     expertExplanation:
-      "Authored demo rationale: no contact plus an attempt to deceive supports a simulation caution.",
-    ruleReference: "Law 12 concept — simulation",
+      "No contact plus an attempt to deceive supports a simulation caution.",
+    ruleReference: "Law 12 concept: simulation",
     rulePath: ["Law 12", "Disciplinary action", "Unsporting behaviour", "Simulation"],
     factors: [
       factor("initiator", "Contact initiator", "None", true, "No contact occurs."),
@@ -1164,13 +1164,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Clear gap", true, "Space between players is visible."),
     ],
     criticalFactor: "initiator",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 8, "play-on": 28, "indirect-free-kick-yellow-simulation": 56, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 2, "play-on": 18, "indirect-free-kick-yellow-simulation": 74, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 12, "play-on": 32, "indirect-free-kick-yellow-simulation": 46, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.48,
@@ -1180,7 +1180,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only description of an attacker falling with no contact in the box.",
     educatorBody: "No contact is the cleanest simulation case. Caution, restart, and move on.",
     refereeBody: "Yellow for simulation. I make the signal obvious so both teams understand why there is no penalty.",
-    ruleCitation: "Law 12 concept — simulation",
+    ruleCitation: "Law 12 concept: simulation",
     alternateOptionId: "play-on",
     publisherSeed: "simulation-no-contact",
   }),
@@ -1198,8 +1198,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: simulationOptions,
     recommendedDecision: "play-on",
     expertExplanation:
-      "Authored demo rationale: equal shoulder contact with the attacker initiating the heavier lean supports play on rather than foul or simulation.",
-    ruleReference: "Law 12 concept — charging fairly",
+      "Equal shoulder contact with the attacker initiating the heavier lean supports play on rather than foul or simulation.",
+    ruleReference: "Law 12 concept: charging fairly",
     rulePath: ["Law 12", "Fouls and misconduct", "Charging"],
     factors: [
       factor("initiator", "Contact initiator", "Mutual / attacker leans more", true, "Attacker drives into the contact."),
@@ -1209,13 +1209,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Good side view", true, "Arms and shoulders visible."),
     ],
     criticalFactor: "defender-movement",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 22, "play-on": 48, "indirect-free-kick-yellow-simulation": 22, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 10, "play-on": 68, "indirect-free-kick-yellow-simulation": 14, "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 28, "play-on": 40, "indirect-free-kick-yellow-simulation": 24, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.66,
@@ -1226,9 +1226,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(12).width,
     mediaHeight: imageAt(12).height,
     mediaAlt: "Ambient midfield-press diagram used for a shoulder-charge debate.",
-    educatorBody: "Fair charge is still legal. If the attacker manufactures the fall from equal contact, play on — simulation only if deception is clear.",
+    educatorBody: "Fair charge is still legal. If the attacker manufactures the fall from equal contact, play on, simulation only if deception is clear.",
     refereeBody: "I am playing on unless I see an arm or late shove. Equal shoulders are football.",
-    ruleCitation: "Law 12 concept — charging fairly",
+    ruleCitation: "Law 12 concept: charging fairly",
     alternateOptionId: "indirect-free-kick-yellow-simulation",
     publisherSeed: "simulation-shoulder-to-shoulder",
   }),
@@ -1246,8 +1246,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: goalkeeperOptions,
     recommendedDecision: "indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: a goalkeeper may not handle a throw-in taken by a teammate — indirect free kick.",
-    ruleReference: "Law 12 concept — goalkeeper handling restrictions",
+      "Keeper can't handle a throw-in from a teammate. Indirect free kick.",
+    ruleReference: "Law 12 concept: goalkeeper handling restrictions",
     rulePath: ["Law 12", "Indirect free kicks", "Goalkeeper handling restriction"],
     factors: [
       factor("teammate-action", "Teammate action", "Throw-in", true, "Restart is a throw-in."),
@@ -1257,13 +1257,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "None", false, "Not a trick play."),
     ],
     criticalFactor: "teammate-action",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 18, "indirect-free-kick": 68, "direct-free-kick": 8, "penalty-kick": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 4, "indirect-free-kick": 90, "direct-free-kick": 4, "penalty-kick": 2,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 24, "indirect-free-kick": 58, "direct-free-kick": 10, "penalty-kick": 8,
     }),
     disagreementScore: 0.3,
@@ -1277,7 +1277,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     similarCaseIds: ["goalkeeper-deliberate-kick"],
     educatorBody: "Throw-ins are an easy trap. Hands from a teammate still trigger the handling restriction.",
     refereeBody: "IFK from the point of handling. No card unless there is something else.",
-    ruleCitation: "Law 12 concept — goalkeeper handling restrictions",
+    ruleCitation: "Law 12 concept: goalkeeper handling restrictions",
     publisherSeed: "gk-throw-in-hands",
   }),
   buildCase({
@@ -1294,8 +1294,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: goalkeeperOptions,
     recommendedDecision: "play-on",
     expertExplanation:
-      "Authored demo rationale: a deliberate header from a teammate may be handled by the goalkeeper — the restriction targets kicks (and throw-ins), not headers.",
-    ruleReference: "Law 12 concept — goalkeeper handling restrictions",
+      "Deliberate header back to the keeper is fine to handle. The restriction is kicks and throw-ins, not headers.",
+    ruleReference: "Law 12 concept: goalkeeper handling restrictions",
     rulePath: ["Law 12", "Indirect free kicks", "Goalkeeper handling restriction"],
     factors: [
       factor("teammate-action", "Teammate action", "Deliberate header", true, "Played with the head."),
@@ -1305,13 +1305,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "None", false, "Ordinary header back."),
     ],
     criticalFactor: "body-part",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 64, "indirect-free-kick": 26, "direct-free-kick": 6, "penalty-kick": 4,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 88, "indirect-free-kick": 8, "direct-free-kick": 2, "penalty-kick": 2,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 52, "indirect-free-kick": 36, "direct-free-kick": 7, "penalty-kick": 5,
     }),
     disagreementScore: 0.37,
@@ -1321,7 +1321,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only case about a goalkeeper handling a headed back-pass.",
     educatorBody: "Body part is the whole lesson. Headers back are legal to handle; kicked back-passes are not.",
     refereeBody: "Play on. I only intervene if someone tries to invent a free kick from a header.",
-    ruleCitation: "Law 12 concept — goalkeeper handling restrictions",
+    ruleCitation: "Law 12 concept: goalkeeper handling restrictions",
     alternateOptionId: "indirect-free-kick",
     publisherSeed: "gk-header-back",
   }),
@@ -1339,8 +1339,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: goalkeeperOptions,
     recommendedDecision: "indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: persistent failure to release the ball can be penalized with an indirect free kick after management fails — local competition guidance varies.",
-    ruleReference: "Law 12 concept — goalkeeper release of the ball",
+      "If the keeper keeps holding after you've managed it, indirect free kick. Local guidance varies.",
+    ruleReference: "Law 12 concept: goalkeeper release of the ball",
     rulePath: ["Law 12", "Indirect free kicks", "Goalkeeper release"],
     factors: [
       factor("teammate-action", "Teammate action", "None relevant", false, "Not a back-pass case."),
@@ -1350,13 +1350,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "Time-wasting", true, "Delay is the issue."),
     ],
     criticalFactor: "goalkeeper-action",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 34, "indirect-free-kick": 52, "direct-free-kick": 8, "penalty-kick": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 22, "indirect-free-kick": 68, "direct-free-kick": 6, "penalty-kick": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 40, "indirect-free-kick": 44, "direct-free-kick": 9, "penalty-kick": 7,
     }),
     disagreementScore: 0.63,
@@ -1366,7 +1366,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Demo clip placeholder of a goalkeeper delaying the release of the ball.",
     educatorBody: "Manage first when possible, but the law still allows an IFK for failure to release. Know your competition’s tolerance.",
     refereeBody: "I give a clear verbal, then IFK if it continues. I do not wait forever.",
-    ruleCitation: "Law 12 concept — goalkeeper release of the ball",
+    ruleCitation: "Law 12 concept: goalkeeper release of the ball",
     alternateOptionId: "play-on",
     publisherSeed: "gk-six-second",
   }),
@@ -1384,8 +1384,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: goalkeeperOptions,
     recommendedDecision: "indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: once the goalkeeper releases the ball to play with the feet, handling it again before another player touches it is an offence.",
-    ruleReference: "Law 12 concept — goalkeeper handling restrictions",
+      "Once the goalkeeper releases the ball to play with the feet, handling it again before another player touches it is an offence.",
+    ruleReference: "Law 12 concept: goalkeeper handling restrictions",
     rulePath: ["Law 12", "Indirect free kicks", "Goalkeeper handling restriction"],
     factors: [
       factor("teammate-action", "Teammate action", "None", false, "Self-created sequence."),
@@ -1395,13 +1395,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "Possible time-wasting", true, "May also be delaying tactics."),
     ],
     criticalFactor: "goalkeeper-action",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 14, "indirect-free-kick": 72, "direct-free-kick": 8, "penalty-kick": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 5, "indirect-free-kick": 88, "direct-free-kick": 4, "penalty-kick": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 20, "indirect-free-kick": 64, "direct-free-kick": 9, "penalty-kick": 7,
     }),
     disagreementScore: 0.29,
@@ -1414,7 +1414,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Diagram used for a goalkeeper release-then-rehandle teaching case.",
     educatorBody: "Release ends the handling privilege. Picking it up again without another touch is an IFK.",
     refereeBody: "Whistle as soon as the second handle happens. Easy sell if I am watching the release.",
-    ruleCitation: "Law 12 concept — goalkeeper handling restrictions",
+    ruleCitation: "Law 12 concept: goalkeeper handling restrictions",
     publisherSeed: "gk-drop-kick-retouch",
   }),
   buildCase({
@@ -1431,8 +1431,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: goalkeeperOptions,
     recommendedDecision: "direct-free-kick",
     expertExplanation:
-      "Authored demo rationale: handling outside the area is a direct-free-kick offence; whether a card is also required depends on DOGSO analysis of the specific chance.",
-    ruleReference: "Law 12 concept — handling outside the penalty area",
+      "Handling outside the area is a direct-free-kick offence; whether a card is also required depends on DOGSO analysis of the specific chance.",
+    ruleReference: "Law 12 concept: handling outside the penalty area",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("teammate-action", "Teammate action", "None", false, "Not a back-pass."),
@@ -1442,13 +1442,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "None", false, "Emergency clearance."),
     ],
     criticalFactor: "goalkeeper-action",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "indirect-free-kick": 10, "direct-free-kick": 68, "penalty-kick": 20,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "indirect-free-kick": 4, "direct-free-kick": 82, "penalty-kick": 14,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 4, "indirect-free-kick": 12, "direct-free-kick": 58, "penalty-kick": 26,
     }),
     disagreementScore: 0.45,
@@ -1458,7 +1458,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Demo clip placeholder of a goalkeeper punching clear outside the area.",
     educatorBody: "Restart is direct free kick because this is ordinary handling by a player outside the area. Card colour is a separate DOGSO question.",
     refereeBody: "I am sure about the free kick. I only go red if the four DOGSO checks are all yes.",
-    ruleCitation: "Law 12 concept — handling outside the penalty area",
+    ruleCitation: "Law 12 concept: handling outside the penalty area",
     alternateOptionId: "penalty-kick",
     publisherSeed: "gk-outside-area-punch",
   }),
@@ -1476,8 +1476,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: winning the ball does not excuse endangering follow-through with studs into the shin.",
-    ruleReference: "Law 12 concept — serious foul play",
+      "Winning the ball does not excuse endangering follow-through with studs into the shin.",
+    ruleReference: "Law 12 concept: serious foul play",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "High", true, "Challenge is at pace."),
@@ -1487,13 +1487,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "High", true, "Significant force into the leg."),
     ],
     criticalFactor: "contact-height",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "direct-free-kick-no-card": 6, "direct-free-kick-yellow": 34, "direct-free-kick-red": 52, "insufficient-evidence": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 3, "direct-free-kick-yellow": 18, "direct-free-kick-red": 74, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3, "direct-free-kick-no-card": 8, "direct-free-kick-yellow": 40, "direct-free-kick-red": 42, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.6,
@@ -1506,7 +1506,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Still emphasizing a high follow-through after a tackle.",
     educatorBody: "Ball first is not a free pass. Judge the endangering contact that arrives on the follow-through.",
     refereeBody: "I am looking at the shin contact, not the applause for winning the ball.",
-    ruleCitation: "Law 12 concept — serious foul play",
+    ruleCitation: "Law 12 concept: serious foul play",
     alternateOptionId: "direct-free-kick-yellow",
     publisherSeed: "sfp-studs-high-follow",
   }),
@@ -1524,8 +1524,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "penalty-kick-handball",
     expertExplanation:
-      "Authored demo rationale: an arm clearly making the body bigger to block a shot supports a penalty recommendation.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Arm clearly making the body bigger to block a shot. Penalty for me.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Outstretched", true, "Arm is away from the body."),
@@ -1535,13 +1535,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "None", true, "Direct shot."),
     ],
     criticalFactor: "silhouette",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 10, "direct-free-kick-handball": 4, "penalty-kick-handball": 70, "penalty-kick-yellow": 10, "insufficient-evidence": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 4, "direct-free-kick-handball": 2, "penalty-kick-handball": 84, "penalty-kick-yellow": 6, "insufficient-evidence": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 14, "direct-free-kick-handball": 5, "penalty-kick-handball": 64, "penalty-kick-yellow": 10, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.36,
@@ -1553,9 +1553,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaHeight: imageAt(2).height,
     mediaAlt: "Still of an outstretched arm blocking a shot inside the area.",
     similarCaseIds: ["handball-raised-arm"],
-    educatorBody: "Enlarging the silhouette to block a shot is the core handball idea — point to the spot.",
+    educatorBody: "Enlarging the silhouette to block a shot is the core handball idea, point to the spot.",
     refereeBody: "Penalty. I am less worried about a card unless the action was also DOGSO-handling specific.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     publisherSeed: "handball-shot-blocker",
   }),
   buildCase({
@@ -1572,8 +1572,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "offside-indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: challenging the goalkeeper from an offside position is active interference.",
-    ruleReference: "Law 11 concept — interfering with an opponent",
+      "Challenging the goalkeeper from an offside position is active interference.",
+    ruleReference: "Law 11 concept: interfering with an opponent",
     rulePath: ["Law 11", "Offside", "Interfering with an opponent"],
     factors: [
       factor("position", "Position at cross", "Offside", true, "Starts offside."),
@@ -1583,13 +1583,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch by offside attacker", false, "Not required."),
     ],
     criticalFactor: "challenge",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 20, "offside-indirect-free-kick": 68, "attacking-foul-direct-free-kick": 4, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 8, "offside-indirect-free-kick": 84, "attacking-foul-direct-free-kick": 2, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 28, "offside-indirect-free-kick": 56, "attacking-foul-direct-free-kick": 6, "insufficient-evidence": 10,
     }),
     disagreementScore: 0.42,
@@ -1597,16 +1597,16 @@ export const extraCases: readonly OfficiatingCase[] = [
     publishedAt: "2026-07-06T13:25:00.000Z",
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of an offside attacker challenging the goalkeeper.",
-    educatorBody: "Challenging the keeper is interfering with an opponent — flag it even if a teammate finishes.",
+    educatorBody: "Challenging the keeper is interfering with an opponent, flag it even if a teammate finishes.",
     refereeBody: "Offside. The jump into the keeper is enough without needing a touch.",
-    ruleCitation: "Law 11 concept — interfering with an opponent",
+    ruleCitation: "Law 11 concept: interfering with an opponent",
     publisherSeed: "offside-interfering-keeper-challenge",
   }),
   buildCase({
     id: "advantage-shot-then-foul",
     slug: "advantage-after-saved-shot",
     title: "Advantage after a saved shot",
-    prompt: "The shot is saved — do you bring the original foul back?",
+    prompt: "The shot is saved, do you bring the original foul back?",
     description:
       "Advantage is played into a shot that the goalkeeper saves comfortably. The fouled team never regains a useful attacking position.",
     competitionLevel: "Adult recreational",
@@ -1616,8 +1616,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: advantageOptions,
     recommendedDecision: "continue-play",
     expertExplanation:
-      "Authored demo rationale: a genuine shot can itself be the advantage even if it is saved; bringing back is usually unavailable once that phase ends.",
-    ruleReference: "Law 5 concept — advantage",
+      "A genuine shot can itself be the advantage even if it is saved; bringing back is usually unavailable once that phase ends.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "Immediate shot", true, "Benefit attempted at once."),
@@ -1627,13 +1627,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Careless", true, "Original foul remains noted."),
     ],
     criticalFactor: "possession",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 62, "return-original-foul": 26, "drop-ball": 4, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 80, "return-original-foul": 12, "drop-ball": 2, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 54, "return-original-foul": 34, "drop-ball": 4, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.46,
@@ -1643,7 +1643,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only advantage case where a saved shot still counts as the benefit.",
     educatorBody: "A real shot can be the advantage. Do not bring the foul back simply because the shot was saved.",
     refereeBody: "Advantage stands. I may still come back for a card later if the original act was reckless.",
-    ruleCitation: "Law 5 concept — advantage",
+    ruleCitation: "Law 5 concept: advantage",
     alternateOptionId: "return-original-foul",
     publisherSeed: "advantage-shot-then-foul",
   }),
@@ -1661,8 +1661,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: simulationOptions,
     recommendedDecision: "penalty-kick",
     expertExplanation:
-      "Authored demo rationale: punish the foul you saw. Embellishment can be managed or cautioned separately, but it does not erase clear contact.",
-    ruleReference: "Law 12 concept — fouls and unsporting behaviour",
+      "Punish the foul you saw. Embellishment can be managed or cautioned separately, but it does not erase clear contact.",
+    ruleReference: "Law 12 concept: fouls and unsporting behaviour",
     rulePath: ["Law 12", "Fouls and misconduct", "Unsporting behaviour"],
     factors: [
       factor("initiator", "Contact initiator", "Defender", true, "Clear careless contact."),
@@ -1672,13 +1672,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Contact clear", true, "Both contact and embellishment visible."),
     ],
     criticalFactor: "initiator",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 54, "play-on": 10, "indirect-free-kick-yellow-simulation": 28, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 72, "play-on": 6, "indirect-free-kick-yellow-simulation": 14, "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 46, "play-on": 12, "indirect-free-kick-yellow-simulation": 34, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.58,
@@ -1689,9 +1689,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(8).width,
     mediaHeight: imageAt(8).height,
     mediaAlt: "Portrait diagram paired with an embellishment-after-contact case.",
-    educatorBody: "Call the foul. Embellishment is a separate disciplinary question — do not reward the defender because the attacker oversold it.",
+    educatorBody: "Call the foul. Embellishment is a separate disciplinary question, do not reward the defender because the attacker oversold it.",
     refereeBody: "Penalty for the contact. If the embellishment is blatant I can still caution, but I am not playing on.",
-    ruleCitation: "Law 12 concept — fouls and unsporting behaviour",
+    ruleCitation: "Law 12 concept: fouls and unsporting behaviour",
     alternateOptionId: "indirect-free-kick-yellow-simulation",
     publisherSeed: "simulation-contact-then-embellish",
   }),
@@ -1714,8 +1714,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "penalty-red",
     expertExplanation:
-      "Authored demo rationale: deliberately handling a goal-bound shot on the line is a classic penalty + red teaching example.",
-    ruleReference: "Law 12 concept — denying a goal or DOGSO by handling",
+      "Hands on a goal-bound shot on the line. Penalty and red.",
+    ruleReference: "Law 12 concept: denying a goal or DOGSO by handling",
     rulePath: ["Law 12", "Disciplinary action", "Denying a goal or DOGSO"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "On the goal line", true, "Immediate goal denial."),
@@ -1725,13 +1725,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Deliberate handling", true, "Hands deny the goal."),
     ],
     criticalFactor: "foul-type",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 1, "penalty-yellow": 12, "penalty-red": 80, "indirect-red": 7,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "penalty-yellow": 4, "penalty-red": 92, "indirect-red": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 2, "penalty-yellow": 18, "penalty-red": 72, "indirect-red": 8,
     }),
     disagreementScore: 0.2,
@@ -1739,9 +1739,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     publishedAt: "2026-07-11T22:00:00.000Z",
     mediaKind: "video",
     mediaAlt: "Demo clip placeholder of a goal-line handball denying a goal.",
-    educatorBody: "This is denying a goal by handling — penalty and red in the standard teaching frame.",
+    educatorBody: "This is denying a goal by handling, penalty and red in the standard teaching frame.",
     refereeBody: "Point to the spot, show the red, manage the storm.",
-    ruleCitation: "Law 12 concept — denying a goal or DOGSO by handling",
+    ruleCitation: "Law 12 concept: denying a goal or DOGSO by handling",
     publisherSeed: "dogso-handball-last-line",
   }),
   buildCase({
@@ -1750,7 +1750,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     title: "When should on-field review change your call?",
     prompt: "After a soft yellow, when does an on-field review justify upgrading to red?",
     description:
-      "No clip is attached — only the written protocol question. A referee shows yellow for a late challenge. The review screen later shows higher contact and force than the live read suggested.",
+      "No clip is attached, only the written protocol question. A referee shows yellow for a late challenge. The review screen later shows higher contact and force than the live read suggested.",
     competitionLevel: "Semi-professional development",
     difficulty: "advanced",
     category: "Serious foul play",
@@ -1758,8 +1758,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: clear visual evidence of endangering force/contact that was missed live supports upgrading the disciplinary sanction.",
-    ruleReference: "Law 12 concept — serious foul play / review principles",
+      "Live you missed how bad the contact was. On review I'd upgrade the card.",
+    ruleReference: "Law 12 concept: serious foul play / review principles",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "High (on review)", true, "Review clarifies pace."),
@@ -1769,13 +1769,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "High", true, "Endangering force confirmed."),
     ],
     criticalFactor: "force",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2, "direct-free-kick-no-card": 4, "direct-free-kick-yellow": 30, "direct-free-kick-red": 58, "insufficient-evidence": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0, "direct-free-kick-no-card": 2, "direct-free-kick-yellow": 14, "direct-free-kick-red": 80, "insufficient-evidence": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3, "direct-free-kick-no-card": 6, "direct-free-kick-yellow": 36, "direct-free-kick-red": 48, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.51,
@@ -1785,7 +1785,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only protocol discussion about upgrading a card after review.",
     educatorBody: "Reviews exist to correct clear and obvious errors. Higher contact plus force on the screen is exactly that standard.",
     refereeBody: "If the monitor shows what I missed, I own the upgrade. Ego has no place in the protocol.",
-    ruleCitation: "Law 12 concept — serious foul play / review principles",
+    ruleCitation: "Law 12 concept: serious foul play / review principles",
     alternateOptionId: "direct-free-kick-yellow",
     publisherSeed: "text-debate-var-protocol",
   }),
@@ -1803,8 +1803,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: advantageOptions,
     recommendedDecision: "continue-play",
     expertExplanation:
-      "Authored demo rationale: a clear ongoing attacking benefit should not be abandoned because spectators want a whistle.",
-    ruleReference: "Law 5 concept — advantage",
+      "A clear ongoing attacking benefit should not be abandoned because spectators want a whistle.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "Under two seconds", true, "Still inside the window."),
@@ -1814,13 +1814,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Careless", true, "No urgent card required mid-phase."),
     ],
     criticalFactor: "possession",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 68, "return-original-foul": 20, "drop-ball": 4, "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 84, "return-original-foul": 10, "drop-ball": 1, "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 58, "return-original-foul": 30, "drop-ball": 4, "insufficient-evidence": 8,
     }),
     disagreementScore: 0.38,
@@ -1830,7 +1830,7 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaAlt: "Text-only case about holding advantage despite crowd pressure.",
     educatorBody: "Officiate the play in front of you, not the noise. If the attack is real, keep the advantage.",
     refereeBody: "I stay with advantage and communicate loudly so players know I saw the foul.",
-    ruleCitation: "Law 5 concept — advantage",
+    ruleCitation: "Law 5 concept: advantage",
     alternateOptionId: "return-original-foul",
     publisherSeed: "advantage-crowd-noise",
   }),
@@ -1848,8 +1848,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "no-handball",
     expertExplanation:
-      "Authored demo rationale: unexpected spin onto a natural arm position after a block typically supports no offence.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Unexpected spin onto a natural arm position after a block typically supports no offence.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Natural running", true, "Arm is beside the body."),
@@ -1859,13 +1859,13 @@ export const extraCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "Own foot block", true, "Unexpected spin."),
     ],
     criticalFactor: "arm-position",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 50, "direct-free-kick-handball": 5, "penalty-kick-handball": 34, "penalty-kick-yellow": 4, "insufficient-evidence": 7,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 74, "direct-free-kick-handball": 2, "penalty-kick-handball": 16, "penalty-kick-yellow": 2, "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 42, "direct-free-kick-handball": 6, "penalty-kick-handball": 40, "penalty-kick-yellow": 5, "insufficient-evidence": 7,
     }),
     disagreementScore: 0.67,
@@ -1876,9 +1876,9 @@ export const extraCases: readonly OfficiatingCase[] = [
     mediaWidth: imageAt(1).width,
     mediaHeight: imageAt(1).height,
     mediaAlt: "Portrait still used for an accidental spin-onto-arm handball debate.",
-    educatorBody: "Natural position plus zero reaction time after a self-block is usually play on — do not invent a penalty from bad luck.",
+    educatorBody: "Natural position plus zero reaction time after a self-block is usually play on, do not invent a penalty from bad luck.",
     refereeBody: "I sell play on immediately. The arm never left a natural path.",
-    ruleCitation: "Law 12 concept — handling the ball",
+    ruleCitation: "Law 12 concept: handling the ball",
     alternateOptionId: "penalty-kick-handball",
     publisherSeed: "handball-accidental-spin",
   }),

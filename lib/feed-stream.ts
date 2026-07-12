@@ -1,4 +1,5 @@
 import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
+import { scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
 import type { OfficiatingCase } from "@/lib/types";
 
 export const FEED_BATCH_SIZE = 8;
@@ -40,6 +41,7 @@ export function shuffleCases(
 export function pickRandomMedia(
   random: RandomFn = defaultRandom,
   excludeSrc?: string | null,
+  preferredTags: readonly string[] = [],
 ): MediaLibraryItem {
   if (mediaLibrary.length === 0) {
     throw new Error("mediaLibrary is empty");
@@ -49,6 +51,25 @@ export function pickRandomMedia(
     ? mediaLibrary.filter((item) => item.src !== excludeSrc)
     : mediaLibrary;
   const pool = candidates.length > 0 ? candidates : mediaLibrary;
+
+  if (preferredTags.length > 0) {
+    let bestScore = -1;
+    const ranked: MediaLibraryItem[] = [];
+    for (const item of pool) {
+      const score = scoreTagOverlap(item.tags, preferredTags);
+      if (score > bestScore) {
+        bestScore = score;
+        ranked.length = 0;
+        ranked.push(item);
+      } else if (score === bestScore) {
+        ranked.push(item);
+      }
+    }
+    if (ranked.length > 0 && bestScore > 0) {
+      return ranked[Math.min(ranked.length - 1, Math.floor(random() * ranked.length))]!;
+    }
+  }
+
   const index = Math.min(pool.length - 1, Math.floor(random() * pool.length));
   return pool[index]!;
 }
@@ -68,7 +89,7 @@ export function withLibraryBackdrop(
   const hasAuthoredImage = Boolean(scenario.imageSrc || scenario.posterSrc);
   if (hasAuthoredImage) return scenario;
 
-  const pick = pickRandomMedia(random, scenario.imageSrc);
+  const pick = pickRandomMedia(random, scenario.imageSrc, tagsForCategory(scenario.category));
   return {
     ...scenario,
     mediaKind: "image",

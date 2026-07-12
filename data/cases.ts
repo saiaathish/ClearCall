@@ -34,8 +34,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-yellow",
     expertExplanation:
-      "Authored demo rationale: the lower point of contact, moderate force, and recoverable control lean toward a reckless challenge and caution rather than the paired red-card outcome. Qualified review is still required.",
-    ruleReference: "Law 12 concept — reckless challenges and serious foul play",
+      "Low contact, moderate force, and he can still pull out. Yellow for me, not the red from the sister clip.",
+    ruleReference: "Law 12 concept: reckless challenges and serious foul play",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "Medium", true, "Approach speed raises risk but is not decisive alone."),
@@ -45,21 +45,21 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "Moderate", true, "The described force does not match the paired high-force case."),
     ],
     criticalFactor: "control",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 4,
       "direct-free-kick-no-card": 11,
       "direct-free-kick-yellow": 51,
       "direct-free-kick-red": 29,
       "insufficient-evidence": 5,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 1,
       "direct-free-kick-no-card": 6,
       "direct-free-kick-yellow": 67,
       "direct-free-kick-red": 23,
       "insufficient-evidence": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 7,
       "direct-free-kick-no-card": 12,
       "direct-free-kick-yellow": 42,
@@ -79,9 +79,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "sfp-controlled-lunge",
       "direct-free-kick-yellow",
       ["contact-height", "control", "force"],
-      "The lower contact matters, but it should be weighed together with control and force rather than treated as a shortcut.",
-      "I would sell the caution by staying close, separating the players, and recording the exact contact point for the review.",
-      "Law 12 concept — reckless challenges",
+      "Low contact alone doesn't settle it. Weigh that with control and force.",
+      "I'd sell the yellow, get close, split them, and note exactly where it hit.",
+      "Law 12 concept: reckless challenges",
     ),
   },
   {
@@ -100,8 +100,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: foulOptions,
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: the combined high contact, force, exposed studs, and low control distinguish this case from the lower-contact caution example and support a sending-off recommendation for teaching purposes.",
-    ruleReference: "Law 12 concept — serious foul play",
+      "High contact, studs showing, no real chance to pull out. I'm going red.",
+    ruleReference: "Law 12 concept: serious foul play",
     rulePath: ["Law 12", "Fouls and misconduct", "Serious foul play"],
     factors: [
       factor("speed", "Speed", "High", true, "High approach speed increases the danger created."),
@@ -111,21 +111,21 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("force", "Force", "High", true, "Force and contact height combine to raise the danger."),
     ],
     criticalFactor: "contact-height",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 1,
       "direct-free-kick-no-card": 3,
       "direct-free-kick-yellow": 28,
       "direct-free-kick-red": 64,
       "insufficient-evidence": 4,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0,
       "direct-free-kick-no-card": 1,
       "direct-free-kick-yellow": 12,
       "direct-free-kick-red": 84,
       "insufficient-evidence": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 2,
       "direct-free-kick-no-card": 5,
       "direct-free-kick-yellow": 35,
@@ -145,9 +145,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "sfp-high-contact-lunge",
       "direct-free-kick-red",
       ["contact-height", "control", "force"],
-      "The cleat-on-boot contact is visible, but a single image cannot confirm speed or intent alone. The teaching point is reading all three: contact height, force, and the absence of a withdrawal opportunity.",
-      "Freeze the frame at the moment of contact. The boot height and stud exposure are clear; the key question is whether the tackler had any realistic option to pull out.",
-      "Law 12 concept — serious foul play",
+      "You can see the cleat on the boot. Still, one still doesn't prove speed by itself. Height, force, and whether he could pull out. All three.",
+      "Freeze contact. Boot height and studs are obvious. Question is whether he had any real chance to pull out.",
+      "Law 12 concept: serious foul play",
     ),
   },
   {
@@ -166,8 +166,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "no-handball",
     expertExplanation:
-      "Authored demo rationale: close proximity and an arm used to support the falling body lean toward no offence in this teaching scenario. The exact movement and competition guidance require qualified review.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Arm looks like it's bracing the fall, not making the body bigger. Play on until I see something else.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Supporting the body", true, "The arm is described as bracing a natural fall."),
@@ -177,21 +177,21 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "Nearby opponent", true, "A short deflection reduces reaction time."),
     ],
     criticalFactor: "arm-position",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 48,
       "direct-free-kick-handball": 7,
       "penalty-kick-handball": 36,
       "penalty-kick-yellow": 4,
       "insufficient-evidence": 5,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 71,
       "direct-free-kick-handball": 3,
       "penalty-kick-handball": 20,
       "penalty-kick-yellow": 1,
       "insufficient-evidence": 5,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 39,
       "direct-free-kick-handball": 5,
       "penalty-kick-handball": 43,
@@ -211,16 +211,16 @@ const seedCases: readonly OfficiatingCase[] = [
       "handball-supporting-arm",
       "no-handball",
       ["arm-position", "proximity", "deflection"],
-      "The image shows the full slide commitment, which is essential context. Ask whether the arm is doing work for the body, not the ball — that framing drives the recommendation.",
-      "Seeing the full slide motion in the image helps: the arm is clearly placed for balance as the player goes to ground, not extended toward the ball's path.",
-      "Law 12 concept — handling the ball",
+      "Full slide is in the still. Ask if the arm is working for the body or for the ball. That's the whole thing.",
+      "Looking at the full slide, that arm is for balance as he goes down. Not reaching for the ball.",
+      "Law 12 concept: handling the ball",
     ),
   },
   {
     ...commonCaseFields,
     id: "handball-raised-arm",
     slug: "raised-arm-blocks-cross",
-    title: "Handball in the area — penalty awarded",
+    title: "Handball in the area, penalty awarded",
     prompt: "Was the penalty correctly awarded for the raised-arm handball, and what restart should follow?",
     description:
       "A defender turns toward an inswinging cross inside their penalty area with one arm raised above shoulder height. The ball travels directly from the wide player, strikes the elevated arm, and the referee awards a penalty kick.",
@@ -232,8 +232,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: handballOptions,
     recommendedDecision: "penalty-kick-handball",
     expertExplanation:
-      "Authored demo rationale: the elevated arm, visible travel time, and enlarged silhouette distinguish this example from the supporting-arm pair and lean toward a penalty recommendation.",
-    ruleReference: "Law 12 concept — handling the ball",
+      "Arm up, time to react, silhouette bigger. Penalty.",
+    ruleReference: "Law 12 concept: handling the ball",
     rulePath: ["Law 12", "Fouls and misconduct", "Handling the ball"],
     factors: [
       factor("arm-position", "Arm position", "Above shoulder", true, "The elevated arm is central to the demo recommendation."),
@@ -243,21 +243,21 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("deflection", "Prior deflection", "None", true, "The flight is described as direct."),
     ],
     criticalFactor: "arm-position",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "no-handball": 14,
       "direct-free-kick-handball": 4,
       "penalty-kick-handball": 67,
       "penalty-kick-yellow": 11,
       "insufficient-evidence": 4,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "no-handball": 5,
       "direct-free-kick-handball": 2,
       "penalty-kick-handball": 82,
       "penalty-kick-yellow": 8,
       "insufficient-evidence": 3,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "no-handball": 19,
       "direct-free-kick-handball": 5,
       "penalty-kick-handball": 58,
@@ -277,9 +277,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "handball-raised-arm",
       "penalty-kick-handball",
       ["arm-position", "silhouette", "proximity"],
-      "The penalty being taken is the downstream consequence. The teaching point is whether the arm-position analysis before the decision was sound — the outcome alone does not validate the call.",
-      "Once a penalty is awarded and taken, the restart pressure is off, but reviewing the arm position from the original cross remains essential for learning.",
-      "Law 12 concept — handling the ball",
+      "Penalty already happened. Doesn't mean the arm read was right. Outcome isn't proof.",
+      "Once the pen's taken the pressure's gone, but still go back and check the arm on the cross.",
+      "Law 12 concept: handling the ball",
     ),
   },
   {
@@ -289,7 +289,7 @@ const seedCases: readonly OfficiatingCase[] = [
     title: "Challenge for the ball, offside player nearby",
     prompt: "Is the attacker in an offside position actively interfering with play during this physical challenge?",
     description:
-      "Two players contest aggressively for the ball in midfield. As the challenge unfolds, a third attacker in an offside position is visible in the background — close enough that the defending team claims interference, but without making contact or obstructing any direct sightline.",
+      "Two players contest aggressively for the ball in midfield. As the challenge unfolds, a third attacker in an offside position is visible in the background, close enough that the defending team claims interference, but without making contact or obstructing any direct sightline.",
     competitionLevel: "College club",
     difficulty: "advanced",
     category: "Offside interference",
@@ -298,8 +298,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "offside-indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: the direct line-of-vision obstruction and proximity to the goalkeeper lean toward active interference even without a touch.",
-    ruleReference: "Law 11 concept — interfering with an opponent",
+      "He's right in the keeper's line. That's interference even without a touch.",
+    ruleReference: "Law 11 concept: interfering with an opponent",
     rulePath: ["Law 11", "Offside", "Interfering with an opponent"],
     factors: [
       factor("position", "Position at shot", "Offside position", true, "Position is established before evaluating active involvement."),
@@ -309,19 +309,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch", false, "A touch is not always required for interference with an opponent."),
     ],
     criticalFactor: "line-of-vision",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 34,
       "offside-indirect-free-kick": 56,
       "attacking-foul-direct-free-kick": 3,
       "insufficient-evidence": 7,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 16,
       "offside-indirect-free-kick": 77,
       "attacking-foul-direct-free-kick": 1,
       "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 42,
       "offside-indirect-free-kick": 45,
       "attacking-foul-direct-free-kick": 4,
@@ -340,16 +340,16 @@ const seedCases: readonly OfficiatingCase[] = [
       "offside-line-of-vision",
       "offside-indirect-free-kick",
       ["position", "line-of-vision", "opponent-impact"],
-      "The physical challenge draws the eye, but the offside player's proximity is the real question. Check position first, then ask whether that position actively affected the challenge or the defending team's reaction.",
-      "I would track the offside player's movement during the challenge — static presence away from the contest is very different from moving toward the ball or drawing a defender.",
-      "Law 11 concept — interfering with an opponent",
+      "Challenge pulls your eye. Real question is the offside guy's proximity. Position first, then did it actually change the challenge?",
+      "I'd watch the offside player during the challenge. Standing still away from it is different from drifting toward the ball.",
+      "Law 11 concept: interfering with an opponent",
     ),
   },
   {
     ...commonCaseFields,
     id: "offside-no-impact",
     slug: "offside-position-away-from-play",
-    title: "VAR flags offside — but does position mean offence?",
+    title: "VAR flags offside, but does position mean offence?",
     prompt: "VAR has confirmed an attacker is in an offside position. Does that position constitute an active offside offence?",
     description:
       "VAR analysis confirms an attacker is in an offside position at the moment of the pass, with body-part tracking lines visible on the freeze frame. The attacker does not touch the ball, challenge an opponent, or obstruct the goalkeeper's sightline before the teammate scores.",
@@ -361,8 +361,8 @@ const seedCases: readonly OfficiatingCase[] = [
     answerOptions: offsideOptions,
     recommendedDecision: "goal-awarded",
     expertExplanation:
-      "Authored demo rationale: position alone does not complete the offence; the description supplies no touch, challenge, sightline obstruction, or material opponent impact.",
-    ruleReference: "Law 11 concept — offside position and offence",
+      "Being offside isn't an offence by itself. No touch, no challenge, no sightline block. Play on.",
+    ruleReference: "Law 11 concept: offside position and offence",
     rulePath: ["Law 11", "Offside", "Interfering with an opponent"],
     factors: [
       factor("position", "Position at shot", "Offside position", true, "Position triggers the involvement check but is not enough alone."),
@@ -372,19 +372,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("touch", "Ball touch", "No touch", true, "The attacker does not play the ball."),
     ],
     criticalFactor: "opponent-impact",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "goal-awarded": 61,
       "offside-indirect-free-kick": 29,
       "attacking-foul-direct-free-kick": 2,
       "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "goal-awarded": 83,
       "offside-indirect-free-kick": 12,
       "attacking-foul-direct-free-kick": 1,
       "insufficient-evidence": 4,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "goal-awarded": 52,
       "offside-indirect-free-kick": 36,
       "attacking-foul-direct-free-kick": 3,
@@ -403,9 +403,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "offside-no-impact",
       "goal-awarded",
       ["line-of-vision", "challenge", "opponent-impact"],
-      "The VAR confirmation of position is the starting point, not the conclusion. The tracking lines answer 'where' — the referee still needs to answer 'did it matter.' All active-involvement checks remain negative here.",
-      "Holding the flag even after VAR confirms the position requires discipline. The technology only measures location; involvement is still a judgment call on top of that data.",
-      "Law 11 concept — offside position and offence",
+      "VAR only tells you where he was. You still have to answer whether it mattered. Here every involvement check is empty.",
+      "Keeping the flag down after VAR confirms position takes discipline. Tech measures location. Involvement is still on you.",
+      "Law 11 concept: offside position and offence",
     ),
   },
   {
@@ -415,7 +415,7 @@ const seedCases: readonly OfficiatingCase[] = [
     title: "Physical hold stops a central run",
     prompt: "What disciplinary sanction fits this deliberate physical challenge on a central run toward goal?",
     description:
-      "An attacker drives centrally toward goal and is physically held and impeded by a defender just outside the penalty area. The contact is deliberate — the defender grabs and slows the attacker — with only the goalkeeper ahead and the nearest covering defender positioned wide.",
+      "An attacker drives centrally toward goal and is physically held and impeded by a defender just outside the penalty area. The contact is deliberate, the defender grabs and slows the attacker, with only the goalkeeper ahead and the nearest covering defender positioned wide.",
     competitionLevel: "Open-age amateur",
     difficulty: "advanced",
     category: "Denial of an obvious goal-scoring opportunity",
@@ -429,8 +429,8 @@ const seedCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "direct-free-kick-red",
     expertExplanation:
-      "Authored demo rationale: distance to goal, central direction, control of the ball, and limited covering defense lean toward a denial-of-opportunity recommendation. The geometry should be expert-reviewed.",
-    ruleReference: "Law 12 concept — denial of an obvious goal-scoring opportunity",
+      "Central, on the ball, cover thin. DOGSO.",
+    ruleReference: "Law 12 concept: denial of an obvious goal-scoring opportunity",
     rulePath: ["Law 12", "Disciplinary action", "Denial of an obvious goal-scoring opportunity"],
     factors: [
       factor("distance-to-goal", "Distance to goal", "About 22 metres", true, "The attacker is close enough for the opportunity analysis."),
@@ -440,19 +440,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("foul-type", "Foul type", "Pull-back", true, "The deliberate tactical foul ends the opportunity."),
     ],
     criticalFactor: "defenders",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 2,
       "direct-free-kick-no-card": 5,
       "direct-free-kick-yellow": 39,
       "direct-free-kick-red": 54,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 0,
       "direct-free-kick-no-card": 2,
       "direct-free-kick-yellow": 23,
       "direct-free-kick-red": 75,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 3,
       "direct-free-kick-no-card": 8,
       "direct-free-kick-yellow": 46,
@@ -471,9 +471,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "dogso-central-breakaway",
       "direct-free-kick-red",
       ["distance-to-goal", "direction", "ball-control", "defenders"],
-      "The physical hold is visible and deliberate. Work through all four DOGSO considerations — the covering defender's wide position is only a factor if they can realistically intervene before the shot.",
-      "The hold clearly interrupts the run, but confirming DOGSO still requires checking direction, distance, and the covering defender. I would look immediately to my assistant for the covering defender's position.",
-      "Law 12 concept — denial of an obvious goal-scoring opportunity",
+      "Hold is obvious and deliberate. Run the four DOGSO checks. Wide cover only counts if they can actually get there before the shot.",
+      "Hold kills the run. Still check direction, distance, cover. I'd look straight to my AR for where the covering defender is.",
+      "Law 12 concept: denial of an obvious goal-scoring opportunity",
     ),
   },
   {
@@ -497,8 +497,8 @@ const seedCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "return-original-foul",
     expertExplanation:
-      "Authored demo rationale: the expected benefit does not materialize and the failure occurs almost immediately, so returning to the original foul is the teaching recommendation. Timing and local guidance need review.",
-    ruleReference: "Law 5 concept — advantage",
+      "Advantage never lands and it dies right away. Bring the foul back.",
+    ruleReference: "Law 5 concept: advantage",
     rulePath: ["Law 5", "Powers and duties", "Advantage"],
     factors: [
       factor("time-elapsed", "Time elapsed", "About one second", true, "The decision window remains very short."),
@@ -508,19 +508,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("severity", "Original foul severity", "Careless", true, "The original offence remains available for the restart in this demo."),
     ],
     criticalFactor: "time-elapsed",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "continue-play": 31,
       "return-original-foul": 57,
       "drop-ball": 4,
       "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "continue-play": 19,
       "return-original-foul": 74,
       "drop-ball": 1,
       "insufficient-evidence": 6,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "continue-play": 38,
       "return-original-foul": 49,
       "drop-ball": 5,
@@ -535,9 +535,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "advantage-quick-breakdown",
       "return-original-foul",
       ["time-elapsed", "possession", "pressure"],
-      "The signal does not force the referee to ignore an advantage that fails in the immediate next beat. The short timing is central here.",
-      "A clear voice and decisive return to the foul would help both teams understand why play is coming back.",
-      "Law 5 concept — advantage",
+      "You signalled advantage. It dies in the next beat. Bring it back. Timing's the whole call.",
+      "Loud voice, bring it back clean so both teams know why.",
+      "Law 5 concept: advantage",
     ),
   },
   {
@@ -561,8 +561,8 @@ const seedCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "indirect-free-kick-yellow-simulation",
     expertExplanation:
-      "Authored demo rationale: the attacker-created lateral leg movement and the defender's planted position lean toward simulation in this written scenario. Video-angle and expert review are essential before real use.",
-    ruleReference: "Law 12 concept — unsporting behaviour and simulation",
+      "Attacker sticks the leg out and the defender's planted. Looks like he's hunting the call. Get another angle if you can.",
+    ruleReference: "Law 12 concept: unsporting behaviour and simulation",
     rulePath: ["Law 12", "Disciplinary action", "Unsporting behaviour", "Simulation"],
     factors: [
       factor("initiator", "Contact initiator", "Attacker", true, "The attacker changes the leg path toward the defender."),
@@ -572,19 +572,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("camera-certainty", "View certainty", "Single authored angle", false, "A real decision would require better visual evidence."),
     ],
     criticalFactor: "initiator",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "penalty-kick": 29,
       "play-on": 24,
       "indirect-free-kick-yellow-simulation": 39,
       "insufficient-evidence": 8,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "penalty-kick": 13,
       "play-on": 22,
       "indirect-free-kick-yellow-simulation": 57,
       "insufficient-evidence": 8,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "penalty-kick": 35,
       "play-on": 25,
       "indirect-free-kick-yellow-simulation": 31,
@@ -603,9 +603,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "simulation-initiated-contact",
       "indirect-free-kick-yellow-simulation",
       ["initiator", "defender-movement", "fall-pattern"],
-      "The recommendation depends on seeing the attacker create the contact. If that observation is uncertain, the confidence should fall rather than the label becoming automatic.",
-      "I would avoid guessing from the appeal itself; the defender's movement and the attacker's leg path are the useful observations.",
-      "Law 12 concept — simulation",
+      "Only sell simulation if you saw the attacker create it. If you're unsure, drop the confidence. Don't auto-label.",
+      "Don't guess from the appeal. Watch the defender's feet and the attacker's leg path.",
+      "Law 12 concept: simulation",
     ),
   },
   {
@@ -629,8 +629,8 @@ const seedCases: readonly OfficiatingCase[] = [
     ],
     recommendedDecision: "indirect-free-kick",
     expertExplanation:
-      "Authored demo rationale: a deliberate foot pass by a teammate followed by goalkeeper handling supports an indirect-free-kick teaching recommendation. Restart location details require current-law review.",
-    ruleReference: "Law 12 concept — goalkeeper handling restrictions",
+      "Teammate kicks it back, keeper picks it up. Indirect free kick.",
+    ruleReference: "Law 12 concept: goalkeeper handling restrictions",
     rulePath: ["Law 12", "Indirect free kicks", "Goalkeeper handling restriction"],
     factors: [
       factor("teammate-action", "Teammate action", "Deliberate kick", true, "The teammate intentionally plays the ball with the foot."),
@@ -640,19 +640,19 @@ const seedCases: readonly OfficiatingCase[] = [
       factor("trick", "Deliberate trick", "None", false, "No separate trick scenario is part of this case."),
     ],
     criticalFactor: "teammate-action",
-    communityDistribution: makeDistribution("Authored demo — community pattern", {
+    communityDistribution: makeDistribution("Authored demo: community pattern", {
       "play-on": 12,
       "indirect-free-kick": 72,
       "direct-free-kick": 10,
       "penalty-kick": 6,
     }),
-    verifiedDistribution: makeDistribution("Authored demo — reviewer pattern", {
+    verifiedDistribution: makeDistribution("Authored demo: reviewer pattern", {
       "play-on": 3,
       "indirect-free-kick": 91,
       "direct-free-kick": 4,
       "penalty-kick": 2,
     }),
-    learnerDistribution: makeDistribution("Authored demo — learner pattern", {
+    learnerDistribution: makeDistribution("Authored demo: learner pattern", {
       "play-on": 18,
       "indirect-free-kick": 63,
       "direct-free-kick": 12,
@@ -671,9 +671,9 @@ const seedCases: readonly OfficiatingCase[] = [
       "goalkeeper-deliberate-kick",
       "indirect-free-kick",
       ["teammate-action", "body-part", "goalkeeper-action"],
-      "The sliding clearance adds a wrinkle: defenders under pressure sometimes argue the play was unintentional. The teaching point is that deliberateness is judged on the defender's body action, not the quality of the pass.",
-      "The slide is visible but intent is harder to read than a standing pass-back. I would focus on whether the defender had other options and chose the foot — that distinguishes deliberate from reflexive.",
-      "Law 12 concept — goalkeeper handling restrictions",
+      "Slide clearance muddies it. People say it wasn't deliberate. Judge the body action, not how pretty the pass was.",
+      "Slide is clear, intent isn't. Did he have other options and still choose the foot? That's deliberate vs reflex.",
+      "Law 12 concept: goalkeeper handling restrictions",
     ),
   },
 ];

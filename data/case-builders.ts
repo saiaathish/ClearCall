@@ -23,17 +23,14 @@ import {
 export const DEMO_REVIEW_DISCLAIMER =
   "Authored demonstration material only. The scenario, percentages, comments, and recommended decision require review by a qualified soccer officiating expert before production use; they are not official governing-body guidance.";
 
-export const demoDesk: Publisher = personToPublisher(
-  {
-    displayName: "ClearCall demo desk",
-    role: "educator",
-    organization: "Authored product prototype",
-    gender: "men",
-    nationality: "us",
-    portraitIndex: 0,
-  },
-  "clearcall-demo-desk",
-);
+export const demoDesk: Publisher = personToPublisher({
+  displayName: "ClearCall demo desk",
+  role: "educator",
+  organization: "Authored product prototype",
+  gender: "men",
+  nationality: "us",
+  portraitIndex: 0,
+});
 
 export const makeDistribution = (
   label: string,
@@ -202,42 +199,14 @@ const TIME_LABELS = [
   "4d ago",
 ] as const;
 
-const OPENERS = [
-  "Live, I sold",
-  "On replay I keep landing on",
-  "Match-day read:",
-  "Clinic note:",
-  "Honest take —",
-  "From the AR angle,",
-  "If I am writing the report,",
-  "Gut first, then factors:",
-  "This one is fiddly because",
-  "After the second look,",
-] as const;
-
-const MIDDLES = [
-  "the critical factor is doing more work than the appeal",
-  "geometry beats volume every time",
-  "I refuse to name a card before the restart logic is clean",
-  "one missing angle still leaves doubt",
-  "the paired teaching contrast is what decides it for me",
-  "crowd noise is not evidence",
-  "the body language after contact is a trap",
-  "reaction time collapses half the handball debates",
-  "covering defenders change the whole disciplinary picture",
-  "advantage windows are shorter than people argue online",
-] as const;
-
-const CLOSERS = [
-  "I am locking that in.",
-  "Still open to a second angle.",
-  "Would love an assessor note on this.",
-  "Saving it for my next mentorship session.",
-  "That is the call I would sell.",
-  "Not my favourite, but it is coherent.",
-  "Changed my mind once, then came back.",
-  "Write it up carefully.",
-] as const;
+/**
+ * Short-form discussion bodies (protocol: Reddit/Discord mode).
+ * Vary structure per comment. Contractions. Fragments ok. No em-dashes.
+ * Do not stitch the same opener+middle+closer skeleton every time.
+ */
+function pick<T>(list: readonly T[], random: () => number): T {
+  return list[Math.floor(random() * list.length)]!;
+}
 
 function composeThreadBody(input: {
   caseId: string;
@@ -251,45 +220,78 @@ function composeThreadBody(input: {
   random: () => number;
   usedBodies: Set<string>;
 }): string {
-  const { caseId, title, category, criticalFactor, ruleCitation, slot, agrees, role, random, usedBodies } = input;
-  for (let attempt = 0; attempt < 24; attempt += 1) {
-    const opener = OPENERS[Math.floor(random() * OPENERS.length)]!;
-    const middle = MIDDLES[Math.floor(random() * MIDDLES.length)]!;
-    const closer = CLOSERS[Math.floor(random() * CLOSERS.length)]!;
-    const stance = agrees
-      ? `I am with the pinned ${category.toLowerCase()} read`
-      : `I am pushing back on the pinned ${category.toLowerCase()} read`;
-    const factorBit = `Focus on ${criticalFactor.replaceAll("-", " ")}`;
-    const roleBit =
+  const { caseId, title, category, criticalFactor, slot, agrees, role, random, usedBodies } = input;
+  const factor = criticalFactor.replaceAll("-", " ");
+  const cat = category.toLowerCase();
+  const shortTitle = title.length > 42 ? `${title.slice(0, 40)}…` : title;
+
+  const builds: Array<() => string> = [
+    () =>
+      agrees
+        ? `Same call as the pin on “${shortTitle}”. ${factor} is what sells it for me.`
+        : `Not sold on the pin for “${shortTitle}”. ${factor} doesn't get me there.`,
+    () =>
+      agrees
+        ? `Watched “${shortTitle}” twice. Yeah I'm with the pin. Crowd noise isn't doing anything.`
+        : `Watched “${shortTitle}” twice. Still going the other way. ${factor} feels thin here.`,
+    () =>
+      `Ok so “${shortTitle}”. ${
+        agrees ? "I'd sell what they pinned." : "I'd flip it."
+      } ${
+        role === "learner"
+          ? "Still learning to say the factor out loud before the card."
+          : "If I can't sell it live, I don't invent it in the comments."
+      }`,
+    () =>
+      agrees
+        ? `Hmm. Pin feels right. ${factor} first, then the rest. “${shortTitle}” isn't as close as people are making it.`
+        : `Hmm. Pin feels off. People are reacting to the fall more than ${factor}. “${shortTitle}” is a trap clip.`,
+    () =>
+      `${agrees ? "Locking the pin." : "Pushing back."} On “${shortTitle}” I'm stuck on ${factor}. ${
+        role === "educator" ? "Newer refs: name that before you colour the card." : "Write it short and move."
+      }`,
+    () =>
+      `Live I went ${agrees ? "with" : "against"} what got pinned on “${shortTitle}”. Replay didn't change much. ${factor} did the work.`,
+    () =>
+      agrees
+        ? `“${shortTitle}”. ${factor} is clean enough. Same as pin.`
+        : `“${shortTitle}”. Wait. ${factor} isn't enough for me. Different call.`,
+    () =>
+      `${
+        agrees ? "Yeah that tracks." : "Nah."
+      } ${cat} debates always get loud. For “${shortTitle}” I'm still on ${factor}.`,
+    () =>
       role === "learner"
-        ? "I am still building the checklist habit"
-        : role === "educator"
-          ? "Teaching point first"
-          : "On the pitch I need a sellable signal";
-    const angle = [
-      `watching “${title}”`,
-      `on the “${title}” clip`,
-      `for “${title}”`,
-      `after scrolling “${title}”`,
-    ][attempt % 4]!;
-    const body = [
-      `${opener} ${stance} ${angle}.`,
-      `${factorBit} — ${middle}.`,
-      `${roleBit}. ${ruleCitation.split("—")[0]?.trim() ?? ruleCitation}.`,
-      closer,
-    ].join(" ");
+        ? `Gonna sit with “${shortTitle}” before next weekend. Tentatively ${agrees ? "with the pin" : "against it"}. ${factor} is the bit I keep replaying.`
+        : `Match day I'd ${agrees ? "sell the pin" : "go the other way"} on “${shortTitle}”. ${factor}. That's it.`,
+    () =>
+      `Anyone else flip once on “${shortTitle}”? I did. Landed ${agrees ? "back with the pin" : "against it"} after staring at ${factor}.`,
+    () =>
+      agrees
+        ? `Blunt take: pin is fine. “${shortTitle}” just needs you to ignore the theatre and watch ${factor}.`
+        : `Blunt take: pin is wrong. “${shortTitle}” is all theatre if you skip ${factor}.`,
+    () =>
+      `From the AR angle on “${shortTitle}”… ${agrees ? "same place as pin." : "I'm out."} ${factor} or nothing.`,
+  ];
+
+  for (let attempt = 0; attempt < 28; attempt += 1) {
+    const body = pick(builds, random)()
+      .replaceAll("—", ",")
+      .replaceAll(/\s+/g, " ")
+      .trim();
     if (!usedBodies.has(body)) {
       usedBodies.add(body);
       return body;
     }
   }
-  const fallback = `On “${title}” (${caseId} / slot ${slot}): ${agrees ? "agree" : "dissent"} around ${criticalFactor} for ${category}.`;
+
+  const fallback = `On “${shortTitle}” (${caseId}/${slot}): ${agrees ? "same call" : "different call"}. ${factor}.`;
   usedBodies.add(fallback);
   return fallback;
 }
 
-function publisherFromPerson(person: FeedPersonSeed, caseId: string, slot: number): Publisher {
-  return personToPublisher(person, `${caseId}-slot-${slot}`);
+function publisherFromPerson(person: FeedPersonSeed): Publisher {
+  return personToPublisher(person);
 }
 
 export interface DiscussionContext {
@@ -342,12 +344,9 @@ export function makeDiscussion(
     assignedPeople.push(more[0]);
   }
 
-  const pinnedEducator = context.title
-    ? `${educatorBody.trim()} That is the read I would pin on “${context.title}”.`
-    : educatorBody.trim();
-  const pinnedReferee = context.title
-    ? `${refereeBody.trim()} Match-day sell on “${context.title}”.`
-    : refereeBody.trim();
+  const titleHint = context.title ? ` Looking at “${context.title}”.` : "";
+  const pinnedEducator = `${educatorBody.trim()}${titleHint}`.replaceAll("—", ",");
+  const pinnedReferee = `${refereeBody.trim()}${titleHint ? ` Same clip, “${context.title}”.` : ""}`.replaceAll("—", ",");
   usedBodies.add(pinnedEducator);
   usedBodies.add(pinnedReferee);
 
@@ -379,7 +378,7 @@ export function makeDiscussion(
     return {
       id: `${caseId}-response-${slot}`,
       caseId,
-      author: publisherFromPerson(person, caseId, slot),
+      author: publisherFromPerson(person),
       body,
       selectedOptionId: agrees ? recommendedDecision : dissentOption,
       confidence: isPinned ? 78 + Math.floor(random() * 12) : 55 + Math.floor(random() * 35),
@@ -388,14 +387,14 @@ export function makeDiscussion(
       helpfulCount: isPinned ? 12 + Math.floor(random() * 24) : 1 + Math.floor(random() * 18),
       factorReactions: makeFactorReactions(selectedKeys, 3 + slot + Math.floor(random() * 6)),
       postedAtLabel: isPinned
-        ? "Pinned demo response"
+        ? "Pinned"
         : TIME_LABELS[Math.min(TIME_LABELS.length - 1, Math.floor(random() * TIME_LABELS.length))]!,
       isPinned,
       isVerifiedExplanation: false,
       isSynthetic: true,
       disclosure: isPinned
-        ? "Pinned authored demo rationale; it has not been independently verified."
-        : "Authored fictional discussion response.",
+        ? "Pinned demo take — not an official ruling."
+        : "Fictional discussion reply for the demo.",
     } satisfies DiscussionResponse;
   });
 }
@@ -403,7 +402,7 @@ export function makeDiscussion(
 export function pickPublisher(seed: string): Publisher {
   const [person] = pickPeople(`publisher:${seed}`, 1);
   if (!person) return demoDesk;
-  return personToPublisher(person, `case-${seed}`);
+  return personToPublisher(person);
 }
 
 export const commonCaseFields = {

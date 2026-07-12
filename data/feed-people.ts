@@ -347,9 +347,19 @@ export function initialsForName(displayName: string): string {
   return `${parts[0]![0] ?? ""}${parts[parts.length - 1]![0] ?? ""}`.toUpperCase();
 }
 
-export function personToPublisher(person: FeedPersonSeed, idSuffix: string): Publisher {
+/** Stable URL-safe id so the same person links to one profile across cases. */
+export function personSlug(displayName: string): string {
+  return displayName
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function personToPublisher(person: FeedPersonSeed): Publisher {
   return {
-    id: `publisher-${idSuffix}`,
+    id: personSlug(person.displayName),
     displayName: person.displayName,
     role: person.role,
     organization: person.organization,
@@ -362,6 +372,10 @@ export function personToPublisher(person: FeedPersonSeed, idSuffix: string): Pub
         ? "Fictional demo publisher; no credential or affiliation is claimed."
         : "Fictional demo participant; no credential is claimed.",
   };
+}
+
+export function findPersonBySlug(slug: string): FeedPersonSeed | undefined {
+  return FEED_PEOPLE.find((person) => personSlug(person.displayName) === slug);
 }
 
 /** Stable seeded RNG so the same case always draws the same people. */

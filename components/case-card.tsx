@@ -32,9 +32,9 @@ import {
 import type { OfficiatingCase, UserAnswer } from "@/lib/types";
 import { useDemo, type SubmitAnswerResult } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
-import { Avatar } from "@/components/avatar";
 import { CaseVideo } from "@/components/case-video";
 import { DistributionBars } from "@/components/distribution-bars";
+import { PublisherLink } from "@/components/publisher-link";
 import { SaveButton, ShareButton } from "@/components/case-actions";
 import { StatusBadge } from "@/components/status-badge";
 
@@ -113,21 +113,19 @@ export function CaseCard({
       aria-labelledby={`case-${scenario.id}-title`}
     >
       <header className="case-card__header">
-        <Avatar
-          initials={scenario.publisher.avatarInitials}
-          src={scenario.publisher.avatarSrc}
-        />
-        <div className="publisher">
-          <div className="publisher__name">
-            {scenario.publisher.displayName}
-            {scenario.publisher.isVerified && (
-              <BadgeCheck className="verified-icon" aria-label="Verified referee" size={15} />
-            )}
+        <PublisherLink publisher={scenario.publisher}>
+          <div className="publisher">
+            <div className="publisher__name">
+              {scenario.publisher.displayName}
+              {scenario.publisher.isVerified && (
+                <BadgeCheck className="verified-icon" aria-label="Verified referee" size={15} />
+              )}
+            </div>
+            <div className="publisher__meta">
+              {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+            </div>
           </div>
-          <div className="publisher__meta">
-            {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
-          </div>
-        </div>
+        </PublisherLink>
         <div className="case-card__actions">
           <SaveButton caseId={scenario.id} />
           <ShareButton caseId={scenario.id} />
@@ -434,11 +432,11 @@ function ResultPanel({
           <h3 id={`result-${scenario.id}-title`}>
             {openDiscussion
               ? aligned
-                ? "Your call aligns with the demo recommendation"
-                : "Your call adds a different interpretation"
+                ? "Same call as the demo desk"
+                : "Different take from the demo desk"
               : aligned
-                ? "Your call matched the reviewed decision"
-                : "This case challenges your weighting"}
+                ? "You matched the reviewed call"
+                : "Worth another look at the factors"}
           </h3>
           {wasRevised ? (
             <p>Your first attempt remains the calibration record.</p>
@@ -479,7 +477,7 @@ function ResultPanel({
 
       <div className="expert-explanation">
         <span className="expert-explanation__label">
-          <Sparkles aria-hidden="true" size={14} /> Authored teaching rationale
+          <Sparkles aria-hidden="true" size={14} /> Why the demo lands here
         </span>
         <p>{scenario.expertExplanation}</p>
         <div className="rule-citation">
