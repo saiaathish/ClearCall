@@ -1,4 +1,5 @@
 import type { DiscussionResponse, MediaKind, OfficiatingCase } from "@/lib/types";
+import { sanitizePublicText } from "@/data/validate-cases";
 
 /**
  * Language that implies the reader can see attached footage or a still.
@@ -37,7 +38,7 @@ function scrubMediaReferences(text: string): string {
       .replace(/\bsingle[- ]angle\b/gi, "written-fact")
       .replace(/\bAR angle\b/gi, "AR report")
       .replace(/\bcamera certainty\b/gi, "evidence certainty")
-      .replace(/\u2014/g, ",") // no em-dashes
+      .replace(/\u2014/g, ",")
       .replace(/\s{2,}/g, " ")
       .replace(/\s+([,.!?])/g, "$1")
       .trim(),
@@ -55,115 +56,61 @@ function ensureMediaPrompt(prompt: string, kind: "image" | "video"): string {
     .replace(/\bNo clip is attached,?\s*only the written protocol question\.?\s*/gi, "")
     .replace(/\u2014/g, ",")
     .trim();
-  if (kind === "video" && /\b(image|photo|picture|still)\b/i.test(next) && !/\b(clip|video|footage)\b/i.test(next)) {
-    next = next.replace(/\b(this |the |attached )?(image|photo|picture|still)\b/gi, "this clip");
+  // Prefer neutral "this challenge / this incident" over awkward mid-sentence "this clip".
+  if (/\bthis clip\b/i.test(next)) {
+    next = next.replace(/\bthis clip\b/gi, "this challenge");
   }
-  if (kind === "image" && /\b(clip|video|footage)\b/i.test(next) && !/\b(image|photo|still)\b/i.test(next)) {
-    next = next.replace(/\b(this |the |attached )?(clip|video|footage)\b/gi, "this still");
+  if (/\bthis still\b/i.test(next)) {
+    next = next.replace(/\bthis still\b/gi, "this incident");
   }
-  return scrubAiTells(next.replace(/\s{2,}/g, " ").trim());
-}
-
-function visualPhrase(mediaAlt: string): string {
-  return mediaAlt.trim().replace(/\.$/, "");
+  if (kind === "video" && /\b(image|photo|picture|still)\b/i.test(next) && !/\b(clip|video|footage|challenge|incident)\b/i.test(next)) {
+    next = next.replace(/\b(this |the |attached )?(image|photo|picture|still)\b/gi, "this incident");
+  }
+  if (kind === "image" && /\b(clip|video|footage)\b/i.test(next) && !/\b(image|photo|still|incident|challenge)\b/i.test(next)) {
+    next = next.replace(/\b(this |the |attached )?(clip|video|footage)\b/gi, "this incident");
+  }
+  return scrubAiTells(sanitizePublicText(next.replace(/\s{2,}/g, " ").trim()));
 }
 
 /**
- * Ground the teaching scenario in what is actually on screen.
- * Human-centric: short bursts, concrete visual first, then the call question.
+ * Keep authored incident descriptions. Only strip generation artifacts and
+ * media-caption filler — never rewrite into "On screen / Call it as" templates.
  */
 function alignDescription(
   description: string,
   kind: MediaKind,
-  mediaAlt: string,
-  category: string,
+  caseId: string,
 ): string {
-  if (kind === "text") {
-    let next = scrubMediaReferences(description);
-    if (!/written|protocol|fact pattern|text-only/i.test(next)) {
-      next = `Written protocol case. ${next}`;
-    }
-    return next.replace(/\s{2,}/g, " ").trim();
-  }
-
-  const mediaLabel = kind === "video" ? "clip" : "still";
-  const visual = visualPhrase(mediaAlt);
-  const teaching = description
+  let next = sanitizePublicText(description, caseId)
     .replace(/\s*The attached (?:clip|still) shows[^.]*\./gi, "")
-    .replace(/\s*On screen:[^.]*\./gi, "")
     .replace(/\s*Use what you can see[^.]*\./gi, "")
     .replace(/\bNo clip is attached,?\s*only the written protocol question\.?\s*/gi, "")
-    .replace(/\bWritten protocol (?:case|question)\.?\s*/gi, "")
     .replace(/\u2014/g, ",")
     .trim();
 
-  // Lead with the visual using the exact mediaAlt, then the teaching beat.
-  const grounded = [
-    `On screen: ${visual}.`,
-    teaching,
-    `Call it as a ${category.toLowerCase()} look off this ${mediaLabel}.`,
-  ].join(" ");
-
-  return scrubAiTells(grounded.replace(/\s{2,}/g, " ").trim());
-}
-
-const MEDIA_COMMENT_HOOKS = [
-  (visual: string, noun: string) => `yeah looking at this ${noun}. ${visual}. that's the whole argument for me.`,
-  (visual: string, noun: string) => `paused the ${noun} on ${visual.charAt(0).toLowerCase()}${visual.slice(1)}. still not sold either way.`,
-  (visual: string, noun: string) => `ok the ${noun} shows ${visual.charAt(0).toLowerCase()}${visual.slice(1)}. once you see that the rest is noise.`,
-  (visual: string, noun: string) => `hmm. rewatched. ${visual}. changes how loud i get about the card.`,
-  (visual: string) => `blunt: if that's what we're judging, ${visual.charAt(0).toLowerCase()}${visual.slice(1)}. write that first.`,
-];
-
-function hashSeed(input: string): number {
-  let hash = 0;
-  for (let i = 0; i < input.length; i += 1) {
-    hash = (hash * 31 + input.charCodeAt(i)) >>> 0;
+  if (kind === "text") {
+    next = scrubMediaReferences(next);
+    if (!/written|protocol|fact pattern|text-only/i.test(next)) {
+      next = `Written protocol case. ${next}`;
+    }
   }
-  return hash;
-}
 
-function sharesVisualCue(body: string, visual: string): boolean {
-  const tokens = visual
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter((token) => token.length >= 5)
-    .slice(0, 4);
-  if (tokens.length === 0) return body.toLowerCase().includes(visual.toLowerCase().slice(0, 24));
-  const lower = body.toLowerCase();
-  return tokens.some((token) => lower.includes(token));
+  return scrubAiTells(next.replace(/\s{2,}/g, " ").trim());
 }
 
 function alignDiscussionBody(
   body: string,
   kind: MediaKind,
-  mediaAlt: string,
-  index: number,
   caseId: string,
 ): string {
-  if (kind === "text") {
-    return scrubMediaReferences(body);
-  }
-
-  const noun = kind === "video" ? "clip" : "still";
-  const visual = visualPhrase(mediaAlt);
-  let next = body
+  let next = sanitizePublicText(body, caseId)
     .replace(/\bNo clip is attached,?\s*/gi, "")
     .replace(/\bWritten protocol (?:case|question)\.?\s*/gi, "")
     .replace(/\u2014/g, ",")
-    .replace(/\bwatched [^.!?]{0,80}/gi, `rewatched ${caseId}'s ${noun}`)
-    .replace(/\breplay(?:ed|ing)?\b/gi, `${noun} check`)
-    .replace(/\bfrom the ar angle\b/gi, `from this ${noun}`)
     .trim();
 
-  // Pin + a couple replies must talk about what's actually visible (Reddit-style, short).
-  if ((index === 0 || index === 2 || index === 4) && !sharesVisualCue(next, visual)) {
-    const hook = MEDIA_COMMENT_HOOKS[(hashSeed(`${caseId}:${index}`) + index) % MEDIA_COMMENT_HOOKS.length]!;
-    const grounded = `${hook(visual, noun)} [${caseId}]`;
-    next = index === 0 ? `${next} ${grounded}` : grounded;
-  } else if (!next.includes(caseId)) {
-    // Keep catalog-wide uniqueness even when the template already mentioned the visual.
-    next = `${next} (${caseId}:${index})`;
+  if (kind === "text") {
+    next = scrubMediaReferences(next);
   }
 
   return scrubAiTells(next.replace(/\s{2,}/g, " ").trim());
@@ -172,14 +119,16 @@ function alignDiscussionBody(
 function alignDiscussion(
   discussion: readonly DiscussionResponse[],
   kind: MediaKind,
-  mediaAlt: string,
   caseId: string,
 ): readonly DiscussionResponse[] {
   const used = new Set<string>();
   return discussion.map((item, index) => {
-    let body = alignDiscussionBody(item.body, kind, mediaAlt, index, caseId);
+    let body = alignDiscussionBody(item.body, kind, caseId);
+    if (!body) {
+      body = `Additional view on this decision (${index + 1}).`;
+    }
     if (used.has(body)) {
-      body = `${body} (${index + 1})`;
+      body = `${body} Consider the deciding factors carefully.`;
     }
     used.add(body);
     return { ...item, body };
@@ -187,9 +136,9 @@ function alignDiscussion(
 }
 
 /**
- * After media assignment, make prompt / description / discussion match the
- * final media kind and on-screen asset. Text posts never claim a clip exists.
- * Media posts talk about what is actually attached (human, concrete, short).
+ * After media assignment, sanitize prompt / description / discussion so public
+ * text never includes generation artifacts or internal case IDs.
+ * Does not invent visual captions or inject media alt text into the description.
  */
 export function alignCaseCopy(
   scenario: OfficiatingCase,
@@ -201,16 +150,18 @@ export function alignCaseCopy(
   const { mediaKind, mediaAlt } = options;
   const prompt =
     mediaKind === "text"
-      ? ensureTextOnlyPrompt(scenario.prompt)
+      ? ensureTextOnlyPrompt(sanitizePublicText(scenario.prompt, scenario.id))
       : ensureMediaPrompt(scenario.prompt, mediaKind);
 
   return {
     ...scenario,
     mediaKind,
-    mediaAlt,
+    mediaAlt: sanitizePublicText(mediaAlt, scenario.id),
     prompt,
-    description: alignDescription(scenario.description, mediaKind, mediaAlt, scenario.category),
-    seededDiscussion: alignDiscussion(scenario.seededDiscussion, mediaKind, mediaAlt, scenario.id),
+    description: alignDescription(scenario.description, mediaKind, scenario.id),
+    title: sanitizePublicText(scenario.title, scenario.id),
+    expertExplanation: sanitizePublicText(scenario.expertExplanation, scenario.id),
+    seededDiscussion: alignDiscussion(scenario.seededDiscussion, mediaKind, scenario.id),
   };
 }
 

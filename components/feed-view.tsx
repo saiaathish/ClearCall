@@ -65,7 +65,10 @@ export function FeedView() {
     [activeCategory, orderedCases],
   );
   const poolKey = poolIdentityFor(activeCategory, removedIds);
-  filteredCasesRef.current = filteredCases;
+
+  useEffect(() => {
+    filteredCasesRef.current = filteredCases;
+  }, [filteredCases]);
 
   // Reset only when foul filter or removed-case set changes — not when ranking reorders.
   if (hydrated && boundPoolKey !== poolKey) {
@@ -202,7 +205,7 @@ export function FeedView() {
     router.replace(query ? `/?${query}` : "/", { scroll: false });
     setAnnouncement(
       category === "all"
-        ? `${cases.length} seeded cases reshuffled across all foul types.`
+        ? `${cases.length} curated demo cases across varied foul types.`
         : `Feed filtered to ${category} and reshuffled.`,
     );
   };

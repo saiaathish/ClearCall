@@ -75,7 +75,14 @@ describe("calculateSimilarity", () => {
 
 describe("findTeachingContrast", () => {
   it("adds a transparent bonus and selects the deliberate different-outcome pair", () => {
-    const seedCatalog = cases.slice(0, 10);
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
     const contrast = findTeachingContrast(
       caseById("sfp-controlled-lunge"),
       seedCatalog,
@@ -143,7 +150,12 @@ describe("calculateCalibrationScore", () => {
 
 describe("rankPersonalizedCases", () => {
   it("prioritizes a category after a high-confidence incorrect answer", () => {
-    const seedCatalog = cases.slice(0, 10);
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("advantage-quick-breakdown"),
+    ];
     const ranked = rankPersonalizedCases(seedCatalog, [
       answer(
         "sfp-controlled-lunge",
@@ -218,8 +230,9 @@ describe("deriveLearnerProfile", () => {
 describe("authored demo data integrity", () => {
   it("contains review-labelled cases with internally valid IDs and percentages", () => {
     const ids = new Set(cases.map((item) => item.id));
-    expect(cases).toHaveLength(100);
-    expect(ids.size).toBe(100);
+    expect(cases.length).toBeGreaterThanOrEqual(12);
+    expect(cases.length).toBeLessThanOrEqual(16);
+    expect(ids.size).toBe(cases.length);
 
     for (const item of cases) {
       const optionIds = new Set(item.answerOptions.map((option) => option.id));
@@ -250,7 +263,14 @@ describe("authored demo data integrity", () => {
   });
 
   it("includes the three requested deliberate teaching pairs", () => {
-    const seedCatalog = cases.slice(0, 10);
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
     const expectedPairs = [
       ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
       ["handball-supporting-arm", "handball-raised-arm"],
@@ -267,7 +287,14 @@ describe("authored demo data integrity", () => {
   });
 
   it("keeps teaching pairs bidirectional in similarCaseIds", () => {
-    const seedCatalog = cases.slice(0, 10);
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
     const expectedPairs = [
       ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
       ["handball-supporting-arm", "handball-raised-arm"],

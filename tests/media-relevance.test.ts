@@ -26,16 +26,17 @@ describe("media relevance", () => {
     }
   });
 
-  it("uses multiple distinct soccer clips", () => {
+  it("uses distinct soccer clips without reuse", () => {
     const clips = new Set(
       cases.filter((item) => item.mediaKind === "video").map((item) => item.videoSrc),
     );
-    expect(clips.size).toBeGreaterThanOrEqual(12);
+    expect(clips.size).toBe(cases.filter((item) => item.mediaKind === "video").length);
+    expect(clips.size).toBeGreaterThanOrEqual(3);
   });
 
   it("keeps the catalog mixed without forcing video reuse", () => {
     const videos = cases.filter((item) => item.mediaKind === "video");
-    expect(videos.length).toBeGreaterThanOrEqual(12);
+    expect(videos.length).toBeGreaterThanOrEqual(3);
     expect(videos.length).toBeLessThanOrEqual(VIDEO_ASSETS.length);
   });
 
@@ -46,16 +47,23 @@ describe("media relevance", () => {
     expect(new Set(videos).size).toBe(videos.length);
   });
 
-  it("grounds media-post comments in the attached asset", () => {
-    const withMedia = cases.filter((item) => item.mediaKind === "video" || item.mediaKind === "image");
-    expect(withMedia.length).toBeGreaterThan(0);
-    for (const item of withMedia) {
-      const visualCue = item.mediaAlt.toLowerCase().replace(/\.$/, "");
-      const bodies = item.seededDiscussion.map((entry) => entry.body.toLowerCase()).join(" ");
-      const tokens = visualCue.split(/[^a-z0-9]+/).filter((token) => token.length >= 5).slice(0, 3);
-      expect(tokens.some((token) => bodies.includes(token)) || bodies.includes(visualCue.slice(0, 24))).toBe(
-        true,
-      );
+  it("keeps public copy free of generation artifacts and media-caption filler", () => {
+    for (const item of cases) {
+      const publicText = [
+        item.title,
+        item.prompt,
+        item.description,
+        ...item.seededDiscussion.map((entry) => entry.body),
+      ].join("\n");
+      expect(publicText).not.toMatch(/call it as/i);
+      expect(publicText).not.toMatch(/look off this/i);
+      expect(publicText).not.toMatch(/on screen:/i);
+      expect(publicText).not.toMatch(/once you see that the rest is noise/i);
+      expect(publicText).not.toMatch(/changes how loud i get/i);
+      expect(publicText).not.toMatch(/still not sold either way/i);
+      expect(publicText).not.toMatch(/\[[a-z0-9]+(?:-[a-z0-9]+)+\]/i);
+      expect(publicText).not.toMatch(/\(gen-[^)]+\)/i);
+      expect(publicText).not.toContain(item.id);
     }
   });
 
@@ -68,19 +76,18 @@ describe("media relevance", () => {
       (item) =>
         item.imageSrc?.includes("handball") ||
         item.imageSrc?.includes("goalkeeper") ||
-        /arm|hand|keeper|wall|deflection/i.test(item.mediaAlt),
+        /arm|hand|keeper|wall|deflection|sliding/i.test(item.mediaAlt),
     );
     expect(matched.length).toBeGreaterThan(0);
   });
 
-  it("anchors media post copy to the attached asset", () => {
+  it("keeps incident descriptions free of raw media alt dumps", () => {
     const withMedia = cases.filter((item) => item.mediaKind === "video" || item.mediaKind === "image");
     expect(withMedia.length).toBeGreaterThan(0);
     for (const item of withMedia) {
-      expect(item.description.toLowerCase()).toContain(
-        item.mediaAlt.toLowerCase().replace(/\.$/, ""),
-      );
       expect(item.description).not.toMatch(/no clip is attached/i);
+      expect(item.description).not.toMatch(/^On screen:/i);
+      expect(item.description.toLowerCase()).not.toBe(item.mediaAlt.toLowerCase());
     }
   });
 
@@ -99,7 +106,7 @@ describe("media relevance", () => {
     }
   });
 
-  it("matches specialty video cases to overlapping category tags", () => {
+  it("matches specialty video cases to overlapping category tags when tagged", () => {
     const specialty = cases.filter(
       (item) =>
         item.mediaKind === "video" &&
@@ -118,17 +125,11 @@ describe("media relevance", () => {
     }
   });
 
-  it("keeps the Celine Martin handball shot-blocker on unique authored still media", () => {
-    const item = cases.find((entry) => entry.id === "handball-shot-blocker");
+  it("keeps authored handball cases on case still media", () => {
+    const item = cases.find((entry) => entry.id === "handball-supporting-arm");
     expect(item).toBeTruthy();
-    // May be image (unique still) or text if the preferred still was already claimed.
-    expect(["image", "text"]).toContain(item!.mediaKind);
-    if (item!.mediaKind === "image") {
-      expect(item!.imageSrc?.startsWith("/media/cases/") || item!.imageSrc?.startsWith("/media/stock/")).toBe(
-        true,
-      );
-      expect(item!.videoSrc).toBeNull();
-    }
-    expect(item!.prompt).toContain("outstretched arm");
+    expect(item!.mediaKind).toBe("image");
+    expect(item!.imageSrc?.startsWith("/media/cases/")).toBe(true);
+    expect(item!.videoSrc).toBeNull();
   });
 });
