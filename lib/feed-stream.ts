@@ -11,7 +11,7 @@ export const FEED_PRELOAD_AHEAD = 8;
 export const FEED_RECENT_WINDOW = 5;
 
 export interface FeedItem {
-  /** Stable React key for this appearance. */
+  /** Stable React key for this appearance (case can repeat across cycles). */
   key: string;
   scenario: OfficiatingCase;
   cycle: number;
@@ -159,9 +159,14 @@ export function withLibraryBackdrop(
   };
 }
 
+function recentIds(items: readonly FeedItem[], windowSize: number): Set<string> {
+  const slice = items.slice(Math.max(0, items.length - windowSize));
+  return new Set(slice.map((item) => item.scenario.id));
+}
+
 /**
- * Append the next batch of unique feed items.
- * Deduplicates by stable case ID and never reshuffles exhausted cases back in.
+ * Append the next batch of feed items. When the unique catalog is exhausted,
+ * reshuffle and keep going while avoiding immediate repeats.
  */
 export function appendFeedBatch(
   pool: readonly OfficiatingCase[],
@@ -176,32 +181,50 @@ export function appendFeedBatch(
   if (pool.length === 0) return [...existing];
 
   const batchSize = options.batchSize ?? FEED_BATCH_SIZE;
+  const recentWindow = options.recentWindow ?? FEED_RECENT_WINDOW;
   const random = options.random ?? defaultRandom;
-  const cycle = options.cycle ?? (existing.at(-1)?.cycle ?? 0);
+  let cycle = options.cycle ?? (existing.at(-1)?.cycle ?? 0);
   const next = [...existing];
-  const seenIds = new Set(existing.map((item) => item.scenario.id));
-  const usedMedia = new Set<string>();
+  const usedInBatch = new Set<string>();
+  const appearanceCounts = new Map<string, number>();
   for (const item of existing) {
-    const src = item.scenario.videoSrc ?? item.scenario.imageSrc ?? item.scenario.posterSrc;
-    if (src) usedMedia.add(src);
+    appearanceCounts.set(item.scenario.id, (appearanceCounts.get(item.scenario.id) ?? 0) + 1);
   }
 
-  const remaining = shuffleCasesForMix(
-    pool.filter((scenario) => !seenIds.has(scenario.id)),
-    random,
-  );
+  const usedMedia = new Set<string>();
+  // Prefer fresh library stills within this batch; recycled cycles may reuse assets.
 
-  for (const drawn of remaining) {
-    if (next.length - existing.length >= batchSize) break;
-    if (seenIds.has(drawn.id)) continue;
+  let deck = shuffleCasesForMix(pool, random);
+  let deckIndex = 0;
 
+  const draw = (): OfficiatingCase | null => {
+    const blocked = recentIds(next, recentWindow);
+    for (let attempt = 0; attempt < pool.length * 2; attempt += 1) {
+      if (deckIndex >= deck.length) {
+        cycle += 1;
+        deck = shuffleCasesForMix(pool, random);
+        deckIndex = 0;
+      }
+      const candidate = deck[deckIndex]!;
+      deckIndex += 1;
+      if (pool.length > recentWindow && blocked.has(candidate.id)) continue;
+      if (usedInBatch.has(candidate.id) && pool.length > batchSize) continue;
+      return candidate;
+    }
+    return deck[0] ?? pool[0] ?? null;
+  };
+
+  for (let added = 0; added < batchSize; added += 1) {
+    const drawn = draw();
+    if (!drawn) break;
+    usedInBatch.add(drawn.id);
+    const appearance = appearanceCounts.get(drawn.id) ?? 0;
+    appearanceCounts.set(drawn.id, appearance + 1);
     const scenario = withLibraryBackdrop(drawn, random, usedMedia);
     const mediaSrc = scenario.videoSrc ?? scenario.imageSrc ?? scenario.posterSrc;
     if (mediaSrc) usedMedia.add(mediaSrc);
-
-    seenIds.add(drawn.id);
     next.push({
-      key: drawn.id,
+      key: `${drawn.id}::${cycle}::${appearance}`,
       scenario,
       cycle,
     });
