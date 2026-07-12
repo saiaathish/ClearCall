@@ -25,7 +25,6 @@ import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
 import { PublisherLink } from "@/components/publisher-link";
 import { StatusBadge } from "@/components/status-badge";
-import { SaveButton, ShareButton } from "@/components/case-actions";
 import { createClient } from "@/lib/supabase/client";
 import { fetchLiveDistribution } from "@/lib/voting";
 import { toggleHelpfulVote } from "@/lib/reputation";
@@ -165,17 +164,13 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   return (
     <div className="page-shell">
       <header className="thread-header">
-        <Link className="thread-back" href="/">
-          <ArrowLeft aria-hidden="true" size={18} /> Back to feed
-        </Link>
         <div className="thread-header__title">
           <span>Case</span>
           <h1>{scenario.title}</h1>
         </div>
-        <div className="button-row">
-          <SaveButton caseId={scenario.id} showLabel />
-          <ShareButton caseId={scenario.id} showLabel />
-        </div>
+        <Link className="button button--secondary" href="/">
+          <ArrowLeft aria-hidden="true" size={16} /> Back to feed
+        </Link>
       </header>
 
       <div className="case-detail-layout">
