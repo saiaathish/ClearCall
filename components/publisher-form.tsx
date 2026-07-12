@@ -11,12 +11,10 @@ import {
 } from "react";
 import {
   AlertCircle,
-  Check,
   CheckCircle2,
   FileImage,
   FileText,
   FileVideo,
-  Film,
   Plus,
   RotateCcw,
   Send,
@@ -49,17 +47,6 @@ interface PublisherFormState {
 }
 
 type ValidationErrors = Record<string, string>;
-
-interface PreviewModel {
-  mediaKind: MediaKind;
-  description: string;
-  category: string;
-  difficulty: string;
-  originalDecision: string;
-  answers: readonly string[];
-  clipLabel: string;
-  isPending: boolean;
-}
 
 const CATEGORY_OPTIONS: readonly CaseCategory[] = [
   "Serious foul play",
@@ -176,93 +163,6 @@ function FieldError({ fieldId, message }: { fieldId: string; message?: string })
 
 function describedBy(fieldId: string, errors: ValidationErrors, hintId?: string): string | undefined {
   return [hintId, errors[fieldId] ? `${fieldId}-error` : null].filter(Boolean).join(" ") || undefined;
-}
-
-function CasePreview({ model, id = "case-live-preview" }: { model: PreviewModel; id?: string }) {
-  return (
-    <aside className="publish-preview" aria-labelledby={`${id}-heading`} id={id}>
-      <div>
-        <p className="eyebrow">{model.isPending ? "Submitted" : "Preview"}</p>
-        <h2 className="section-title" id={`${id}-heading`}>
-          {model.isPending ? "Awaiting review" : "How it will look"}
-        </h2>
-      </div>
-
-      <article className="preview-card" data-media={model.mediaKind}>
-        {model.mediaKind !== "text" ? (
-          <div className="preview-card__stage">
-            <div className="case-media__field" aria-hidden="true" />
-            <div className="case-media__topline">
-              <span className="meta-chip">Soccer</span>
-              <span className="meta-chip">{model.clipLabel}</span>
-            </div>
-            <div className="case-media__placeholder">
-              <span className="case-media__placeholder-icon" aria-hidden="true">
-                {model.mediaKind === "image" ? <FileImage size={22} /> : <Film size={22} />}
-              </span>
-              <strong>{model.mediaKind} attached</strong>
-              <span>{model.description || "Incident not described yet."}</span>
-            </div>
-          </div>
-        ) : null}
-
-        <div className="preview-card__body">
-          <div className="meta-row">
-            <span className="status-badge status-badge--open">Open discussion</span>
-            <span className="meta-chip">{model.category || "Category"}</span>
-            <span className="meta-chip">{model.difficulty || "Difficulty"}</span>
-          </div>
-          <h2>{titleFromDescription(model.description)}</h2>
-          <p>{model.description || "Describe the incident to see a preview."}</p>
-          <p>
-            <strong>Original decision:</strong> {model.originalDecision || "Not added"}
-          </p>
-
-          <div className="answer-builder" aria-label="Answer choices preview">
-            {model.answers.filter(Boolean).length > 0 ? (
-              model.answers.filter(Boolean).map((answer, index) => (
-                <div className="file-summary" key={`${answer}-${index}`}>
-                  <span>
-                    <strong>{answer}</strong>
-                    <span>Answer option</span>
-                  </span>
-                  {index === 0 ? <Check aria-label="First option" size={16} /> : null}
-                </div>
-              ))
-            ) : (
-              <p>No answer choices yet.</p>
-            )}
-          </div>
-        </div>
-      </article>
-    </aside>
-  );
-}
-
-function livePreviewModel(form: PublisherFormState, selectedFile: File | null): PreviewModel {
-  return {
-    mediaKind: form.mediaKind,
-    description: form.description,
-    category: form.category,
-    difficulty: form.difficulty,
-    originalDecision: form.originalDecision,
-    answers: form.answers.map((answer) => answer.label),
-    clipLabel: selectedFile ? selectedFile.name : form.mediaKind === "text" ? "Text post" : `No ${form.mediaKind}`,
-    isPending: false,
-  };
-}
-
-function submittedPreviewModel(draft: PublishedCaseDraft): PreviewModel {
-  return {
-    mediaKind: draft.mediaKind,
-    description: draft.description,
-    category: draft.category,
-    difficulty: draft.difficulty,
-    originalDecision: draft.originalDecision,
-    answers: draft.answerOptions.map((answer) => answer.label),
-    clipLabel: draft.mediaFileName ?? draft.clipFileName ?? `${draft.mediaKind} post`,
-    isPending: true,
-  };
 }
 
 export function PublisherForm() {
@@ -486,346 +386,335 @@ export function PublisherForm() {
 
   if (submittedDraft) {
     return (
-      <div className="publish-layout">
-        <section
-          className="success-state"
-          aria-labelledby="publish-success-title"
-          ref={successRef}
-          tabIndex={-1}
-        >
-          <span className="success-state__icon" aria-hidden="true">
-            <CheckCircle2 size={26} />
-          </span>
-          <span className="status-badge status-badge--pending">Pending expert review</span>
-          <h2 id="publish-success-title">Case submitted</h2>
-          <p>Your draft is in the review queue. Experts can fill in rule path and reasoning later.</p>
-          <div className="button-row">
-            <a className="button" href="#submitted-case-preview">
-              <FileText aria-hidden="true" size={17} />
-              View submitted case
-            </a>
-            <button className="button button--secondary" type="button" onClick={startAnotherDraft}>
-              <RotateCcw aria-hidden="true" size={17} />
-              Publish another
-            </button>
-          </div>
-        </section>
-        <CasePreview model={submittedPreviewModel(submittedDraft)} id="submitted-case-preview" />
-      </div>
+      <section
+        className="success-state"
+        aria-labelledby="publish-success-title"
+        ref={successRef}
+        tabIndex={-1}
+      >
+        <span className="success-state__icon" aria-hidden="true">
+          <CheckCircle2 size={26} />
+        </span>
+        <span className="status-badge status-badge--pending">Pending expert review</span>
+        <h2 id="publish-success-title">Case submitted</h2>
+        <p>Your draft is in the review queue. Experts can fill in rule path and reasoning later.</p>
+        <div className="button-row">
+          <button className="button" type="button" onClick={startAnotherDraft}>
+            <RotateCcw aria-hidden="true" size={17} />
+            Publish another
+          </button>
+        </div>
+      </section>
     );
   }
 
   const errorEntries = Object.entries(errors);
 
   return (
-    <div className="publish-layout">
-      <form className="publisher-form" noValidate onSubmit={handleSubmit}>
-        <section className="form-section" aria-labelledby="publish-basics">
-          <div className="form-section__header">
-            <div>
-              <h2 id="publish-basics">Your case</h2>
-              <p>Upload media, describe the incident, and list the calls learners can pick.</p>
-            </div>
-          </div>
-
-          <fieldset className="media-kind-picker">
-            <legend className="field-label">Format</legend>
-            <div>
-              {(["text", "image", "video"] as const).map((kind) => (
-                <label key={kind}>
-                  <input
-                    checked={form.mediaKind === kind}
-                    name="media-kind"
-                    onChange={() => selectMediaKind(kind)}
-                    type="radio"
-                    value={kind}
-                  />
-                  <span>
-                    {kind === "text" ? (
-                      <FileText aria-hidden="true" size={17} />
-                    ) : kind === "image" ? (
-                      <FileImage aria-hidden="true" size={17} />
-                    ) : (
-                      <FileVideo aria-hidden="true" size={17} />
-                    )}
-                    {kind[0].toUpperCase() + kind.slice(1)}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          {form.mediaKind !== "text" ? (
-            <>
-              <label className="field-label" htmlFor="clip-file">
-                {form.mediaKind === "image" ? "Image" : "Clip"} <span aria-hidden="true">*</span>
-              </label>
-              <div
-                className="upload-zone"
-                data-dragging={dragging || undefined}
-                onDragEnter={(event) => {
-                  event.preventDefault();
-                  setDragging(true);
-                }}
-                onDragLeave={() => setDragging(false)}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "copy";
-                }}
-                onDrop={handleDrop}
-              >
-                <div>
-                  <span className="upload-zone__icon" aria-hidden="true">
-                    <Upload size={22} />
-                  </span>
-                  <strong>Drop a {form.mediaKind} here or choose a file</strong>
-                  <p id="clip-file-hint">
-                    {form.mediaKind === "image" ? "JPEG, PNG, WebP, or GIF." : "MP4 or WebM."}
-                  </p>
-                  <input
-                    accept={form.mediaKind === "image" ? "image/*,.svg" : "video/*,.mov,.m4v,.ogv"}
-                    aria-describedby={describedBy("clip-file", errors, "clip-file-hint")}
-                    aria-invalid={Boolean(errors["clip-file"])}
-                    className="input"
-                    id="clip-file"
-                    onChange={handleFileChange}
-                    ref={fileInputRef}
-                    required
-                    type="file"
-                  />
-                </div>
-              </div>
-              <FieldError fieldId="clip-file" message={errors["clip-file"]} />
-
-              {selectedFile ? (
-                <>
-                  <div className="file-summary">
-                    <span>
-                      <strong>{selectedFile.name}</strong>
-                      <span>
-                        {formatBytes(selectedFile.size)}
-                        {selectedFile.type ? ` · ${selectedFile.type}` : ""}
-                      </span>
-                    </span>
-                    <button
-                      aria-label={`Remove ${selectedFile.name}`}
-                      className="icon-button icon-button--small"
-                      onClick={() => clearSelectedFile()}
-                      type="button"
-                    >
-                      <Trash2 aria-hidden="true" size={16} />
-                    </button>
-                  </div>
-                  {previewUrl && form.mediaKind === "video" ? (
-                    <div className="case-media">
-                      <video
-                        aria-label={`Preview of ${selectedFile.name}`}
-                        controls
-                        playsInline
-                        preload="metadata"
-                        src={previewUrl}
-                        style={{ height: "100%", objectFit: "contain", width: "100%" }}
-                      >
-                        <track
-                          kind="captions"
-                          label="No captions"
-                          src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A"
-                          srcLang="en"
-                        />
-                      </video>
-                    </div>
-                  ) : previewUrl && form.mediaKind === "image" ? (
-                    <div className="case-media case-media--image">
-                      <Image
-                        alt={`Preview of ${selectedFile.name}`}
-                        fill
-                        sizes="(max-width: 900px) 100vw, 50vw"
-                        src={previewUrl}
-                        unoptimized
-                      />
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-            </>
-          ) : null}
-
+    <form className="publisher-form" noValidate onSubmit={handleSubmit}>
+      <section className="form-section" aria-labelledby="publish-basics">
+        <div className="form-section__header">
           <div>
-            <label className="field-label" htmlFor="case-description">
-              What happened <span aria-hidden="true">*</span>
+            <h2 id="publish-basics">Your case</h2>
+            <p>Upload media, describe the incident, and list the calls learners can pick.</p>
+          </div>
+        </div>
+
+        <fieldset className="media-kind-picker">
+          <legend className="field-label">Format</legend>
+          <div>
+            {(["text", "image", "video"] as const).map((kind) => (
+              <label key={kind}>
+                <input
+                  checked={form.mediaKind === kind}
+                  name="media-kind"
+                  onChange={() => selectMediaKind(kind)}
+                  type="radio"
+                  value={kind}
+                />
+                <span>
+                  {kind === "text" ? (
+                    <FileText aria-hidden="true" size={17} />
+                  ) : kind === "image" ? (
+                    <FileImage aria-hidden="true" size={17} />
+                  ) : (
+                    <FileVideo aria-hidden="true" size={17} />
+                  )}
+                  {kind[0].toUpperCase() + kind.slice(1)}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {form.mediaKind !== "text" ? (
+          <>
+            <label className="field-label" htmlFor="clip-file">
+              {form.mediaKind === "image" ? "Image" : "Clip"} <span aria-hidden="true">*</span>
             </label>
-            <textarea
-              aria-describedby={describedBy("case-description", errors)}
-              aria-invalid={Boolean(errors["case-description"])}
-              className="textarea"
-              id="case-description"
-              onChange={(event) => updateField("description", event.target.value)}
-              placeholder="Late challenge near the touchline. Defender arrives after the ball is played…"
-              required
-              rows={4}
-              value={form.description}
-            />
-            <FieldError fieldId="case-description" message={errors["case-description"]} />
-          </div>
+            <div
+              className="upload-zone"
+              data-dragging={dragging || undefined}
+              onDragEnter={(event) => {
+                event.preventDefault();
+                setDragging(true);
+              }}
+              onDragLeave={() => setDragging(false)}
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "copy";
+              }}
+              onDrop={handleDrop}
+            >
+              <div>
+                <span className="upload-zone__icon" aria-hidden="true">
+                  <Upload size={22} />
+                </span>
+                <strong>Drop a {form.mediaKind} here or choose a file</strong>
+                <p id="clip-file-hint">
+                  {form.mediaKind === "image" ? "JPEG, PNG, WebP, or GIF." : "MP4 or WebM."}
+                </p>
+                <input
+                  accept={form.mediaKind === "image" ? "image/*,.svg" : "video/*,.mov,.m4v,.ogv"}
+                  aria-describedby={describedBy("clip-file", errors, "clip-file-hint")}
+                  aria-invalid={Boolean(errors["clip-file"])}
+                  className="input"
+                  id="clip-file"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  required
+                  type="file"
+                />
+              </div>
+            </div>
+            <FieldError fieldId="clip-file" message={errors["clip-file"]} />
 
-          <div className="form-grid">
-            <div>
-              <label className="field-label" htmlFor="incident-category">
-                Category
-              </label>
-              <select
-                className="select"
-                id="incident-category"
-                onChange={(event) => updateField("category", event.target.value as CaseCategory)}
-                value={form.category}
-              >
-                {CATEGORY_OPTIONS.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="field-label" htmlFor="difficulty">
-                Difficulty
-              </label>
-              <select
-                className="select"
-                id="difficulty"
-                onChange={(event) => updateField("difficulty", event.target.value as Difficulty)}
-                value={form.difficulty}
-              >
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-            <div className="form-field--wide">
-              <label className="field-label" htmlFor="original-decision">
-                Original on-field decision <span aria-hidden="true">*</span>
-              </label>
-              <input
-                aria-describedby={describedBy("original-decision", errors)}
-                aria-invalid={Boolean(errors["original-decision"])}
-                className="input"
-                id="original-decision"
-                onChange={(event) => updateField("originalDecision", event.target.value)}
-                placeholder="Play continued; no card shown"
-                required
-                type="text"
-                value={form.originalDecision}
-              />
-              <FieldError fieldId="original-decision" message={errors["original-decision"]} />
-            </div>
-          </div>
-
-          <fieldset className="choice-group" id="answer-options">
-            <legend className="field-label">
-              Answer choices <span aria-hidden="true">*</span>
-            </legend>
-            <span className="field-hint">At least two options.</span>
-            <div className="answer-builder">
-              {form.answers.map((answer, index) => (
-                <div className="answer-builder__row" key={answer.uid}>
-                  <span className="answer-builder__index" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+            {selectedFile ? (
+              <>
+                <div className="file-summary">
+                  <span>
+                    <strong>{selectedFile.name}</strong>
+                    <span>
+                      {formatBytes(selectedFile.size)}
+                      {selectedFile.type ? ` · ${selectedFile.type}` : ""}
+                    </span>
                   </span>
-                  <div>
-                    <label className="sr-only" htmlFor={`answer-label-${answer.uid}`}>
-                      Answer {index + 1}
-                    </label>
-                    <input
-                      aria-describedby={describedBy(`answer-label-${answer.uid}`, errors)}
-                      aria-invalid={Boolean(errors[`answer-label-${answer.uid}`])}
-                      className="input"
-                      id={`answer-label-${answer.uid}`}
-                      onChange={(event) => updateAnswer(answer.uid, event.target.value)}
-                      placeholder={index === 0 ? "Direct free kick and red card" : `Answer ${index + 1}`}
-                      type="text"
-                      value={answer.label}
-                    />
-                    <FieldError
-                      fieldId={`answer-label-${answer.uid}`}
-                      message={errors[`answer-label-${answer.uid}`]}
+                  <button
+                    aria-label={`Remove ${selectedFile.name}`}
+                    className="icon-button icon-button--small"
+                    onClick={() => clearSelectedFile()}
+                    type="button"
+                  >
+                    <Trash2 aria-hidden="true" size={16} />
+                  </button>
+                </div>
+                {previewUrl && form.mediaKind === "video" ? (
+                  <div className="case-media">
+                    <video
+                      aria-label={`Preview of ${selectedFile.name}`}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      src={previewUrl}
+                      style={{ height: "100%", objectFit: "contain", width: "100%" }}
+                    >
+                      <track
+                        kind="captions"
+                        label="No captions"
+                        src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A"
+                        srcLang="en"
+                      />
+                    </video>
+                  </div>
+                ) : previewUrl && form.mediaKind === "image" ? (
+                  <div className="case-media case-media--image">
+                    <Image
+                      alt={`Preview of ${selectedFile.name}`}
+                      fill
+                      sizes="(max-width: 900px) 100vw, 50vw"
+                      src={previewUrl}
+                      unoptimized
                     />
                   </div>
-                  {form.answers.length > 2 ? (
-                    <button
-                      aria-label={`Remove answer ${index + 1}`}
-                      className="icon-button icon-button--small"
-                      onClick={() => removeAnswer(answer.uid)}
-                      type="button"
-                    >
-                      <Trash2 aria-hidden="true" size={16} />
-                    </button>
-                  ) : (
-                    <span aria-hidden="true" />
-                  )}
-                </div>
-              ))}
-            </div>
-            <FieldError fieldId="answer-options" message={errors["answer-options"]} />
-            {form.answers.length < 5 ? (
-              <button className="button button--secondary" onClick={addAnswer} type="button">
-                <Plus aria-hidden="true" size={16} />
-                Add answer
-              </button>
+                ) : null}
+              </>
             ) : null}
-          </fieldset>
+          </>
+        ) : null}
 
-          <label className="checkbox-row" htmlFor="permission-confirmed">
-            <input
-              aria-describedby={describedBy("permission-confirmed", errors)}
-              aria-invalid={Boolean(errors["permission-confirmed"])}
-              checked={form.permissionConfirmed}
-              id="permission-confirmed"
-              onChange={(event) => updateField("permissionConfirmed", event.target.checked)}
-              required
-              type="checkbox"
-            />
-            <span>I have permission to share this material on ClearCall.</span>
+        <div>
+          <label className="field-label" htmlFor="case-description">
+            What happened <span aria-hidden="true">*</span>
           </label>
-          <FieldError fieldId="permission-confirmed" message={errors["permission-confirmed"]} />
+          <textarea
+            aria-describedby={describedBy("case-description", errors)}
+            aria-invalid={Boolean(errors["case-description"])}
+            className="textarea"
+            id="case-description"
+            onChange={(event) => updateField("description", event.target.value)}
+            placeholder="Late challenge near the touchline. Defender arrives after the ball is played…"
+            required
+            rows={4}
+            value={form.description}
+          />
+          <FieldError fieldId="case-description" message={errors["case-description"]} />
+        </div>
 
-          {errorEntries.length > 0 ? (
-            <div
-              aria-labelledby="validation-summary-title"
-              className="validation-summary"
-              ref={validationSummaryRef}
-              role="alert"
-              tabIndex={-1}
+        <div className="form-grid">
+          <div>
+            <label className="field-label" htmlFor="incident-category">
+              Category
+            </label>
+            <select
+              className="select"
+              id="incident-category"
+              onChange={(event) => updateField("category", event.target.value as CaseCategory)}
+              value={form.category}
             >
-              <h2 id="validation-summary-title">
-                Fix {errorEntries.length} {errorEntries.length === 1 ? "thing" : "things"} first
-              </h2>
-              <ul>
-                {errorEntries.map(([fieldId, message]) => (
-                  <li key={fieldId}>
-                    <a href={`#${fieldId}`} onClick={(event) => handleValidationLink(event, fieldId)}>
-                      {message}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-
-          <div className="permission-notice">
-            <ShieldAlert aria-hidden="true" size={18} />
-            <span>
-              Submits for expert review. Rule reasoning and citations can be added later.
-            </span>
+              {CATEGORY_OPTIONS.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
           </div>
+          <div>
+            <label className="field-label" htmlFor="difficulty">
+              Difficulty
+            </label>
+            <select
+              className="select"
+              id="difficulty"
+              onChange={(event) => updateField("difficulty", event.target.value as Difficulty)}
+              value={form.difficulty}
+            >
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div className="form-field--wide">
+            <label className="field-label" htmlFor="original-decision">
+              Original on-field decision <span aria-hidden="true">*</span>
+            </label>
+            <input
+              aria-describedby={describedBy("original-decision", errors)}
+              aria-invalid={Boolean(errors["original-decision"])}
+              className="input"
+              id="original-decision"
+              onChange={(event) => updateField("originalDecision", event.target.value)}
+              placeholder="Play continued; no card shown"
+              required
+              type="text"
+              value={form.originalDecision}
+            />
+            <FieldError fieldId="original-decision" message={errors["original-decision"]} />
+          </div>
+        </div>
 
-          <button className="button button--wide" disabled={!hydrated} type="submit">
-            <Send aria-hidden="true" size={17} />
-            Submit for review
-          </button>
-        </section>
-      </form>
+        <fieldset className="choice-group" id="answer-options">
+          <legend className="field-label">
+            Answer choices <span aria-hidden="true">*</span>
+          </legend>
+          <span className="field-hint">At least two options.</span>
+          <div className="answer-builder">
+            {form.answers.map((answer, index) => (
+              <div className="answer-builder__row" key={answer.uid}>
+                <span className="answer-builder__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <label className="sr-only" htmlFor={`answer-label-${answer.uid}`}>
+                    Answer {index + 1}
+                  </label>
+                  <input
+                    aria-describedby={describedBy(`answer-label-${answer.uid}`, errors)}
+                    aria-invalid={Boolean(errors[`answer-label-${answer.uid}`])}
+                    className="input"
+                    id={`answer-label-${answer.uid}`}
+                    onChange={(event) => updateAnswer(answer.uid, event.target.value)}
+                    placeholder={index === 0 ? "Direct free kick and red card" : `Answer ${index + 1}`}
+                    type="text"
+                    value={answer.label}
+                  />
+                  <FieldError
+                    fieldId={`answer-label-${answer.uid}`}
+                    message={errors[`answer-label-${answer.uid}`]}
+                  />
+                </div>
+                {form.answers.length > 2 ? (
+                  <button
+                    aria-label={`Remove answer ${index + 1}`}
+                    className="icon-button icon-button--small"
+                    onClick={() => removeAnswer(answer.uid)}
+                    type="button"
+                  >
+                    <Trash2 aria-hidden="true" size={16} />
+                  </button>
+                ) : (
+                  <span aria-hidden="true" />
+                )}
+              </div>
+            ))}
+          </div>
+          <FieldError fieldId="answer-options" message={errors["answer-options"]} />
+          {form.answers.length < 5 ? (
+            <button className="button button--secondary" onClick={addAnswer} type="button">
+              <Plus aria-hidden="true" size={16} />
+              Add answer
+            </button>
+          ) : null}
+        </fieldset>
 
-      <CasePreview model={livePreviewModel(form, selectedFile)} />
-    </div>
+        <label className="checkbox-row" htmlFor="permission-confirmed">
+          <input
+            aria-describedby={describedBy("permission-confirmed", errors)}
+            aria-invalid={Boolean(errors["permission-confirmed"])}
+            checked={form.permissionConfirmed}
+            id="permission-confirmed"
+            onChange={(event) => updateField("permissionConfirmed", event.target.checked)}
+            required
+            type="checkbox"
+          />
+          <span>I have permission to share this material on ClearCall.</span>
+        </label>
+        <FieldError fieldId="permission-confirmed" message={errors["permission-confirmed"]} />
+
+        {errorEntries.length > 0 ? (
+          <div
+            aria-labelledby="validation-summary-title"
+            className="validation-summary"
+            ref={validationSummaryRef}
+            role="alert"
+            tabIndex={-1}
+          >
+            <h2 id="validation-summary-title">
+              Fix {errorEntries.length} {errorEntries.length === 1 ? "thing" : "things"} first
+            </h2>
+            <ul>
+              {errorEntries.map(([fieldId, message]) => (
+                <li key={fieldId}>
+                  <a href={`#${fieldId}`} onClick={(event) => handleValidationLink(event, fieldId)}>
+                    {message}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <div className="permission-notice">
+          <ShieldAlert aria-hidden="true" size={18} />
+          <span>
+            Submits for expert review. Rule reasoning and citations can be added later.
+          </span>
+        </div>
+
+        <button className="button button--wide" disabled={!hydrated} type="submit">
+          <Send aria-hidden="true" size={17} />
+          Submit for review
+        </button>
+      </section>
+    </form>
   );
 }

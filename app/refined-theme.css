@@ -122,56 +122,26 @@ dd {
   text-decoration: none;
 }
 
-.brand-mark {
-  position: relative;
-  display: grid;
-  width: 48px;
-  height: 40px;
-  flex: 0 0 48px;
-  place-items: center;
-  overflow: hidden;
+.brand-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  height: 44px;
   border: 2px solid var(--ink);
-  background: var(--green);
+  background: #000;
+  object-fit: contain;
 }
 
-.brand-mark::before,
-.brand-mark::after {
-  position: absolute;
-  background: var(--paper);
-  content: "";
-  opacity: 0.9;
+.brand-logo--full {
+  width: auto;
+  max-width: min(188px, 100%);
+  height: 54px;
 }
 
-.brand-mark::before {
-  width: 2px;
-  height: 100%;
-}
-
-.brand-mark::after {
-  width: 100%;
-  height: 2px;
-}
-
-.brand-mark span {
-  position: relative;
-  z-index: 1;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  background: var(--yellow);
-}
-
-.brand-mark span:first-child {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-}
-
-.brand-mark span:last-child {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
+.brand-logo--mark {
+  display: none;
+  width: 44px;
+  height: 44px;
 }
 
 .brand-copy {
@@ -181,14 +151,7 @@ dd {
   line-height: 1.05;
 }
 
-.brand-copy strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.45rem;
-  letter-spacing: -0.04em;
-}
-
 .brand-copy > span {
-  margin-top: 4px;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
@@ -709,6 +672,7 @@ select:focus {
 }
 
 .feed-post {
+  position: relative;
   overflow: hidden;
   border: 2px solid var(--ink);
   background: var(--surface);
@@ -723,6 +687,20 @@ select:focus {
     border-color 140ms ease;
 }
 
+/* Stretch the title link across the card so any non-control click opens it. */
+.feed-post__hit::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+}
+
+.feed-post a:not(.feed-post__hit),
+.feed-post button {
+  position: relative;
+  z-index: 2;
+}
+
 /* Keep video posts fully laid out so muted autoplay + IO stay reliable. */
 .feed-post[data-media="video"] {
   content-visibility: visible;
@@ -734,13 +712,17 @@ select:focus {
   box-shadow: 9px 14px 0 rgb(16 23 19 / 0.24);
 }
 
-.feed-post:focus-visible {
-  outline: 3px solid var(--yellow);
-  outline-offset: 3px;
-}
-
 .feed-post:focus-within {
   border-color: var(--green-bright);
+}
+
+.feed-post__hit:focus-visible {
+  outline: none;
+}
+
+.feed-post:has(.feed-post__hit:focus-visible) {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
 }
 
 .feed-post:hover:focus-within,
@@ -1321,7 +1303,6 @@ select:focus {
 .comparison-insight,
 .compare-case,
 .saved-case-card,
-.publish-preview,
 .form-section,
 .about-section,
 .trust-card {
@@ -1409,17 +1390,14 @@ select:focus {
 
 .compare-case .case-media,
 .saved-case-card__poster,
-.preview-card__stage,
 .case-media__field {
   background-color: var(--green);
 }
 
 .compare-case__body,
 .saved-case-card__body,
-.preview-card__body,
 .content-section,
 .metric-card,
-.publish-preview,
 .form-section,
 .about-section,
 .trust-card {
@@ -1428,7 +1406,6 @@ select:focus {
 
 .compare-case h2,
 .saved-case-card h2,
-.preview-card__body h2,
 .about-section h2,
 .trust-card h2 {
   color: var(--ink);
@@ -1492,7 +1469,6 @@ select:focus {
 .section-description,
 .content-section p,
 .saved-case-card p,
-.preview-card__body p,
 .about-section p,
 .trust-card p {
   color: var(--muted);
@@ -1566,8 +1542,7 @@ select:focus {
   color: var(--ink);
 }
 
-.saved-case-card__poster::after,
-.preview-card__stage::after {
+.saved-case-card__poster::after {
   border-color: rgb(255 253 247 / 0.52);
 }
 
@@ -1849,11 +1824,16 @@ select:focus {
     padding-inline: 0;
   }
 
+  .desktop-sidebar .brand-logo--full,
   .desktop-sidebar .brand-copy,
   .desktop-nav .nav-link span,
   .profile-control > span:last-child,
   .about-link span {
     display: none;
+  }
+
+  .desktop-sidebar .brand-logo--mark {
+    display: block;
   }
 
   .desktop-nav {
@@ -1897,6 +1877,11 @@ select:focus {
 
   .mobile-topbar .brand {
     padding: 0;
+  }
+
+  .mobile-topbar .brand-logo--full {
+    height: 42px;
+    max-width: min(168px, 58vw);
   }
 
   .mobile-nav {
@@ -2046,14 +2031,11 @@ select:focus {
 
 @media (max-width: 600px) {
   .brand {
-    padding-left: 14px;
+    padding-left: 0;
   }
 
-  .brand-copy > span {
-    max-width: 130px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .brand-copy {
+    display: none;
   }
 
   .page-shell,
@@ -2141,7 +2123,6 @@ select:focus {
   .case-card__body,
   .content-section,
   .form-section,
-  .publish-preview,
   .compare-case__body,
   .about-section,
   .trust-card {

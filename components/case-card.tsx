@@ -159,12 +159,6 @@ export function CaseCard({
           savedAnswer={savedAnswer}
           onSave={saveDecision}
         />
-
-        {!savedAnswer && (
-          <Link className="text-link" href={`/case/${scenario.id}`}>
-            Open full case context <ArrowRight aria-hidden="true" size={14} />
-          </Link>
-        )}
       </div>
 
       {savedAnswer && (
