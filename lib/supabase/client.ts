@@ -9,7 +9,7 @@ export function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL ??
     "https://clearcall-not-configured.supabase.co";
   const anonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
     "clearcall-public-anon-key-not-configured";
 
   return createBrowserClient<Database>(
