@@ -66,11 +66,12 @@ describe("feed stream", () => {
     expect(enriched.imageSrc).toBeNull();
   });
 
-  it("leaves video placeholders as video", () => {
-    const videoCase = cases.find((item) => item.mediaKind === "video" && !item.videoSrc);
+  it("keeps real demo video clips as video", () => {
+    const videoCase = cases.find((item) => item.mediaKind === "video" && item.videoSrc);
     expect(videoCase).toBeTruthy();
     const enriched = withLibraryBackdrop(videoCase!, () => 0);
     expect(enriched.mediaKind).toBe("video");
+    expect(enriched.videoSrc).toBe(videoCase!.videoSrc);
   });
 
   it("preserves authored image assets", () => {
