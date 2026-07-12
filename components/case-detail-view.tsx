@@ -282,6 +282,12 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </div>
           </section>
 
+          <section className="content-section">
+            <Link className="button button--secondary button--wide" href={`/compare?case=${scenario.id}`}>
+              <GitCompareArrows aria-hidden="true" size={16} /> Compare match vs expert
+            </Link>
+          </section>
+
           {similarCases.length > 0 && (
             <section className="content-section">
               <div className="content-section__header">
@@ -296,9 +302,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </Link>
                 ))}
               </div>
-              <Link className="button button--secondary button--wide" href={`/compare?a=${scenario.id}&b=${similarCases[0]?.id ?? ""}`} style={{ marginTop: 13 }}>
-                <GitCompareArrows aria-hidden="true" size={16} /> Compare side by side
-              </Link>
             </section>
           )}
         </aside>

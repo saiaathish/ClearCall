@@ -2,20 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  CircleAlert,
-  Search,
-} from "lucide-react";
+import { ArrowRight, CircleAlert } from "lucide-react";
 import { cases } from "@/data/cases";
-import {
-  areComparablePair,
-  calculateSimilarity,
-  findTeachingContrast,
-  getComparablePeers,
-} from "@/lib/algorithms";
 import type { OfficiatingCase } from "@/lib/types";
-import { useToast } from "@/components/toast-provider";
+import { useDemo } from "@/context/demo-context";
 import { CaseVideo } from "@/components/case-video";
 import { StatusBadge } from "@/components/status-badge";
 
@@ -23,171 +13,153 @@ function optionLabel(scenario: OfficiatingCase, optionId: string) {
   return scenario.answerOptions.find((option) => option.id === optionId)?.label ?? optionId;
 }
 
-function factorMap(scenario: OfficiatingCase) {
-  return new Map(scenario.factors.map((factor) => [factor.key, factor] as const));
+function criticalFactor(scenario: OfficiatingCase) {
+  return scenario.factors.find((factor) => factor.key === scenario.criticalFactor);
 }
 
-const comparableCases = cases.filter(
-  (candidate) => getComparablePeers(candidate, cases).length > 0,
-);
+export function CompareView({ initialCaseId }: { initialCaseId?: string }) {
+  const { answers } = useDemo();
+  const first = cases.find((item) => item.id === initialCaseId) ?? cases[0];
+  const [caseId, setCaseId] = useState(first.id);
 
-function makeDifferenceReason(a: OfficiatingCase, b: OfficiatingCase, differences: readonly string[]) {
-  if (!areComparablePair(a, b)) {
-    return "These cases are not an authored teaching pair, so their factor rows are context rather than a teaching-pair claim.";
-  }
-  if (differences.length > 0) {
-    return `These cases are an authored teaching pair, but ${differences.slice(0, 2).join(" and ").toLowerCase()} change the teaching outcome.`;
-  }
-  return `Both cases follow a closely related factor pattern. Compare the rule path and competition context before deciding whether the same outcome applies.`;
-}
-
-export function CompareView({ initialA, initialB }: { initialA?: string; initialB?: string }) {
-  const first = comparableCases.find((item) => item.id === initialA) ?? comparableCases[0];
-  const firstPeers = getComparablePeers(first, cases);
-  const initialContrast = findTeachingContrast(first, firstPeers);
-  const requestedSecond = cases.find(
-    (item) => item.id === initialB && areComparablePair(first, item),
-  );
-  const second =
-    requestedSecond ??
-    initialContrast?.case ??
-    firstPeers[0] ??
-    comparableCases[1];
-  const [caseAId, setCaseAId] = useState(first.id);
-  const [caseBId, setCaseBId] = useState(second.id);
-  const { showToast } = useToast();
-
-  const caseA = comparableCases.find((item) => item.id === caseAId) ?? comparableCases[0];
-  const eligibleCases = getComparablePeers(caseA, cases);
-  const caseB = eligibleCases.find((item) => item.id === caseBId) ?? eligibleCases[0];
-  const similarity = calculateSimilarity(caseA, caseB);
-  const automaticContrast = findTeachingContrast(caseA, eligibleCases);
-
-  const mapA = factorMap(caseA);
-  const mapB = factorMap(caseB);
-  const factorKeys = [...new Set([...mapA.keys(), ...mapB.keys()])];
-  const differenceLabels = factorKeys
-    .filter((key) => mapA.get(key)?.value !== mapB.get(key)?.value)
-    .map((key) => mapA.get(key)?.label ?? mapB.get(key)?.label ?? key);
-  const reason =
-    automaticContrast?.case.id === caseB.id
-      ? automaticContrast.reason
-      : makeDifferenceReason(caseA, caseB, differenceLabels);
-
-  const findContrast = () => {
-    const peers = getComparablePeers(caseA, cases);
-    const contrast = findTeachingContrast(caseA, peers);
-    if (!contrast) {
-      showToast("No authored teaching pair is available for this case.");
-      return;
-    }
-    setCaseBId(contrast.case.id);
-    showToast(`Selected ${contrast.case.title} as the teaching pair contrast.`, "success");
-  };
+  const scenario = cases.find((item) => item.id === caseId) ?? cases[0];
+  const answer = answers[scenario.id];
+  const critical = criticalFactor(scenario);
+  const supportingFactors = scenario.factors.filter((factor) => factor.supportsRecommendation);
+  const callsDiffer =
+    scenario.originalDecision.trim().toLowerCase() !==
+    optionLabel(scenario, scenario.recommendedDecision).trim().toLowerCase();
 
   return (
     <div className="page-shell">
       <header className="page-header">
         <div className="page-header__copy">
-          <h1 className="page-title">Similar picture. Different weight.</h1>
+          <h1 className="page-title">Same incident. Different reads.</h1>
           <p className="page-description">
-            Compare teaching pairs side by side.
+            Compare the match call with the authored demo recommendation.
           </p>
         </div>
       </header>
 
-      <section className="compare-controls" aria-label="Choose cases to compare">
+      <section className="compare-controls" aria-label="Choose a case to compare">
         <div>
-          <label className="field-label" htmlFor="case-a">Case A</label>
-          <select className="select" id="case-a" value={caseA.id} onChange={(event) => {
-            const nextCase = comparableCases.find((item) => item.id === event.target.value) ?? comparableCases[0];
-            const peers = getComparablePeers(nextCase, cases);
-            const nextContrast = findTeachingContrast(nextCase, peers);
-            setCaseAId(nextCase.id);
-            setCaseBId(nextContrast?.case.id ?? peers[0]?.id ?? comparableCases[1].id);
-          }}>
-            {comparableCases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
+          <label className="field-label" htmlFor="compare-case">Case</label>
+          <select
+            className="select"
+            id="compare-case"
+            value={scenario.id}
+            onChange={(event) => setCaseId(event.target.value)}
+          >
+            {cases.map((item) => (
+              <option key={item.id} value={item.id}>{item.title}</option>
+            ))}
           </select>
         </div>
-        <span className="compare-vs" aria-hidden="true">VS</span>
-        <div>
-          <label className="field-label" htmlFor="case-b">Case B</label>
-          <select className="select" id="case-b" value={caseB.id} onChange={(event) => setCaseBId(event.target.value)}>
-            {eligibleCases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
-          </select>
-        </div>
-        <button className="button" type="button" onClick={findContrast}>
-          <Search aria-hidden="true" size={16} /> Find teaching contrast
-        </button>
+        {answer && (
+          <div className="compare-your-call" aria-label="Your recorded call">
+            <span>Your call</span>
+            <strong>{optionLabel(scenario, answer.selectedOptionId)}</strong>
+            <span>{answer.confidence}% confidence</span>
+          </div>
+        )}
       </section>
 
       <div className="compare-grid">
-        <CompareCase scenario={caseA} label="Case A" />
-        <CompareCase scenario={caseB} label="Case B" />
+        <article className="compare-case">
+          <CaseVideo scenario={scenario} />
+          <div className="compare-case__body">
+            <div className="compare-case__label">
+              <span>Match referee</span>
+              <StatusBadge status={scenario.scenarioStatus} />
+            </div>
+            <h2>{scenario.title}</h2>
+            <div className="meta-row">
+              <span className="meta-chip">{scenario.category}</span>
+              <span className="meta-chip">{scenario.difficulty}</span>
+            </div>
+            <div className="compare-decision">
+              <span>On-field call<strong>{scenario.originalDecision}</strong></span>
+              <span>Competition<strong>{scenario.competitionLevel}</strong></span>
+              <span>Source<strong>{scenario.sourceType}</strong></span>
+            </div>
+            <p className="compare-side-note">
+              This is the call made in the match. Use it as the starting point, then weigh the authored factors on the right.
+            </p>
+          </div>
+        </article>
+
+        <article className="compare-case">
+          <CaseVideo scenario={scenario} />
+          <div className="compare-case__body">
+            <div className="compare-case__label">
+              <span>Expert / demo</span>
+              <StatusBadge status={scenario.scenarioStatus} />
+            </div>
+            <h2>{scenario.title}</h2>
+            <div className="meta-row">
+              <span className="meta-chip">{scenario.category}</span>
+              <span className="meta-chip">{scenario.difficulty}</span>
+            </div>
+            <div className="compare-decision">
+              <span>Demo recommendation<strong>{optionLabel(scenario, scenario.recommendedDecision)}</strong></span>
+              <span>Rule reference<strong>{scenario.ruleReference}</strong></span>
+              <span>Critical factor<strong>{critical ? `${critical.label}: ${critical.value}` : scenario.criticalFactor}</strong></span>
+            </div>
+            <p className="compare-side-note">{scenario.expertExplanation}</p>
+          </div>
+        </article>
       </div>
 
-      <section className="comparison-insight" aria-labelledby="comparison-insight-heading">
-        <div>
-          <h2 id="comparison-insight-heading">{reason}</h2>
+      {callsDiffer && (
+        <div className="difference-callout">
+          <CircleAlert aria-hidden="true" size={18} />
+          <div>
+            <strong>Where the reads diverge</strong>
+            <p>
+              The match call was {scenario.originalDecision}; the authored demo recommends{" "}
+              {optionLabel(scenario, scenario.recommendedDecision)}.
+              {critical
+                ? ` The critical factor is ${critical.label.toLowerCase()} (${critical.value}).`
+                : ""}
+            </p>
+          </div>
         </div>
-        <div className="similarity-score" aria-label={`${similarity.score} percent structural similarity`}>
-          <span><strong>{similarity.score}%</strong><span>Similarity</span></span>
-        </div>
-      </section>
+      )}
 
-      <section aria-labelledby="factor-comparison-heading">
+      <section aria-labelledby="supporting-factors-heading">
         <div className="content-section__header">
           <div>
-            <h2 className="section-title" id="factor-comparison-heading">Factor comparison</h2>
+            <h2 className="section-title" id="supporting-factors-heading">Factors supporting the demo call</h2>
           </div>
         </div>
         <div className="factor-table-wrap">
           <table className="factor-table">
-            <thead><tr><th scope="col">Factor</th><th scope="col">Case A</th><th scope="col">Case B</th></tr></thead>
+            <thead>
+              <tr>
+                <th scope="col">Factor</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
             <tbody>
-              {factorKeys.map((key) => {
-                const factorA = mapA.get(key);
-                const factorB = mapB.get(key);
-                const critical = key === caseA.criticalFactor || key === caseB.criticalFactor;
-                return (
-                  <tr data-critical={critical || undefined} key={key}>
-                    <th scope="row">{factorA?.label ?? factorB?.label ?? key}</th>
-                    <td>{factorA?.value ?? "Not recorded"}</td>
-                    <td>{factorB?.value ?? "Not recorded"}</td>
-                  </tr>
-                );
-              })}
+              {supportingFactors.map((factor) => (
+                <tr
+                  data-critical={factor.key === scenario.criticalFactor || undefined}
+                  key={factor.key}
+                >
+                  <th scope="row">{factor.label}</th>
+                  <td>{factor.value}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </section>
 
-      <div className="difference-callout">
-        <CircleAlert aria-hidden="true" size={18} />
-        <div>
-          <strong>Critical distinction</strong>
-          <p>{makeDifferenceReason(caseA, caseB, differenceLabels)}</p>
-        </div>
-      </div>
+      <p>
+        <Link className="text-link" href={`/case/${scenario.id}`}>
+          Open full case <ArrowRight aria-hidden="true" size={14} />
+        </Link>
+      </p>
     </div>
-  );
-}
-
-function CompareCase({ scenario, label }: { scenario: OfficiatingCase; label: string }) {
-  return (
-    <article className="compare-case">
-      <CaseVideo scenario={scenario} />
-      <div className="compare-case__body">
-        <div className="compare-case__label"><span>{label}</span><StatusBadge status={scenario.scenarioStatus} /></div>
-        <h2>{scenario.title}</h2>
-        <div className="meta-row"><span className="meta-chip">{scenario.category}</span><span className="meta-chip">{scenario.difficulty}</span></div>
-        <div className="compare-decision">
-          <span>Demo recommendation<strong>{optionLabel(scenario, scenario.recommendedDecision)}</strong></span>
-          <span>Rule reference<strong>{scenario.ruleReference}</strong></span>
-          <span>Rule path<strong>{scenario.rulePath.at(-1)}</strong></span>
-        </div>
-        <Link className="text-link" href={`/case/${scenario.id}`}>Open full case <ArrowRight aria-hidden="true" size={14} /></Link>
-      </div>
-    </article>
   );
 }
