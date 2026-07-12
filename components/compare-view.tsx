@@ -8,7 +8,12 @@ import {
   Search,
 } from "lucide-react";
 import { cases } from "@/data/cases";
-import { calculateSimilarity, findTeachingContrast } from "@/lib/algorithms";
+import {
+  areComparablePair,
+  calculateSimilarity,
+  findTeachingContrast,
+  getComparablePeers,
+} from "@/lib/algorithms";
 import type { ComparisonValue, OfficiatingCase } from "@/lib/types";
 import { useToast } from "@/components/toast-provider";
 import { CaseVideo } from "@/components/case-video";
@@ -22,49 +27,41 @@ function factorMap(scenario: OfficiatingCase) {
   return new Map(scenario.factors.map((factor) => [factor.key, factor] as const));
 }
 
-function sharesTeachingFamily(a: OfficiatingCase, b: OfficiatingCase) {
-  return a.sport === b.sport && a.category === b.category;
-}
-
-const comparableCases = cases.filter((candidate) =>
-  cases.some((other) => other.id !== candidate.id && sharesTeachingFamily(candidate, other)),
+const comparableCases = cases.filter(
+  (candidate) => getComparablePeers(candidate, cases).length > 0,
 );
 
 function makeDifferenceReason(a: OfficiatingCase, b: OfficiatingCase, differences: readonly string[]) {
-  if (!sharesTeachingFamily(a, b)) {
-    return "These cases belong to different incident families, so their factor rows are context rather than a teaching-pair claim.";
+  if (!areComparablePair(a, b)) {
+    return "These cases are not an authored teaching pair, so their factor rows are context rather than a teaching-pair claim.";
   }
   if (differences.length > 0) {
-    return `These cases share the same broad incident family, but ${differences.slice(0, 2).join(" and ").toLowerCase()} change the teaching outcome.`;
+    return `These cases are an authored teaching pair, but ${differences.slice(0, 2).join(" and ").toLowerCase()} change the teaching outcome.`;
   }
   return `Both cases follow a closely related factor pattern. Compare the rule path and competition context before deciding whether the same outcome applies.`;
 }
 
 export function CompareView({ initialA, initialB }: { initialA?: string; initialB?: string }) {
   const first = comparableCases.find((item) => item.id === initialA) ?? comparableCases[0];
-  const initialContrast = findTeachingContrast(first, cases.filter((item) => item.id !== first.id));
+  const firstPeers = getComparablePeers(first, cases);
+  const initialContrast = findTeachingContrast(first, firstPeers);
   const requestedSecond = cases.find(
-    (item) => item.id === initialB && item.id !== first.id && sharesTeachingFamily(first, item),
+    (item) => item.id === initialB && areComparablePair(first, item),
   );
   const second =
     requestedSecond ??
     initialContrast?.case ??
-    comparableCases.find((item) => item.id !== first.id && sharesTeachingFamily(first, item)) ??
+    firstPeers[0] ??
     comparableCases[1];
   const [caseAId, setCaseAId] = useState(first.id);
   const [caseBId, setCaseBId] = useState(second.id);
   const { showToast } = useToast();
 
   const caseA = comparableCases.find((item) => item.id === caseAId) ?? comparableCases[0];
-  const eligibleCases = comparableCases.filter(
-    (item) => item.id !== caseA.id && sharesTeachingFamily(caseA, item),
-  );
+  const eligibleCases = getComparablePeers(caseA, cases);
   const caseB = eligibleCases.find((item) => item.id === caseBId) ?? eligibleCases[0];
   const similarity = calculateSimilarity(caseA, caseB);
-  const automaticContrast = findTeachingContrast(
-    caseA,
-    cases.filter((item) => item.id !== caseA.id),
-  );
+  const automaticContrast = findTeachingContrast(caseA, eligibleCases);
 
   const mapA = factorMap(caseA);
   const mapB = factorMap(caseB);
@@ -85,13 +82,14 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
       : makeDifferenceReason(caseA, caseB, differenceLabels);
 
   const findContrast = () => {
-    const contrast = findTeachingContrast(caseA, cases.filter((item) => item.id !== caseA.id));
+    const peers = getComparablePeers(caseA, cases);
+    const contrast = findTeachingContrast(caseA, peers);
     if (!contrast) {
-      showToast("No eligible teaching contrast is available for this case.");
+      showToast("No authored teaching pair is available for this case.");
       return;
     }
     setCaseBId(contrast.case.id);
-    showToast(`Selected ${contrast.case.title} as the strongest teaching contrast.`, "success");
+    showToast(`Selected ${contrast.case.title} as the teaching pair contrast.`, "success");
   };
 
   return (
@@ -101,7 +99,7 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
           <p className="eyebrow">Teaching contrast</p>
           <h1 className="page-title">Similar picture. Different weight.</h1>
           <p className="page-description">
-            Compare structured factors side by side to understand why visually similar incidents can support different calls.
+            Compare only authored teaching pairs side by side to see why visually similar incidents can support different calls.
           </p>
         </div>
       </header>
@@ -111,15 +109,10 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
           <label className="field-label" htmlFor="case-a">Case A</label>
           <select className="select" id="case-a" value={caseA.id} onChange={(event) => {
             const nextCase = comparableCases.find((item) => item.id === event.target.value) ?? comparableCases[0];
-            const nextContrast = findTeachingContrast(
-              nextCase,
-              cases.filter((item) => item.id !== nextCase.id),
-            );
-            const nextEligible = comparableCases.find(
-              (item) => item.id !== nextCase.id && sharesTeachingFamily(nextCase, item),
-            );
+            const peers = getComparablePeers(nextCase, cases);
+            const nextContrast = findTeachingContrast(nextCase, peers);
             setCaseAId(nextCase.id);
-            setCaseBId(nextContrast?.case.id ?? nextEligible?.id ?? comparableCases[1].id);
+            setCaseBId(nextContrast?.case.id ?? peers[0]?.id ?? comparableCases[1].id);
           }}>
             {comparableCases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
           </select>
