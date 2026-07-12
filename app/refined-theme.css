@@ -1704,36 +1704,9 @@ select:focus {
 }
 
 .thread-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 18px;
   margin-bottom: 22px;
-  border-bottom: 2px solid var(--ink);
-  padding-bottom: 16px;
-}
-
-.thread-header__title {
-  min-width: 0;
-}
-
-.thread-header__title > span {
-  color: var(--muted);
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.thread-header__title h1 {
-  overflow: hidden;
-  margin: 2px 0 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.45rem, 3vw, 2.2rem);
-  line-height: 1.08;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .case-detail-layout {
@@ -1960,16 +1933,7 @@ select:focus {
   }
 
   .thread-header {
-    grid-template-columns: 1fr auto;
-  }
-
-  .thread-header__title {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-
-  .thread-header__title h1 {
-    white-space: normal;
+    margin-bottom: 18px;
   }
 
   .detail-main .case-card {
