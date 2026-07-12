@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
+import type { Distribution } from "@/lib/types";
 
 type TypedClient = SupabaseClient<Database>;
 
@@ -65,4 +66,16 @@ export async function fetchLiveDistribution(
     community: tally(data, answerOptionIds),
     verified: tally(data, answerOptionIds, "verified_referee"),
   };
+}
+
+/**
+ * Returns a Distribution using live percentages when available, falling back
+ * to the authored demo distribution when there are no real votes yet.
+ */
+export function withLiveOverride(
+  authored: Distribution,
+  live: LiveDistribution | null,
+): Distribution {
+  if (!live) return authored;
+  return { ...authored, percentages: live.percentages, basis: "live_community", isSynthetic: false };
 }

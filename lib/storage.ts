@@ -373,6 +373,24 @@ export async function publishDraftRemote(
     const result = await response.json() as { case?: { id?: string } };
     return { ...draft, id: result.case?.id ?? draft.id, status: "locally-published" };
   }
+}
+
+export async function completeOnboardingRemote(
+  supabase: TypedClient,
+  userId: string,
+): Promise<void> {
+  await supabase
+    .from("profiles")
+    .update({ onboarding_complete: true })
+    .eq("id", userId);
+}
+
+export async function publishDraftRemote(
+  supabase: SupabaseClient,
+  userId: string,
+  draft: PublishedCaseDraft,
+  file: File | null,
+): Promise<PublishedCaseDraft> {
   let mediaPath: string | null = null;
 
   if (file) {
