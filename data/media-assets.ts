@@ -317,6 +317,15 @@ export function tagsForCategory(category: string): readonly MediaTag[] {
   if (key.includes("goalkeeper") || key.includes("keeper")) {
     return ["keeper", "goal"];
   }
+  if (key.includes("dissent") || key.includes("misconduct")) {
+    return ["match", "open-play"];
+  }
+  if (key.includes("holding") || key.includes("penalty area")) {
+    return ["set-piece", "goal", "challenge"];
+  }
+  if (key.includes("restart")) {
+    return ["set-piece", "match"];
+  }
   return ["match", "open-play"];
 }
 

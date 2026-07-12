@@ -13,7 +13,7 @@ import {
   simulationOptions,
 } from "@/data/case-builders";
 
-import { PHOTO_ASSETS, VIDEO_ASSETS, photoAt } from "@/data/media-assets";
+import { PHOTO_ASSETS, photoAt } from "@/data/media-assets";
 
 function imageAt(index: number) {
   return photoAt(index);

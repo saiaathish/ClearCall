@@ -199,174 +199,44 @@ const TIME_LABELS = [
   "4d ago",
 ] as const;
 
-/**
- * Short-form discussion bodies (authentic-human protocol, Reddit/Discord mode).
- * Mind-in-motion: fragments, contractions, mid-thought flips. No em-dashes.
- * Don't quote case ids. Don't reuse opener+middle+closer every time.
- * Light emoji — about half the thread replies, never stacks, never on pinned educators.
- */
-function pick<T>(list: readonly T[], random: () => number): T {
-  return list[Math.floor(random() * list.length)]!;
-}
-
-function maybeSpiceBody(body: string, agrees: boolean, random: () => number): string {
-  // Skip if it already has a react (some templates bake one in).
-  if (/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(body)) return body;
-  // ~half get one small react (user asked for a bit of life).
-  if (random() > 0.52) return body;
-  const spice = agrees
-    ? pick(["👍", "👀", "✅", "🟨", "⚽", "🔥"], random)
-    : pick(["🤔", "👀", "😅", "🟥", "😬", "🤷"], random);
-  if (body.length < 64 && random() > 0.5) {
-    return `${spice} ${body}`;
-  }
-  return `${body} ${spice}`;
-}
-
-function humanTitle(title: string, caseId: string): string {
-  // Prefer the real title; never fall back to a slugy case id in quotes.
-  if (!title || title === caseId || /^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(title)) {
-    return "";
-  }
-  if (title.length <= 40) return title;
-  const cut = title.slice(0, 38);
-  const at = cut.lastIndexOf(" ");
-  return `${(at > 20 ? cut.slice(0, at) : cut).trim()}…`;
-}
-
-/** Short spoken cue for comments: first clause, lowercased. */
-function shortCue(title: string, caseId: string): string {
-  const named = humanTitle(title, caseId) || title || caseId;
-  const first = named.split(",")[0]!.trim();
-  const cue = first.length >= 8 ? first : named;
-  return cue.toLowerCase();
-}
-
-function composeThreadBody(input: {
-  caseId: string;
-  title: string;
-  category: string;
-  criticalFactor: string;
-  ruleCitation: string;
-  slot: number;
-  agrees: boolean;
-  role: string;
-  random: () => number;
-  usedBodies: Set<string>;
-}): string {
-  const { caseId, title, category, criticalFactor, slot, agrees, role, random, usedBodies } = input;
-  const factor = criticalFactor.replaceAll("-", " ");
-  const cat = category.toLowerCase();
-  // Short spoken cue is the uniqueness anchor. Never quote a slug.
-  const cue = shortCue(title, caseId);
-
-  const builds: Array<() => string> = [
-    () =>
-      agrees
-        ? `yeah i'm with the pin on ${cue}. ${factor} is doing the work.`
-        : `nah not buying the pin on ${cue}. ${factor} just isn't enough.`,
-    () =>
-      agrees
-        ? `watched ${cue} twice. still with them. crowd noise isn't evidence lol`
-        : `watched ${cue} twice and still flipping it. ${factor} feels thin.`,
-    () =>
-      `ok so ${cue}. ${agrees ? "i'd sell what they pinned." : "i'd go the other way."} ${
-        role === "learner"
-          ? "still trying to say the factor out loud before the card tbh"
-          : "if i can't sell it live i'm not inventing it here"
-      }`,
-    () =>
-      agrees
-        ? `hmm pin feels right on ${cue}. ${factor} first. everything else is noise.`
-        : `hmm pin feels off on ${cue}. people are reacting to the fall more than ${factor}.`,
-    () =>
-      `${agrees ? "locking it." : "pushing back."} stuck on ${factor} for ${cue}. ${
-        role === "educator" ? "newer refs: name that before you colour the card." : "write it short and move."
-      }`,
-    () =>
-      `live i went ${agrees ? "with" : "against"} the pin on ${cue}. replay didn't change much. ${factor} did.`,
-    () =>
-      agrees
-        ? `${cue}. ${factor} is clean enough. same call.`
-        : `${cue}. wait. ${factor} isn't enough for me. different call.`,
-    () =>
-      `${agrees ? "yeah that tracks." : "nah."} ${cat} threads always get loud. for ${cue} i'm still on ${factor}.`,
-    () =>
-      role === "learner"
-        ? `gonna sit with ${cue} before next weekend. tentatively ${agrees ? "with the pin" : "against it"}. ${factor} is the bit i keep replaying.`
-        : `match day i'd ${agrees ? "sell the pin" : "go the other way"} on ${cue}. ${factor}. that's it.`,
-    () =>
-      `anyone else flip once on ${cue}? i did. landed ${agrees ? "back with the pin" : "against it"} after staring at ${factor}.`,
-    () =>
-      agrees
-        ? `blunt take on ${cue}: pin is fine. ignore the theatre, watch ${factor}.`
-        : `blunt take on ${cue}: pin is wrong. it's all theatre if you skip ${factor}.`,
-    () =>
-      `from the ar angle on ${cue}… ${agrees ? "same place as pin." : "i'm out."} ${factor} or nothing.`,
-    () =>
-      agrees
-        ? `idk why ${cue} is even a fight. ${factor} sells it.`
-        : `idk man ${factor} isn't getting me to the pin on ${cue}.`,
-    () =>
-      agrees
-        ? `same on ${cue}. ${factor}. moved on.`
-        : `different read on ${cue}. ${factor} is the whole disagreement for me.`,
-    () =>
-      role === "learner"
-        ? `ngl still learning these. leaning ${agrees ? "pin" : "other way"} on ${cue} cos of ${factor}.`
-        : `honestly on ${cue}? ${agrees ? "sell it." : "don't sell it."} ${factor} is what i'd write in the report.`,
-    () =>
-      agrees
-        ? `yep. ${cue}, ${factor} clears it for me.`
-        : `nope. ${cue}, ${factor} doesn't clear it.`,
-    () => `so ${factor} on ${cue}. ${agrees ? "with the pin." : "against the pin."}`,
-    () =>
-      agrees
-        ? `came in skeptical on ${cue}, left agreeing. ${factor} flipped me.`
-        : `came in agreeing on ${cue}, left skeptical. ${factor} flipped me the other way.`,
-    () =>
-      agrees
-        ? `tbh ${cue} isn't close. ${factor} 👍`
-        : `tbh ${cue} is messy. ${factor} has me elsewhere.`,
-    () =>
-      `${agrees ? "✅" : "🤔"} ${cue}. ${factor}. ${agrees ? "that's the call." : "not sold."}`,
-  ];
-
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    let plain = pick(builds, random)()
-      .replaceAll("—", ",")
-      .replaceAll(/\s+/g, " ")
-      .replaceAll(/\s+([,.!?])/g, "$1")
-      .trim();
-    // If a template somehow collides, add a soft slot crumb.
-    if (usedBodies.has(plain)) {
-      plain = `${plain} (${slot})`;
-    }
-    if (usedBodies.has(plain)) continue;
-    usedBodies.add(plain);
-    const body = maybeSpiceBody(plain, agrees, random);
-    usedBodies.add(body);
-    return body;
-  }
-
-  const fallback = `${agrees ? "same call" : "different call"} on ${cue}. ${factor}. #${slot}`;
-  usedBodies.add(fallback);
-  return fallback;
-}
-
 function publisherFromPerson(person: FeedPersonSeed): Publisher {
   return personToPublisher(person);
+}
+
+function cleanBody(text: string): string {
+  return text
+    .replaceAll("—", ",")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,.!?])/g, "$1")
+    .trim();
+}
+
+function defaultAlternativeBody(context: DiscussionContext): string {
+  const factor = context.criticalFactor.replaceAll("-", " ");
+  const variants = [
+    `I would want another angle before locking this in. If ${factor} reads differently from the reverse view, the sanction changes.`,
+    `This angle leaves room for doubt. Confirm ${factor} clearly before ruling out the other option.`,
+    `I am not fully sold yet. A closer look at ${factor} could move me off the pinned call.`,
+    `Hold the recommendation lightly until ${factor} is confirmed. One limited view is not enough for certainty.`,
+  ];
+  // Deterministic pick from title so each case stays distinct without random spam.
+  const seed = (context.title ?? context.criticalFactor)
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return variants[seed % variants.length]!;
 }
 
 export interface DiscussionContext {
   category: string;
   criticalFactor: string;
   title?: string;
+  /** Skeptical / alternative viewpoint. Generated when omitted. */
+  alternativeBody?: string;
 }
 
 /**
- * Build a social-style discussion with variable length, unique commentators,
- * and case-specific bodies (no copy-paste comment spam).
+ * Build three concise discussion comments with distinct viewpoints:
+ * 1) technical referee/assessor, 2) practical match referee, 3) skeptical alternative.
  */
 export function makeDiscussion(
   caseId: string,
@@ -380,109 +250,76 @@ export function makeDiscussion(
   context: DiscussionContext = { category: "Incident", criticalFactor: factorKeys[0] ?? "factor" },
 ): readonly DiscussionResponse[] {
   const random = seededRandom(`discussion:${caseId}`);
-  const replyCount = 2 + Math.floor(random() * 10); // 2–11 total replies
-  const usedBodies = new Set<string>();
 
   const fallbackDissent =
     answerOptionIds.find((id) => id !== recommendedDecision) ?? recommendedDecision;
-  const dissentOption = alternateOptionId && (answerOptionIds.length === 0 || answerOptionIds.includes(alternateOptionId))
-    ? alternateOptionId
-    : fallbackDissent;
+  const dissentOption =
+    alternateOptionId && (answerOptionIds.length === 0 || answerOptionIds.includes(alternateOptionId))
+      ? alternateOptionId
+      : fallbackDissent;
 
-  const assignedPeople: FeedPersonSeed[] = [];
-  const drawPool = pickPeople(`people:${caseId}`, Math.max(replyCount + 4, 12), []);
-  while (assignedPeople.length < replyCount && drawPool.length > 0) {
-    const index = Math.min(drawPool.length - 1, Math.floor(random() * drawPool.length));
-    const [nextPerson] = drawPool.splice(index, 1);
-    if (!nextPerson) break;
-    if (assignedPeople.some((item) => item.displayName === nextPerson.displayName)) continue;
-    assignedPeople.push(nextPerson);
+  const people = pickPeople(`people:${caseId}`, 6, []);
+  const authors: FeedPersonSeed[] = [];
+  for (const person of people) {
+    if (authors.some((item) => item.displayName === person.displayName)) continue;
+    authors.push(person);
+    if (authors.length === 3) break;
   }
-  while (assignedPeople.length < replyCount) {
+  while (authors.length < 3) {
     const more = pickPeople(
-      `people:${caseId}:pad:${assignedPeople.length}`,
+      `people:${caseId}:pad:${authors.length}`,
       1,
-      assignedPeople.map((person) => person.displayName),
+      authors.map((person) => person.displayName),
     );
     if (!more[0]) break;
-    assignedPeople.push(more[0]);
+    authors.push(more[0]);
   }
 
-  // Pinned educator stays authored; weave a short case cue so catalog bodies stay unique
-  // without the old "Looking at…" template. Lead ref gets a light react sometimes.
-  const cue = shortCue(context.title ?? "", caseId);
-  const eduCrumb = cue
-    ? pick(
-        [
-          ` On the ${cue}.`,
-          ` For the ${cue}.`,
-          ` re: ${cue}`,
-          ` (${cue})`,
-        ],
-        random,
-      )
-    : "";
-  const refCrumb = cue
-    ? pick(
-        [
-          ` Same on the ${cue}.`,
-          ` Match day: ${cue}.`,
-          ` Thinking the ${cue}.`,
-          "",
-        ],
-        random,
-      )
-    : "";
-  const pinnedEducator = `${educatorBody.trim()}${eduCrumb}`.replaceAll("—", ",");
-  const refereePlain = `${refereeBody.trim()}${refCrumb}`.replaceAll("—", ",");
-  const pinnedReferee = maybeSpiceBody(refereePlain, true, random);
-  usedBodies.add(pinnedEducator);
-  usedBodies.add(refereePlain);
-  usedBodies.add(pinnedReferee);
+  const technical = cleanBody(educatorBody);
+  const practical = cleanBody(refereeBody);
+  const alternative = cleanBody(context.alternativeBody ?? defaultAlternativeBody(context));
 
-  return assignedPeople.map((person, slot) => {
-    const isPinned = slot === 0;
-    const isLeadReferee = slot === 1 && replyCount > 1;
-    const agrees = isPinned || isLeadReferee ? true : random() > 0.42;
-    const selectedKeys = agrees
+  const bodies = [technical, practical, alternative];
+  // Guarantee uniqueness within the thread without leaking case IDs.
+  for (let index = 1; index < bodies.length; index += 1) {
+    if (bodies.slice(0, index).includes(bodies[index]!)) {
+      bodies[index] = `${bodies[index]} That changes my confidence in the call.`;
+    }
+  }
+
+  const roles: Array<{
+    body: string;
+    agrees: boolean;
+    isPinned: boolean;
+    postedAtLabel: string;
+  }> = [
+    { body: bodies[0]!, agrees: true, isPinned: true, postedAtLabel: "Pinned" },
+    { body: bodies[1]!, agrees: true, isPinned: false, postedAtLabel: TIME_LABELS[2]! },
+    { body: bodies[2]!, agrees: false, isPinned: false, postedAtLabel: TIME_LABELS[4]! },
+  ];
+
+  return roles.map((role, slot) => {
+    const person = authors[slot] ?? authors[0]!;
+    const selectedKeys = role.agrees
       ? factorKeys.slice(0, Math.max(1, factorKeys.length - (slot % 2)))
       : factorKeys.slice(0, 1);
-
-    const body = isPinned
-      ? pinnedEducator
-      : isLeadReferee
-        ? pinnedReferee
-        : composeThreadBody({
-            caseId,
-            title: context.title ?? caseId,
-            category: context.category,
-            criticalFactor: context.criticalFactor,
-            ruleCitation,
-            slot,
-            agrees,
-            role: person.role,
-            random,
-            usedBodies,
-          });
 
     return {
       id: `${caseId}-response-${slot}`,
       caseId,
       author: publisherFromPerson(person),
-      body,
-      selectedOptionId: agrees ? recommendedDecision : dissentOption,
-      confidence: isPinned ? 78 + Math.floor(random() * 12) : 55 + Math.floor(random() * 35),
+      body: role.body,
+      selectedOptionId: role.agrees ? recommendedDecision : dissentOption,
+      confidence: role.isPinned ? 82 : role.agrees ? 70 + Math.floor(random() * 12) : 58 + Math.floor(random() * 14),
       selectedFactorKeys: selectedKeys,
-      ruleCitation: isPinned || (agrees && random() > 0.55) ? ruleCitation : undefined,
-      helpfulCount: isPinned ? 12 + Math.floor(random() * 24) : 1 + Math.floor(random() * 18),
-      factorReactions: makeFactorReactions(selectedKeys, 3 + slot + Math.floor(random() * 6)),
-      postedAtLabel: isPinned
-        ? "Pinned"
-        : TIME_LABELS[Math.min(TIME_LABELS.length - 1, Math.floor(random() * TIME_LABELS.length))]!,
-      isPinned,
+      ruleCitation: role.isPinned || slot === 1 ? ruleCitation : undefined,
+      helpfulCount: role.isPinned ? 18 + Math.floor(random() * 16) : 3 + Math.floor(random() * 12),
+      factorReactions: makeFactorReactions(selectedKeys, 4 + slot + Math.floor(random() * 5)),
+      postedAtLabel: role.postedAtLabel,
+      isPinned: role.isPinned,
       isVerifiedExplanation: false,
       isSynthetic: true,
-      disclosure: isPinned
+      disclosure: role.isPinned
         ? "Pinned demo take — not an official ruling."
         : "Fictional discussion reply for the demo.",
     } satisfies DiscussionResponse;
@@ -547,6 +384,7 @@ export interface CaseDraft {
   similarCaseIds?: readonly string[];
   educatorBody: string;
   refereeBody: string;
+  alternativeBody?: string;
   ruleCitation: string;
   alternateOptionId?: string;
   publisherSeed?: string;
@@ -601,6 +439,7 @@ export function buildCase(draft: CaseDraft): OfficiatingCase {
         category: draft.category,
         criticalFactor: draft.criticalFactor,
         title: draft.title,
+        alternativeBody: draft.alternativeBody,
       },
     ),
   };

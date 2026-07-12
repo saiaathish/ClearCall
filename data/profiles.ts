@@ -77,6 +77,9 @@ const CATEGORIES: readonly CaseCategory[] = [
   "Advantage",
   "Simulation",
   "Goalkeeper handling",
+  "Dissent / misconduct",
+  "Penalty area holding",
+  "Restart procedure",
 ];
 
 const JOINED_LABELS = [

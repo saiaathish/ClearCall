@@ -158,6 +158,9 @@ const CASE_CATEGORIES = new Set([
   "Advantage",
   "Simulation",
   "Goalkeeper handling",
+  "Dissent / misconduct",
+  "Penalty area holding",
+  "Restart procedure",
 ]);
 
 const SCENARIO_STATUSES = new Set([

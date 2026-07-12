@@ -20,7 +20,10 @@ export type CaseCategory =
   | "Denial of an obvious goal-scoring opportunity"
   | "Advantage"
   | "Simulation"
-  | "Goalkeeper handling";
+  | "Goalkeeper handling"
+  | "Dissent / misconduct"
+  | "Penalty area holding"
+  | "Restart procedure";
 
 export type DistributionBasis =
   | "authored_demo"

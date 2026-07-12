@@ -1,14 +1,29 @@
 import { describe, expect, it } from "vitest";
 import { cases } from "@/data/cases";
 import { FEED_PEOPLE } from "@/data/feed-people";
+import { validateCases } from "@/data/validate-cases";
 
 describe("seeded case integrity", () => {
-  it("ships 100 unique disclosed demonstration cases", () => {
-    expect(cases).toHaveLength(100);
-    expect(new Set(cases.map((item) => item.id)).size).toBe(100);
+  it("ships a curated set of unique disclosed demonstration cases", () => {
+    expect(cases.length).toBeGreaterThanOrEqual(12);
+    expect(cases.length).toBeLessThanOrEqual(16);
+    expect(new Set(cases.map((item) => item.id)).size).toBe(cases.length);
     expect(cases.every((item) => item.isDemo)).toBe(true);
     expect(cases.every((item) => item.reviewState === "DEMO_REVIEW_REQUIRED")).toBe(true);
     expect(cases.every((item) => item.scenarioStatus === "OPEN_DISCUSSION")).toBe(true);
+  });
+
+  it("passes content validation without hard failures", () => {
+    const issues = validateCases(cases);
+    const hard = issues.filter(
+      (issue) =>
+        issue.message.startsWith("missing") ||
+        issue.message.includes("broken generated") ||
+        issue.message.includes("internal ID") ||
+        issue.message.includes("raw case ID") ||
+        issue.message === "duplicate case ID",
+    );
+    expect(hard).toEqual([]);
   });
 
   it("keeps every authored distribution normalized", () => {
@@ -25,9 +40,17 @@ describe("seeded case integrity", () => {
     }
   });
 
-  it("keeps the three deliberate teaching-pair categories", () => {
-    for (const category of ["Serious foul play", "Handball", "Offside interference"]) {
-      expect(cases.filter((item) => item.category === category).length).toBeGreaterThanOrEqual(2);
+  it("covers varied referee teaching topics", () => {
+    for (const category of [
+      "Serious foul play",
+      "Handball",
+      "Offside interference",
+      "Denial of an obvious goal-scoring opportunity",
+      "Advantage",
+      "Simulation",
+      "Goalkeeper handling",
+    ]) {
+      expect(cases.filter((item) => item.category === category).length).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -37,7 +60,7 @@ describe("seeded case integrity", () => {
     const imageRatios = cases
       .filter((item) => item.mediaKind === "image")
       .map((item) => `${item.mediaWidth}:${item.mediaHeight}`);
-    expect(new Set(imageRatios).size).toBeGreaterThanOrEqual(4);
+    expect(new Set(imageRatios).size).toBeGreaterThanOrEqual(3);
     expect(
       cases
         .filter((item) => item.mediaKind === "image")
@@ -46,15 +69,12 @@ describe("seeded case integrity", () => {
     expect(cases.filter((item) => item.mediaKind === "text").every((item) => !item.imageSrc)).toBe(true);
   });
 
-  it("gives every case a unique discussion with distinct authors, counts, and bodies", () => {
+  it("gives every case three distinct discussion comments", () => {
     const allBodies = new Set<string>();
-    const commentCounts = new Set<number>();
 
     for (const scenario of cases) {
       const discussion = scenario.seededDiscussion;
-      expect(discussion.length).toBeGreaterThanOrEqual(2);
-      expect(discussion.length).toBeLessThanOrEqual(11);
-      commentCounts.add(discussion.length);
+      expect(discussion.length).toBe(3);
 
       const names = discussion.map((item) => item.author.displayName);
       expect(new Set(names).size).toBe(names.length);
@@ -65,6 +85,7 @@ describe("seeded case integrity", () => {
       for (const body of bodies) {
         expect(allBodies.has(body), `duplicate body across catalog: ${body.slice(0, 80)}`).toBe(false);
         allBodies.add(body);
+        expect(body).not.toMatch(/call it as|look off this|\[sfp-|gen-\d|\(gen-/i);
       }
 
       expect(
@@ -72,7 +93,13 @@ describe("seeded case integrity", () => {
       ).toBe(true);
     }
 
-    expect(commentCounts.size).toBeGreaterThan(1);
     expect(FEED_PEOPLE.length).toBeGreaterThan(150);
+  });
+
+  it("never reuses the same image or video across posts", () => {
+    const images = cases.filter((item) => item.mediaKind === "image").map((item) => item.imageSrc);
+    const videos = cases.filter((item) => item.mediaKind === "video").map((item) => item.videoSrc);
+    expect(new Set(images).size).toBe(images.length);
+    expect(new Set(videos).size).toBe(videos.length);
   });
 });

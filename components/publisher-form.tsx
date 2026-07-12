@@ -56,6 +56,9 @@ const CATEGORY_OPTIONS: readonly CaseCategory[] = [
   "Advantage",
   "Simulation",
   "Goalkeeper handling",
+  "Dissent / misconduct",
+  "Penalty area holding",
+  "Restart procedure",
 ];
 
 function createInitialForm(): PublisherFormState {
