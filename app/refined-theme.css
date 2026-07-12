@@ -1340,7 +1340,6 @@ select:focus {
 .comparison-insight,
 .compare-case,
 .saved-case-card,
-.publish-preview,
 .form-section,
 .about-section,
 .trust-card {
@@ -1428,17 +1427,14 @@ select:focus {
 
 .compare-case .case-media,
 .saved-case-card__poster,
-.preview-card__stage,
 .case-media__field {
   background-color: var(--green);
 }
 
 .compare-case__body,
 .saved-case-card__body,
-.preview-card__body,
 .content-section,
 .metric-card,
-.publish-preview,
 .form-section,
 .about-section,
 .trust-card {
@@ -1447,7 +1443,6 @@ select:focus {
 
 .compare-case h2,
 .saved-case-card h2,
-.preview-card__body h2,
 .about-section h2,
 .trust-card h2 {
   color: var(--ink);
@@ -1511,7 +1506,6 @@ select:focus {
 .section-description,
 .content-section p,
 .saved-case-card p,
-.preview-card__body p,
 .about-section p,
 .trust-card p {
   color: var(--muted);
@@ -1585,8 +1579,7 @@ select:focus {
   color: var(--ink);
 }
 
-.saved-case-card__poster::after,
-.preview-card__stage::after {
+.saved-case-card__poster::after {
   border-color: rgb(255 253 247 / 0.52);
 }
 
@@ -2160,7 +2153,6 @@ select:focus {
   .case-card__body,
   .content-section,
   .form-section,
-  .publish-preview,
   .compare-case__body,
   .about-section,
   .trust-card {
