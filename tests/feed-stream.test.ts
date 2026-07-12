@@ -50,6 +50,14 @@ describe("feed stream", () => {
     expect(uniqueKeys.size).toBe(items.length);
   });
 
+  it("assigns unique keys when the same case reappears", () => {
+    const pool = cases.slice(0, 3);
+    let items: FeedItem[] = [];
+    items = appendFeedBatch(pool, items, { batchSize: 3, random: () => 0.1 });
+    items = appendFeedBatch(pool, items, { batchSize: 3, random: () => 0.1 });
+    expect(new Set(items.map((item) => item.key)).size).toBe(items.length);
+  });
+
   it("leaves text-only cases as text", () => {
     const textCase = cases.find((item) => item.mediaKind === "text");
     expect(textCase).toBeTruthy();

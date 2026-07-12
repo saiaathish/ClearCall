@@ -10,6 +10,7 @@ import { rankPersonalizedCases } from "@/lib/algorithms";
 import {
   FEED_BATCH_SIZE,
   FEED_PRELOAD_AHEAD,
+  FEED_SEED_SIZE,
   appendFeedBatch,
   upcomingMediaSrcs,
   type FeedItem,
@@ -26,7 +27,7 @@ function isCaseCategory(value: string | null): value is CaseCategory {
 
 function seedFeed(pool: readonly OfficiatingCase[]): FeedItem[] {
   if (pool.length === 0) return [];
-  return appendFeedBatch(pool, [], { batchSize: FEED_BATCH_SIZE });
+  return appendFeedBatch(pool, [], { batchSize: FEED_SEED_SIZE });
 }
 
 function poolKeyFor(category: CaseCategory | "all", pool: readonly OfficiatingCase[]): string {
@@ -45,6 +46,7 @@ export function FeedView() {
   const [announcement, setAnnouncement] = useState("");
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
+  const filteredCasesRef = useRef<readonly OfficiatingCase[]>([]);
 
   const answerList = useMemo(() => Object.values(answers), [answers]);
   const removedIds = useMemo(() => new Set(removedCaseIds), [removedCaseIds]);
@@ -61,6 +63,7 @@ export function FeedView() {
     [activeCategory, orderedCases],
   );
   const poolKey = poolKeyFor(activeCategory, filteredCases);
+  filteredCasesRef.current = filteredCases;
 
   // Reset the mix when the foul filter or available catalog changes.
   // (React-recommended "adjust state while rendering" pattern — not an effect.)
@@ -69,52 +72,71 @@ export function FeedView() {
     setFeedItems(seedFeed(filteredCases));
   }
 
-  const loadMore = useCallback(() => {
-    if (loadingRef.current || filteredCases.length === 0) return;
-    loadingRef.current = true;
-    setIsAppending(true);
-
-    window.requestAnimationFrame(() => {
-      setFeedItems((current) => {
-        const expanded = appendFeedBatch(filteredCases, current, {
-          batchSize: FEED_BATCH_SIZE,
-        });
-        const warm = upcomingMediaSrcs(
+  const appendNext = useCallback(() => {
+    const pool = filteredCasesRef.current;
+    if (pool.length === 0) return;
+    setFeedItems((current) => {
+      const expanded = appendFeedBatch(pool, current, { batchSize: FEED_BATCH_SIZE });
+      getMediaPreloadCache().preload(
+        upcomingMediaSrcs(
           expanded,
           Math.max(0, expanded.length - FEED_BATCH_SIZE),
           FEED_PRELOAD_AHEAD,
-        );
-        getMediaPreloadCache().preload(warm);
-        setAnnouncement(`${FEED_BATCH_SIZE} more cases loaded. Keep scrolling.`);
-        return expanded;
-      });
-      setIsAppending(false);
-      loadingRef.current = false;
+        ),
+      );
+      return expanded;
     });
-  }, [filteredCases]);
+  }, []);
 
+  // Keep filling while the bottom sentinel is near the viewport.
+  // Re-observe after each batch so IntersectionObserver re-fires (it often
+  // will not when the sentinel stays on-screen after a load).
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || filteredCases.length === 0 || typeof IntersectionObserver === "undefined") return;
+
+    let cancelled = false;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) loadMore();
-      },
-      { rootMargin: "700px 0px" },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [filteredCases.length, loadMore]);
+        if (cancelled || loadingRef.current) return;
+        if (!entries.some((entry) => entry.isIntersecting)) return;
 
-  // Warm a few upcoming media URLs without pinning the whole library in cache.
+        loadingRef.current = true;
+        setIsAppending(true);
+        appendNext();
+
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            if (cancelled) return;
+            loadingRef.current = false;
+            setIsAppending(false);
+            // Force a fresh intersection check after layout.
+            observer.unobserve(sentinel);
+            observer.observe(sentinel);
+          });
+        });
+      },
+      { rootMargin: "1400px 0px", threshold: 0 },
+    );
+
+    observer.observe(sentinel);
+    return () => {
+      cancelled = true;
+      loadingRef.current = false;
+      observer.disconnect();
+    };
+  }, [appendNext, filteredCases.length, poolKey]);
+
   useEffect(() => {
     if (feedItems.length === 0) return;
-    const warm = upcomingMediaSrcs(
-      feedItems,
-      Math.max(0, feedItems.length - FEED_BATCH_SIZE),
-      FEED_PRELOAD_AHEAD,
+    getMediaPreloadCache().preload(
+      upcomingMediaSrcs(
+        feedItems,
+        Math.max(0, feedItems.length - FEED_BATCH_SIZE),
+        FEED_PRELOAD_AHEAD,
+      ),
     );
-    getMediaPreloadCache().preload(warm);
   }, [feedItems]);
 
   const setCategory = (category: CaseCategory | "all") => {
@@ -176,7 +198,7 @@ export function FeedView() {
 
       <div className="feed-result-line">
         <span>{filteredCases.length} {filteredCases.length === 1 ? "case" : "cases"} in mix</span>
-        <span>{feedItems.length} loaded · scrolls forever</span>
+        <span>{feedItems.length} loaded</span>
         <span>{answerList.length}/{cases.length} reviewed</span>
       </div>
 
@@ -187,7 +209,7 @@ export function FeedView() {
               <FeedPostCard
                 appearanceKey={item.key}
                 scenario={item.scenario}
-                priority={index === 0}
+                priority={index < 2}
               />
             </li>
           ))}
@@ -203,10 +225,10 @@ export function FeedView() {
       )}
 
       <div className="feed-loader" ref={sentinelRef} aria-hidden={filteredCases.length === 0}>
-        {filteredCases.length > 0 ? (
+        {filteredCases.length > 0 && isAppending ? (
           <div className="feed-loader__status" aria-live="polite">
             <LoaderCircle className="spin" aria-hidden="true" size={17} />
-            <span>{isAppending ? "Loading…" : "Keep scrolling"}</span>
+            <span>Loading…</span>
           </div>
         ) : null}
       </div>

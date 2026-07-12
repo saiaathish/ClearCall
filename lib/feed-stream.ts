@@ -1,9 +1,11 @@
 import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
 import type { OfficiatingCase } from "@/lib/types";
 
-export const FEED_BATCH_SIZE = 5;
+export const FEED_BATCH_SIZE = 8;
+/** First paint batch — large enough that the stream feels full immediately. */
+export const FEED_SEED_SIZE = 12;
 /** How many media URLs to warm ahead of the last visible item. */
-export const FEED_PRELOAD_AHEAD = 3;
+export const FEED_PRELOAD_AHEAD = 6;
 /** Prefer not to resurface the same case within this many recent slots. */
 export const FEED_RECENT_WINDOW = 4;
 
@@ -104,6 +106,10 @@ export function appendFeedBatch(
   let cycle = options.cycle ?? (existing.at(-1)?.cycle ?? 0);
   const next = [...existing];
   const usedInBatch = new Set<string>();
+  const appearanceCounts = new Map<string, number>();
+  for (const item of existing) {
+    appearanceCounts.set(item.scenario.id, (appearanceCounts.get(item.scenario.id) ?? 0) + 1);
+  }
 
   let deck = shuffleCases(pool, random);
   let deckIndex = 0;
@@ -129,7 +135,8 @@ export function appendFeedBatch(
     const drawn = draw();
     if (!drawn) break;
     usedInBatch.add(drawn.id);
-    const appearance = next.filter((item) => item.scenario.id === drawn.id).length;
+    const appearance = appearanceCounts.get(drawn.id) ?? 0;
+    appearanceCounts.set(drawn.id, appearance + 1);
     const scenario = withLibraryBackdrop(drawn, random);
     next.push({
       key: `${drawn.id}::${cycle}::${appearance}`,

@@ -714,6 +714,8 @@ select:focus {
   background: var(--surface);
   box-shadow: 5px 5px 0 rgb(16 23 19 / 0.16);
   container-type: inline-size;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
@@ -954,10 +956,10 @@ select:focus {
 
 .feed-loader {
   display: grid;
-  min-height: 116px;
+  min-height: 48px;
   place-items: center;
   color: var(--muted);
-  padding: 28px 0;
+  padding: 12px 0 28px;
 }
 
 .feed-loader__status {
