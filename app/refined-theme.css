@@ -122,56 +122,26 @@ dd {
   text-decoration: none;
 }
 
-.brand-mark {
-  position: relative;
-  display: grid;
-  width: 48px;
-  height: 40px;
-  flex: 0 0 48px;
-  place-items: center;
-  overflow: hidden;
+.brand-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  height: 44px;
   border: 2px solid var(--ink);
-  background: var(--green);
+  background: #000;
+  object-fit: contain;
 }
 
-.brand-mark::before,
-.brand-mark::after {
-  position: absolute;
-  background: var(--paper);
-  content: "";
-  opacity: 0.9;
+.brand-logo--full {
+  width: auto;
+  max-width: min(188px, 100%);
+  height: 54px;
 }
 
-.brand-mark::before {
-  width: 2px;
-  height: 100%;
-}
-
-.brand-mark::after {
-  width: 100%;
-  height: 2px;
-}
-
-.brand-mark span {
-  position: relative;
-  z-index: 1;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
-  background: var(--yellow);
-}
-
-.brand-mark span:first-child {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-}
-
-.brand-mark span:last-child {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
+.brand-logo--mark {
+  display: none;
+  width: 44px;
+  height: 44px;
 }
 
 .brand-copy {
@@ -181,14 +151,7 @@ dd {
   line-height: 1.05;
 }
 
-.brand-copy strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.45rem;
-  letter-spacing: -0.04em;
-}
-
 .brand-copy > span {
-  margin-top: 4px;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
@@ -1861,11 +1824,16 @@ select:focus {
     padding-inline: 0;
   }
 
+  .desktop-sidebar .brand-logo--full,
   .desktop-sidebar .brand-copy,
   .desktop-nav .nav-link span,
   .profile-control > span:last-child,
   .about-link span {
     display: none;
+  }
+
+  .desktop-sidebar .brand-logo--mark {
+    display: block;
   }
 
   .desktop-nav {
@@ -1909,6 +1877,11 @@ select:focus {
 
   .mobile-topbar .brand {
     padding: 0;
+  }
+
+  .mobile-topbar .brand-logo--full {
+    height: 42px;
+    max-width: min(168px, 58vw);
   }
 
   .mobile-nav {
@@ -2058,14 +2031,11 @@ select:focus {
 
 @media (max-width: 600px) {
   .brand {
-    padding-left: 14px;
+    padding-left: 0;
   }
 
-  .brand-copy > span {
-    max-width: 130px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .brand-copy {
+    display: none;
   }
 
   .page-shell,
