@@ -939,6 +939,13 @@ svg {
   outline-offset: 3px;
 }
 
+.publisher-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 .publisher-link:hover .publisher__name,
 .publisher-name-link:hover {
   color: var(--accent);
