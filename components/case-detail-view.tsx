@@ -17,13 +17,14 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { cases } from "@/data/cases";
+import { FEED_PEOPLE, personToPublisher } from "@/data/feed-people";
 import type { DiscussionResponse, Distribution, OfficiatingCase, PublishedCaseDraft } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
 import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
+import { PublisherLink } from "@/components/publisher-link";
 import { StatusBadge } from "@/components/status-badge";
-import { SaveButton, ShareButton } from "@/components/case-actions";
 import { createClient } from "@/lib/supabase/client";
 import { fetchLiveDistribution } from "@/lib/voting";
 import { toggleHelpfulVote } from "@/lib/reputation";
@@ -130,15 +131,14 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       });
       return;
     }
+    const jordan =
+      FEED_PEOPLE.find((person) => person.displayName === "Jordan Lee") ??
+      FEED_PEOPLE[0]!;
     const localComment: DiscussionResponse = {
       id: `local-${scenario.id}-${Date.now()}`,
       caseId: scenario.id,
       author: {
-        id: "jordan-lee-local",
-        displayName: "Jordan Lee",
-        role: "learner",
-        avatarInitials: "JL",
-        isVerified: false,
+        ...personToPublisher(jordan),
         isSynthetic: false,
         disclosure: "Local demo-user response stored only in this browser.",
       },
@@ -148,7 +148,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       selectedFactorKeys: answer?.selectedFactorKeys ?? [scenario.criticalFactor],
       helpfulCount: 0,
       factorReactions: {},
-      postedAtLabel: "Just now · local only",
+      postedAtLabel: "Just now",
       isPinned: false,
       isVerifiedExplanation: false,
       isSynthetic: false,
@@ -164,17 +164,10 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   return (
     <div className="page-shell">
       <header className="thread-header">
-        <Link className="thread-back" href="/">
-          <ArrowLeft aria-hidden="true" size={18} /> Back to feed
+        <h1 className="sr-only">{scenario.title}</h1>
+        <Link className="text-link" href="/">
+          <ArrowLeft aria-hidden="true" size={14} /> Back to feed
         </Link>
-        <div className="thread-header__title">
-          <span>Case</span>
-          <h1>{scenario.title}</h1>
-        </div>
-        <div className="button-row">
-          <SaveButton caseId={scenario.id} showLabel />
-          <ShareButton caseId={scenario.id} showLabel />
-        </div>
       </header>
 
       <div className="case-detail-layout">
@@ -185,21 +178,16 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             <>
               <section className="pinned-explanation" aria-labelledby="pinned-explanation-title">
                 <div className="pinned-explanation__topline">
-                  <span className="pinned-label"><Pin aria-hidden="true" size={13} /> Pinned authored explanation</span>
+                  <span className="pinned-label"><Pin aria-hidden="true" size={13} /> Pinned explanation</span>
                   <StatusBadge status={scenario.scenarioStatus} />
                 </div>
                 <blockquote id="pinned-explanation-title">“{scenario.expertExplanation}”</blockquote>
-                <footer>
-                  <span className="avatar" aria-hidden="true">CD</span>
-                  ClearCall demo desk · requires qualified expert review
-                </footer>
               </section>
 
               <section className="content-section" aria-labelledby="distribution-heading">
                 <div className="content-section__header">
                   <div>
-                    <h2 className="section-title" id="distribution-heading">Three lenses, kept separate</h2>
-                    <p className="section-description">These are illustrative authored patterns—not collected votes or official reviewer data.</p>
+                    <h2 className="section-title" id="distribution-heading">How others called it</h2>
                   </div>
                 </div>
                 <div className="distribution-grid">
@@ -214,24 +202,16 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <section className="content-section" aria-labelledby="discussion-heading">
                 <div className="content-section__header">
                   <div>
-                    <h2 className="section-title" id="discussion-heading">Structured discussion</h2>
-                    <p className="section-description">Responses are ordered for learning value; popularity does not define the ruling.</p>
+                    <h2 className="section-title" id="discussion-heading">Discussion</h2>
                   </div>
-                  <span className="meta-chip">{comments.length} responses</span>
                 </div>
-                <ul className="discussion-list">
-                  {comments.map((response) => (
-                    <DiscussionCard key={response.id} response={response} scenario={scenario} />
-                  ))}
-                </ul>
                 <form className="comment-form" onSubmit={submitComment} noValidate>
                   <div>
                     <label className="field-label" htmlFor="local-comment">Add your reasoning</label>
-                    <span className="field-hint" id="local-comment-hint">This response stays in your browser; there is no comment backend.</span>
                   </div>
                   <div className="comment-form__row">
                     <textarea
-                      aria-describedby={`local-comment-hint${commentError ? " local-comment-error" : ""}`}
+                      aria-describedby={commentError ? "local-comment-error" : undefined}
                       aria-invalid={commentError && !comment.trim() ? true : undefined}
                       className="textarea"
                       id="local-comment"
@@ -265,6 +245,11 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </div>
                   {commentError && <p className="field-error" id="local-comment-error" role="alert"><CircleAlert aria-hidden="true" size={14} /> Add reasoning and choose a decision.</p>}
                 </form>
+                <ul className="discussion-list">
+                  {comments.map((response) => (
+                    <DiscussionCard key={response.id} response={response} scenario={scenario} />
+                  ))}
+                </ul>
           </section>
         </div>
 
@@ -273,7 +258,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             <div className="content-section__header">
               <div>
                 <h2 className="section-title">Case context</h2>
-                <p className="section-description">The inputs that frame the decision.</p>
               </div>
             </div>
             <div className="detail-context-grid">
@@ -290,10 +274,16 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             </div>
           </section>
 
+          <section className="content-section">
+            <Link className="button button--secondary button--wide" href={`/compare?case=${scenario.id}`}>
+              <GitCompareArrows aria-hidden="true" size={16} /> Compare match vs expert
+            </Link>
+          </section>
+
           {similarCases.length > 0 && (
             <section className="content-section">
               <div className="content-section__header">
-                <div><h2 className="section-title">Similar cases</h2><p className="section-description">Compare the factor pattern, not only the outcome.</p></div>
+                <div><h2 className="section-title">Similar cases</h2></div>
               </div>
               <div className="similar-list">
                 {similarCases.map((item) => (
@@ -304,16 +294,8 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </Link>
                 ))}
               </div>
-              <Link className="button button--secondary button--wide" href={`/compare?a=${scenario.id}&b=${similarCases[0]?.id ?? ""}`} style={{ marginTop: 13 }}>
-                <GitCompareArrows aria-hidden="true" size={16} /> Compare side by side
-              </Link>
             </section>
           )}
-
-          <div className="demo-notice">
-            <CircleAlert aria-hidden="true" size={15} />
-            <span>{scenario.reviewDisclaimer}</span>
-          </div>
         </aside>
       </div>
     </div>
@@ -358,8 +340,7 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
   return (
     <li className="discussion-card">
       <div className="discussion-card__header">
-        <div className="discussion-author">
-          <span className="avatar" aria-hidden="true">{response.author.avatarInitials}</span>
+        <PublisherLink className="discussion-author" publisher={response.author}>
           <span className="discussion-author__copy">
             <strong>
               {response.author.displayName}
@@ -367,7 +348,7 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
             </strong>
             <span>{response.author.role.replaceAll("_", " ")} · {response.postedAtLabel}</span>
           </span>
-        </div>
+        </PublisherLink>
         <span className="decision-badge">{optionLabel(scenario, response.selectedOptionId)}</span>
       </div>
       <p className="discussion-card__body">{response.body}</p>
@@ -442,9 +423,6 @@ function LocalDraftView({ draft }: { draft: PublishedCaseDraft }) {
           <span className="status-badge status-badge--pending">Pending expert review</span>
           <span className="meta-chip">{draft.category}</span>
           <span className="meta-chip">{draft.difficulty}</span>
-        </div>
-        <div className="demo-notice" style={{ marginTop: 18 }}>
-          <CircleAlert size={15} /> This draft exists only in this browser. It has not been publicly published, moderated, or expert reviewed.
         </div>
       </section>
     </div>

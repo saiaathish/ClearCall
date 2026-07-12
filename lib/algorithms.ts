@@ -13,6 +13,7 @@ import type {
   TeachingContrast,
   UserAnswer,
 } from "./types";
+import { getInitialAttempt, getScoredAnswer } from "./decision-draft";
 
 const DIFFICULTY_ORDER: readonly Difficulty[] = [
   "beginner",
@@ -86,7 +87,8 @@ const dedupeLatestAnswers = (
 
   return [...latestByCase.values()].sort(
     (first, second) =>
-      timestamp(first.answeredAt) - timestamp(second.answeredAt) ||
+      timestamp(getInitialAttempt(first).answeredAt) -
+        timestamp(getInitialAttempt(second).answeredAt) ||
       first.caseId.localeCompare(second.caseId),
   );
 };
@@ -100,17 +102,18 @@ const resolveAnswers = (
   return dedupeLatestAnswers(answers).flatMap((answer) => {
     const item = casesById.get(answer.caseId);
     if (!item) return [];
+    const scoredAnswer = getScoredAnswer(answer);
 
     const optionExists = item.answerOptions.some(
-      (option) => option.id === answer.selectedOptionId,
+      (option) => option.id === scoredAnswer.selectedOptionId,
     );
     if (!optionExists) return [];
 
     return [
       {
-        answer,
+        answer: scoredAnswer,
         case: item,
-        isCorrect: answer.selectedOptionId === item.recommendedDecision,
+        isCorrect: scoredAnswer.selectedOptionId === item.recommendedDecision,
       },
     ];
   });
@@ -195,6 +198,26 @@ export function calculateSimilarity(
   };
 }
 
+/** True when either case lists the other in its authored `similarCaseIds` teaching pair. */
+export function areComparablePair(a: OfficiatingCase, b: OfficiatingCase): boolean {
+  if (a.id === b.id) return false;
+  return a.similarCaseIds.includes(b.id) || b.similarCaseIds.includes(a.id);
+}
+
+/** Resolves the authored similar-case links for a source case into concrete peers. */
+export function getComparablePeers(
+  source: OfficiatingCase,
+  allCases: readonly OfficiatingCase[],
+): OfficiatingCase[] {
+  const byId = new Map(allCases.map((item) => [item.id, item] as const));
+  const peers: OfficiatingCase[] = [];
+  for (const id of source.similarCaseIds) {
+    const peer = byId.get(id);
+    if (peer && peer.id !== source.id) peers.push(peer);
+  }
+  return peers;
+}
+
 const factorDifferences = (
   first: OfficiatingCase,
   second: OfficiatingCase,
@@ -258,8 +281,8 @@ export function findTeachingContrast(
 
       const comparisonValue = outcomesDiffer
         ? similarity.score >= 70
-          ? "High teaching contrast"
-          : "Useful teaching contrast"
+          ? "Strong contrast case"
+          : "Good contrast case"
         : "Similar outcome review";
 
       return [
@@ -389,13 +412,13 @@ const deriveReasoningMistake = (
       if (factor.supportsRecommendation && !selected.has(factor.key)) {
         record(
           `missing:${factor.key}`,
-          `Underweighted ${factor.label.toLocaleLowerCase()}.`,
+          `You keep skipping ${factor.label.toLocaleLowerCase()}.`,
         );
       }
       if (!factor.supportsRecommendation && selected.has(factor.key)) {
         record(
           `extra:${factor.key}`,
-          `Overweighted ${factor.label.toLocaleLowerCase()}.`,
+          `You're leaning too hard on ${factor.label.toLocaleLowerCase()}.`,
         );
       }
     }
@@ -538,24 +561,24 @@ const recommendationReason = (
 
   if (highConfidenceMisses > 0) {
     return highConfidenceMisses === 1
-      ? `Recommended because a high-confidence miss in ${item.category.toLocaleLowerCase()} makes this a useful review.`
-      : `Recommended because ${highConfidenceMisses} high-confidence misses in ${item.category.toLocaleLowerCase()} make this a useful review.`;
+      ? `You missed a ${item.category.toLocaleLowerCase()} call you felt sure about. This one's worth another look.`
+      : `You've whiffed ${highConfidenceMisses} ${item.category.toLocaleLowerCase()} calls you felt sure about. This helps.`;
   }
 
   if (history.length > 0 && breakdown.categoryWeakness >= 0.5) {
     const misses = history.filter((entry) => !entry.isCorrect).length;
-    return `Recommended because ${misses} of your ${history.length} ${item.category.toLocaleLowerCase()} decisions need another look.`;
+    return `${misses}/${history.length} of your ${item.category.toLocaleLowerCase()} calls didn't land — try this one.`;
   }
 
   if (history.length === 0) {
-    return `A balanced ${item.difficulty} case to broaden your practice.`;
+    return `Solid ${item.difficulty} case to get started.`;
   }
 
   if (breakdown.difficultyFit === 1) {
-    return `Matched to your current ${currentLevel} practice level.`;
+    return `Fits where you're at (${currentLevel}).`;
   }
 
-  return `A fresh ${item.category.toLocaleLowerCase()} contrast to vary your practice.`;
+  return `Another ${item.category.toLocaleLowerCase()} angle to keep things fresh.`;
 };
 
 /**

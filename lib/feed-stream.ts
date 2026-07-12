@@ -1,13 +1,14 @@
 import { mediaLibrary, type MediaLibraryItem } from "@/data/media-library";
+import { matchesCategory, scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
 import type { OfficiatingCase } from "@/lib/types";
 
-export const FEED_BATCH_SIZE = 4;
+export const FEED_BATCH_SIZE = 10;
+/** First paint batch — large enough that the stream feels full immediately. */
+export const FEED_SEED_SIZE = 16;
 /** How many media URLs to warm ahead of the last visible item. */
-export const FEED_PRELOAD_AHEAD = 3;
-/** Cap rendered feed nodes so infinite reshuffles do not grow the DOM forever. */
-export const FEED_MAX_RENDERED = 40;
+export const FEED_PRELOAD_AHEAD = 8;
 /** Prefer not to resurface the same case within this many recent slots. */
-export const FEED_RECENT_WINDOW = 3;
+export const FEED_RECENT_WINDOW = 5;
 
 export interface FeedItem {
   /** Stable React key for this appearance (case can repeat across cycles). */
@@ -37,9 +38,54 @@ export function shuffleCases(
   return next;
 }
 
+function isVideoCase(scenario: OfficiatingCase): boolean {
+  return scenario.mediaKind === "video" || Boolean(scenario.videoSrc);
+}
+
+/**
+ * Shuffle so clips surface early and often in the mix — video, other, video…
+ * instead of long text/image streaks from a pure random deck.
+ */
+export function shuffleCasesForMix(
+  pool: readonly OfficiatingCase[],
+  random: RandomFn = defaultRandom,
+): OfficiatingCase[] {
+  const videos = shuffleCases(
+    pool.filter((scenario) => isVideoCase(scenario)),
+    random,
+  );
+  const rest = shuffleCases(
+    pool.filter((scenario) => !isVideoCase(scenario)),
+    random,
+  );
+  if (videos.length === 0 || rest.length === 0) {
+    return videos.length > 0 ? videos : rest;
+  }
+
+  const next: OfficiatingCase[] = [];
+  let videoIndex = 0;
+  let restIndex = 0;
+  while (videoIndex < videos.length || restIndex < rest.length) {
+    if (videoIndex < videos.length) {
+      next.push(videos[videoIndex]!);
+      videoIndex += 1;
+      if (videoIndex < videos.length && random() < 0.4) {
+        next.push(videos[videoIndex]!);
+        videoIndex += 1;
+      }
+    }
+    if (restIndex < rest.length) {
+      next.push(rest[restIndex]!);
+      restIndex += 1;
+    }
+  }
+  return next;
+}
+
 export function pickRandomMedia(
   random: RandomFn = defaultRandom,
   excludeSrc?: string | null,
+  preferredTags: readonly string[] = [],
 ): MediaLibraryItem {
   if (mediaLibrary.length === 0) {
     throw new Error("mediaLibrary is empty");
@@ -49,30 +95,67 @@ export function pickRandomMedia(
     ? mediaLibrary.filter((item) => item.src !== excludeSrc)
     : mediaLibrary;
   const pool = candidates.length > 0 ? candidates : mediaLibrary;
+
+  if (preferredTags.length > 0) {
+    let bestScore = -1;
+    const ranked: MediaLibraryItem[] = [];
+    for (const item of pool) {
+      const score = scoreTagOverlap(item.tags, preferredTags);
+      if (score > bestScore) {
+        bestScore = score;
+        ranked.length = 0;
+        ranked.push(item);
+      } else if (score === bestScore) {
+        ranked.push(item);
+      }
+    }
+    if (ranked.length > 0 && bestScore > 0) {
+      return ranked[Math.min(ranked.length - 1, Math.floor(random() * ranked.length))]!;
+    }
+  }
+
   const index = Math.min(pool.length - 1, Math.floor(random() * pool.length));
   return pool[index]!;
 }
 
 /**
- * Give text / placeholder cases a random library still so the feed stays visual.
- * Authored image/video assets are kept as-is.
+ * Give image-shaped cases without an authored asset a category-matched library still.
+ * Never mutates description copy. Text and video posts are left alone.
  */
 export function withLibraryBackdrop(
   scenario: OfficiatingCase,
   random: RandomFn = defaultRandom,
+  usedMedia: ReadonlySet<string> = new Set(),
 ): OfficiatingCase {
-  const hasAuthoredImage = Boolean(scenario.imageSrc || scenario.posterSrc);
-  const hasAuthoredVideo = Boolean(scenario.videoSrc);
-  if (hasAuthoredImage || hasAuthoredVideo) return scenario;
+  const mediaKind = scenario.mediaKind
+    ?? (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text");
+  if (mediaKind === "text" || mediaKind === "video") return scenario;
 
-  const pick = pickRandomMedia(random, scenario.imageSrc);
+  const hasAuthoredImage = Boolean(scenario.imageSrc || scenario.posterSrc);
+  if (hasAuthoredImage) return scenario;
+
+  const category = scenario.category;
+  const preferred = tagsForCategory(category);
+  const matchedPool = mediaLibrary.filter(
+    (item) => matchesCategory(item.tags, category, 1) && !usedMedia.has(item.src),
+  );
+  if (matchedPool.length === 0 && preferred.length > 0) {
+    return scenario;
+  }
+
+  const available = matchedPool.length > 0
+    ? matchedPool
+    : mediaLibrary.filter((item) => !usedMedia.has(item.src));
+  if (available.length === 0) return scenario;
+
+  const pick = available[Math.min(available.length - 1, Math.floor(random() * available.length))]!;
   return {
     ...scenario,
     mediaKind: "image",
     imageSrc: pick.src,
     mediaWidth: pick.width,
     mediaHeight: pick.height,
-    mediaAlt: `${scenario.mediaAlt} · ambient: ${pick.alt}`,
+    mediaAlt: pick.alt,
   };
 }
 
@@ -83,7 +166,7 @@ function recentIds(items: readonly FeedItem[], windowSize: number): Set<string> 
 
 /**
  * Append the next batch of feed items. When the unique catalog is exhausted,
- * reshuffle and keep going (Instagram-style mix) while avoiding immediate repeats.
+ * reshuffle and keep going while avoiding immediate repeats.
  */
 export function appendFeedBatch(
   pool: readonly OfficiatingCase[],
@@ -103,8 +186,15 @@ export function appendFeedBatch(
   let cycle = options.cycle ?? (existing.at(-1)?.cycle ?? 0);
   const next = [...existing];
   const usedInBatch = new Set<string>();
+  const appearanceCounts = new Map<string, number>();
+  for (const item of existing) {
+    appearanceCounts.set(item.scenario.id, (appearanceCounts.get(item.scenario.id) ?? 0) + 1);
+  }
 
-  let deck = shuffleCases(pool, random);
+  const usedMedia = new Set<string>();
+  // Prefer fresh library stills within this batch; recycled cycles may reuse assets.
+
+  let deck = shuffleCasesForMix(pool, random);
   let deckIndex = 0;
 
   const draw = (): OfficiatingCase | null => {
@@ -112,7 +202,7 @@ export function appendFeedBatch(
     for (let attempt = 0; attempt < pool.length * 2; attempt += 1) {
       if (deckIndex >= deck.length) {
         cycle += 1;
-        deck = shuffleCases(pool, random);
+        deck = shuffleCasesForMix(pool, random);
         deckIndex = 0;
       }
       const candidate = deck[deckIndex]!;
@@ -128,8 +218,11 @@ export function appendFeedBatch(
     const drawn = draw();
     if (!drawn) break;
     usedInBatch.add(drawn.id);
-    const appearance = next.filter((item) => item.scenario.id === drawn.id).length;
-    const scenario = withLibraryBackdrop(drawn, random);
+    const appearance = appearanceCounts.get(drawn.id) ?? 0;
+    appearanceCounts.set(drawn.id, appearance + 1);
+    const scenario = withLibraryBackdrop(drawn, random, usedMedia);
+    const mediaSrc = scenario.videoSrc ?? scenario.imageSrc ?? scenario.posterSrc;
+    if (mediaSrc) usedMedia.add(mediaSrc);
     next.push({
       key: `${drawn.id}::${cycle}::${appearance}`,
       scenario,
@@ -138,15 +231,6 @@ export function appendFeedBatch(
   }
 
   return next;
-}
-
-/** Trim from the front when the rendered stream grows past the soft cap. */
-export function trimFeedItems(
-  items: readonly FeedItem[],
-  maxRendered: number = FEED_MAX_RENDERED,
-): FeedItem[] {
-  if (items.length <= maxRendered) return [...items];
-  return items.slice(items.length - maxRendered);
 }
 
 export function collectMediaSrcs(items: readonly FeedItem[]): string[] {

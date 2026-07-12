@@ -3,11 +3,10 @@ import { cases } from "@/data/cases";
 import { mediaLibrary } from "@/data/media-library";
 import {
   FEED_BATCH_SIZE,
-  FEED_MAX_RENDERED,
   appendFeedBatch,
   pickRandomMedia,
   shuffleCases,
-  trimFeedItems,
+  shuffleCasesForMix,
   upcomingMediaSrcs,
   withLibraryBackdrop,
   type FeedItem,
@@ -37,28 +36,49 @@ describe("feed stream", () => {
     expect(new Set(shuffled.map((item) => item.id))).toEqual(new Set(ids));
   });
 
-  it("keeps appending past the unique catalog via reshuffle", () => {
+  it("keeps appending after the unique catalog is exhausted", () => {
     const pool = cases.slice(0, 5);
     let items: FeedItem[] = [];
-    for (let round = 0; round < 6; round += 1) {
+    for (let round = 0; round < 4; round += 1) {
       items = appendFeedBatch(pool, items, {
         batchSize: FEED_BATCH_SIZE,
         random: sequentialRandom([0.2, 0.7, 0.4, 0.9, 0.1, 0.55, 0.33]),
       });
     }
     expect(items.length).toBeGreaterThan(pool.length);
-    expect(items.length).toBe(6 * FEED_BATCH_SIZE);
-    const uniqueKeys = new Set(items.map((item) => item.key));
-    expect(uniqueKeys.size).toBe(items.length);
+    expect(new Set(items.map((item) => item.scenario.id)).size).toBe(pool.length);
+    expect(new Set(items.map((item) => item.key)).size).toBe(items.length);
   });
 
-  it("assigns library backdrops to text-only cases", () => {
+  it("avoids immediate repeats when the pool is large enough", () => {
+    const pool = cases.slice(0, Math.min(8, cases.length));
+    let items: FeedItem[] = [];
+    items = appendFeedBatch(pool, items, {
+      batchSize: pool.length * 2,
+      recentWindow: 3,
+      random: sequentialRandom([0.15, 0.85, 0.35, 0.65, 0.25, 0.75, 0.45, 0.55]),
+    });
+    expect(items.length).toBe(pool.length * 2);
+    for (let index = 1; index < items.length; index += 1) {
+      expect(items[index]!.scenario.id).not.toBe(items[index - 1]!.scenario.id);
+    }
+    expect(new Set(items.map((item) => item.key)).size).toBe(items.length);
+  });
+
+  it("leaves text-only cases as text", () => {
     const textCase = cases.find((item) => item.mediaKind === "text");
     expect(textCase).toBeTruthy();
     const enriched = withLibraryBackdrop(textCase!, () => 0);
-    expect(enriched.mediaKind).toBe("image");
-    expect(enriched.imageSrc).toBe(mediaLibrary[0]!.src);
-    expect(textCase!.imageSrc).toBeNull();
+    expect(enriched.mediaKind).toBe("text");
+    expect(enriched.imageSrc).toBeNull();
+  });
+
+  it("keeps real demo video clips as video", () => {
+    const videoCase = cases.find((item) => item.mediaKind === "video" && item.videoSrc);
+    expect(videoCase).toBeTruthy();
+    const enriched = withLibraryBackdrop(videoCase!, () => 0);
+    expect(enriched.mediaKind).toBe("video");
+    expect(enriched.videoSrc).toBe(videoCase!.videoSrc);
   });
 
   it("preserves authored image assets", () => {
@@ -68,20 +88,9 @@ describe("feed stream", () => {
     expect(enriched.imageSrc).toBe(imageCase!.imageSrc);
   });
 
-  it("trims from the front once the soft render cap is hit", () => {
-    const pool = cases.slice(0, 8);
-    let items: FeedItem[] = [];
-    while (items.length < FEED_MAX_RENDERED + FEED_BATCH_SIZE) {
-      items = appendFeedBatch(pool, items, { batchSize: FEED_BATCH_SIZE, random: () => 0.3 });
-    }
-    const trimmed = trimFeedItems(items, FEED_MAX_RENDERED);
-    expect(trimmed).toHaveLength(FEED_MAX_RENDERED);
-    expect(trimmed[0]!.key).not.toBe(items[0]!.key);
-  });
-
   it("exposes upcoming media urls for lookahead preload", () => {
-    const pool = cases.slice(0, 6);
-    const items = appendFeedBatch(pool, [], { batchSize: 6, random: () => 0.15 });
+    const pool = cases.slice(0, Math.min(6, cases.length));
+    const items = appendFeedBatch(pool, [], { batchSize: pool.length, random: () => 0.15 });
     const upcoming = upcomingMediaSrcs(items, 2, 3);
     expect(upcoming.length).toBeGreaterThan(0);
     expect(upcoming.every((src) => typeof src === "string" && src.length > 0)).toBe(true);
@@ -90,6 +99,21 @@ describe("feed stream", () => {
   it("picks media from the library", () => {
     const pick = pickRandomMedia(() => 0.99);
     expect(mediaLibrary.some((item) => item.id === pick.id)).toBe(true);
+  });
+
+  it("shuffles the mix so video clips surface early when available", () => {
+    const mixed = shuffleCasesForMix(cases, sequentialRandom([0.2, 0.8, 0.1, 0.9, 0.4, 0.6, 0.3]));
+    expect(mixed).toHaveLength(cases.length);
+    const videoTotal = cases.filter(
+      (item) => item.mediaKind === "video" || Boolean(item.videoSrc),
+    ).length;
+    if (videoTotal >= 3) {
+      const firstEight = mixed.slice(0, Math.min(8, mixed.length));
+      const videoCount = firstEight.filter(
+        (item) => item.mediaKind === "video" || Boolean(item.videoSrc),
+      ).length;
+      expect(videoCount).toBeGreaterThanOrEqual(1);
+    }
   });
 });
 

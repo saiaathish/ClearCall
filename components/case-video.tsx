@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { FileImage, Gauge, Play, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import type { MediaKind, OfficiatingCase } from "@/lib/types";
 
@@ -31,6 +31,37 @@ export function CaseVideo({
   const height = scenario.mediaHeight ?? 900;
   const hasVideo = mediaKind === "video" && Boolean(scenario.videoSrc);
   const mediaStyle = { "--media-ratio": `${width} / ${height}` } as CSSProperties;
+
+  // Compact feed clips autoplay muted only while on-screen.
+  useEffect(() => {
+    if (!compact || !hasVideo) return;
+    const video = videoRef.current;
+    if (!video || typeof IntersectionObserver === "undefined") return;
+    video.muted = true;
+
+    const tryPlay = () => {
+      void video.play().catch(() => {
+        /* Autoplay can be blocked; poster still shows. */
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.2);
+        if (visible) tryPlay();
+        else video.pause();
+      },
+      { threshold: [0, 0.2, 0.5, 0.75], rootMargin: "120px 0px" },
+    );
+    observer.observe(video);
+    video.addEventListener("loadeddata", tryPlay);
+    tryPlay();
+    return () => {
+      observer.disconnect();
+      video.removeEventListener("loadeddata", tryPlay);
+      video.pause();
+    };
+  }, [compact, hasVideo, scenario.videoSrc]);
 
   if (mediaKind === "text") return null;
 
@@ -77,10 +108,12 @@ export function CaseVideo({
           ref={videoRef}
           src={scenario.videoSrc ?? undefined}
           poster={scenario.posterSrc ?? undefined}
-          controls
+          controls={!compact}
           muted={muted}
           playsInline
-          preload="metadata"
+          loop={compact}
+          autoPlay={compact}
+          preload={compact ? "auto" : "metadata"}
           aria-label={scenario.mediaAlt}
           onTimeUpdate={(event) => {
             const video = event.currentTarget;

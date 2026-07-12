@@ -40,7 +40,7 @@ export async function computeReputationScore(
   const [answersRes, commentsRes] = await Promise.all([
     supabase
       .from("user_answers")
-      .select("case_id, selected_option_id, confidence, selected_factor_keys, answered_at")
+      .select("case_id, selected_option_id, confidence, selected_factor_keys, answered_at, initial_selected_option_id, initial_confidence, initial_selected_factor_keys, initial_answered_at, revision_count")
       .eq("user_id", userId),
     supabase
       .from("discussion_responses")
@@ -57,11 +57,20 @@ export async function computeReputationScore(
     confidence: row.confidence,
     selectedFactorKeys: row.selected_factor_keys ?? [],
     answeredAt: row.answered_at,
+    initialAttempt: {
+      selectedOptionId: row.initial_selected_option_id ?? row.selected_option_id,
+      confidence: row.initial_confidence ?? row.confidence,
+      selectedFactorKeys: row.initial_selected_factor_keys ?? row.selected_factor_keys ?? [],
+      answeredAt: row.initial_answered_at ?? row.answered_at,
+    },
+    revisionCount: row.revision_count ?? 0,
   }));
 
   const gradedAnswers = answerRows.filter((row) => casesById.has(row.case_id));
   const agreementCount = gradedAnswers.filter(
-    (row) => row.selected_option_id === casesById.get(row.case_id)?.recommendedDecision,
+    (row) =>
+      (row.initial_selected_option_id ?? row.selected_option_id) ===
+      casesById.get(row.case_id)?.recommendedDecision,
   ).length;
   const verifiedAgreement =
     gradedAnswers.length === 0 ? 0 : agreementCount / gradedAnswers.length;

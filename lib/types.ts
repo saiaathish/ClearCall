@@ -20,7 +20,10 @@ export type CaseCategory =
   | "Denial of an obvious goal-scoring opportunity"
   | "Advantage"
   | "Simulation"
-  | "Goalkeeper handling";
+  | "Goalkeeper handling"
+  | "Dissent / misconduct"
+  | "Penalty area holding"
+  | "Restart procedure";
 
 export type DistributionBasis =
   | "authored_demo"
@@ -71,6 +74,8 @@ export interface Publisher {
   role: UserRole;
   organization?: string;
   avatarInitials: string;
+  /** Optional profile image; when absent, UI falls back to initials. */
+  avatarSrc?: string | null;
   isVerified: boolean;
   isSynthetic: boolean;
   disclosure: string;
@@ -151,14 +156,21 @@ export interface OfficiatingCase {
   reviewDisclaimer: string;
 }
 
-export interface UserAnswer {
-  caseId: string;
+export interface DecisionAttempt {
   /** Stable AnswerOption.id; never the visible label. */
   selectedOptionId: string;
   confidence: number;
   /** Stable RuleFactor.key values; never the visible labels. */
   selectedFactorKeys: readonly string[];
   answeredAt: string;
+}
+
+export interface UserAnswer extends DecisionAttempt {
+  caseId: string;
+  /** Immutable first attempt used for calibration and learning metrics. */
+  initialAttempt?: DecisionAttempt;
+  /** Number of updates made after the first submitted attempt. */
+  revisionCount?: number;
 }
 
 export interface PerformanceBreakdown {
@@ -260,8 +272,8 @@ export interface SimilarityResult {
 }
 
 export type ComparisonValue =
-  | "High teaching contrast"
-  | "Useful teaching contrast"
+  | "Strong contrast case"
+  | "Good contrast case"
   | "Similar outcome review";
 
 export interface TeachingContrast {

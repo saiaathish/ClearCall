@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import { cases } from "../data/cases";
 import {
+  areComparablePair,
   calculateCalibrationScore,
   calculateSimilarity,
   deriveLearnerProfile,
   findTeachingContrast,
+  getComparablePeers,
   rankPersonalizedCases,
   DISAGREEMENT_WEIGHT,
   DIFFICULTY_WEIGHT,
@@ -73,15 +75,23 @@ describe("calculateSimilarity", () => {
 
 describe("findTeachingContrast", () => {
   it("adds a transparent bonus and selects the deliberate different-outcome pair", () => {
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
     const contrast = findTeachingContrast(
       caseById("sfp-controlled-lunge"),
-      cases,
+      seedCatalog,
     );
 
     expect(contrast?.case.id).toBe("sfp-high-contact-lunge");
     expect(contrast?.similarityScore).toBe(76.5);
     expect(contrast?.teachingScore).toBe(96.5);
-    expect(contrast?.comparisonValue).toBe("High teaching contrast");
+    expect(contrast?.comparisonValue).toBe("Strong contrast case");
     expect(contrast?.criticalDifferences.length).toBeGreaterThan(0);
     expect(contrast?.reason).toContain("differ in");
   });
@@ -111,11 +121,42 @@ describe("calculateCalibrationScore", () => {
   it("returns zero honestly when there is no calibration evidence", () => {
     expect(calculateCalibrationScore([], cases)).toBe(0);
   });
+
+  it("keeps calibration anchored to the first attempt after a revision", () => {
+    const revised: UserAnswer = {
+      ...answer(
+        "sfp-high-contact-lunge",
+        "direct-free-kick-red",
+        70,
+        "2026-07-02T10:05:00.000Z",
+        ["studs", "force"],
+      ),
+      initialAttempt: {
+        selectedOptionId: "direct-free-kick-yellow",
+        confidence: 90,
+        selectedFactorKeys: ["speed"],
+        answeredAt: "2026-07-02T10:00:00.000Z",
+      },
+      revisionCount: 1,
+    };
+
+    expect(calculateCalibrationScore([revised], cases)).toBe(19);
+    expect(deriveLearnerProfile([revised], cases).overallAccuracy).toBe(0);
+    expect(rankPersonalizedCases(cases, [revised])[0]?.reason).toContain(
+      "felt sure about",
+    );
+  });
 });
 
 describe("rankPersonalizedCases", () => {
   it("prioritizes a category after a high-confidence incorrect answer", () => {
-    const ranked = rankPersonalizedCases(cases, [
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("advantage-quick-breakdown"),
+    ];
+    const ranked = rankPersonalizedCases(seedCatalog, [
       answer(
         "sfp-controlled-lunge",
         "direct-free-kick-red",
@@ -127,14 +168,15 @@ describe("rankPersonalizedCases", () => {
 
     expect(ranked[0]?.case.id).toBe("sfp-high-contact-lunge");
     expect(ranked[0]?.breakdown.highConfidenceErrorNeed).toBe(1);
-    expect(ranked[0]?.reason).toContain("high-confidence miss");
+    expect(ranked[0]?.reason).toContain("felt sure about");
   });
 
   it("gives a new user a deterministic, category-diverse seeded order", () => {
-    const firstRun = rankPersonalizedCases(cases, [], {
+    const catalog = cases.slice(0, 10);
+    const firstRun = rankPersonalizedCases(catalog, [], {
       currentLevel: "intermediate",
     });
-    const secondRun = rankPersonalizedCases(cases, [], {
+    const secondRun = rankPersonalizedCases(catalog, [], {
       currentLevel: "intermediate",
     });
 
@@ -186,10 +228,11 @@ describe("deriveLearnerProfile", () => {
 });
 
 describe("authored demo data integrity", () => {
-  it("contains ten review-labelled cases with internally valid IDs and percentages", () => {
+  it("contains review-labelled cases with internally valid IDs and percentages", () => {
     const ids = new Set(cases.map((item) => item.id));
-    expect(cases).toHaveLength(10);
-    expect(ids.size).toBe(10);
+    expect(cases.length).toBeGreaterThanOrEqual(12);
+    expect(cases.length).toBeLessThanOrEqual(16);
+    expect(ids.size).toBe(cases.length);
 
     for (const item of cases) {
       const optionIds = new Set(item.answerOptions.map((option) => option.id));
@@ -220,6 +263,14 @@ describe("authored demo data integrity", () => {
   });
 
   it("includes the three requested deliberate teaching pairs", () => {
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
     const expectedPairs = [
       ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
       ["handball-supporting-arm", "handball-raised-arm"],
@@ -231,7 +282,41 @@ describe("authored demo data integrity", () => {
       const second = caseById(secondId);
       expect(first.category).toBe(second.category);
       expect(first.recommendedDecision).not.toBe(second.recommendedDecision);
-      expect(findTeachingContrast(first, cases)?.case.id).toBe(second.id);
+      expect(findTeachingContrast(first, seedCatalog)?.case.id).toBe(second.id);
     }
+  });
+
+  it("keeps teaching pairs bidirectional in similarCaseIds", () => {
+    const seedCatalog = [
+      caseById("sfp-controlled-lunge"),
+      caseById("sfp-high-contact-lunge"),
+      caseById("handball-supporting-arm"),
+      caseById("handball-raised-arm"),
+      caseById("offside-line-of-vision"),
+      caseById("offside-no-impact"),
+    ];
+    const expectedPairs = [
+      ["sfp-controlled-lunge", "sfp-high-contact-lunge"],
+      ["handball-supporting-arm", "handball-raised-arm"],
+      ["offside-line-of-vision", "offside-no-impact"],
+    ] as const;
+
+    for (const [firstId, secondId] of expectedPairs) {
+      const first = caseById(firstId);
+      const second = caseById(secondId);
+      expect(first.similarCaseIds).toContain(secondId);
+      expect(second.similarCaseIds).toContain(firstId);
+      expect(areComparablePair(first, second)).toBe(true);
+      expect(getComparablePeers(first, seedCatalog).map((item) => item.id)).toEqual([secondId]);
+      expect(getComparablePeers(second, seedCatalog).map((item) => item.id)).toEqual([firstId]);
+    }
+  });
+
+  it("does not treat unlinked cases as comparable pairs", () => {
+    const linked = caseById("sfp-controlled-lunge");
+    const unlinked = caseById("dogso-central-breakaway");
+    expect(areComparablePair(linked, unlinked)).toBe(false);
+    expect(getComparablePeers(unlinked, cases)).toEqual([]);
+    expect(areComparablePair(linked, linked)).toBe(false);
   });
 });

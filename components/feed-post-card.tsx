@@ -6,6 +6,7 @@ import type { MediaKind, OfficiatingCase } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { CaseVideo } from "@/components/case-video";
 import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
+import { PublisherLink, PublisherNameLink } from "@/components/publisher-link";
 import { StatusBadge } from "@/components/status-badge";
 
 function formatPublishedAt(value: string) {
@@ -42,6 +43,7 @@ export function FeedPostCard({
   const domId = (appearanceKey ?? scenario.id).replace(/[^a-zA-Z0-9_-]+/g, "-");
   const titleId = `feed-post-${domId}-title`;
   const discussionId = `feed-post-${domId}-discussion`;
+  const previewComments = comments.slice(0, 3);
 
   return (
     <article
@@ -50,11 +52,15 @@ export function FeedPostCard({
       aria-labelledby={titleId}
     >
       <header className="feed-post__header">
-        <span className="avatar" aria-hidden="true">{scenario.publisher.avatarInitials}</span>
-        <div className="publisher">
-          <div className="publisher__name">{scenario.publisher.displayName}</div>
-          <div className="publisher__meta">
-            {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+        <div className="publisher-row">
+          <PublisherLink publisher={scenario.publisher} />
+          <div className="publisher">
+            <PublisherNameLink className="publisher__name" publisher={scenario.publisher}>
+              {scenario.publisher.displayName}
+            </PublisherNameLink>
+            <div className="publisher__meta">
+              {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+            </div>
           </div>
         </div>
         <div className="feed-post__actions" aria-label={`Actions for ${scenario.title}`}>
@@ -77,9 +83,12 @@ export function FeedPostCard({
               <StatusBadge status={scenario.scenarioStatus} />
               <span className="meta-chip">{scenario.category}</span>
               <span className="meta-chip">{scenario.difficulty}</span>
+              <span className="meta-chip meta-chip--media">{mediaKind}</span>
             </div>
             <h2 id={titleId}>
-              <Link href={detailHref}>{scenario.prompt}</Link>
+              <Link className="feed-post__hit" href={detailHref}>
+                {scenario.prompt}
+              </Link>
             </h2>
             <p>{scenario.description}</p>
             <div className="feed-post__context">
@@ -93,27 +102,28 @@ export function FeedPostCard({
               <h3 id={discussionId}>
                 <MessageCircle aria-hidden="true" size={15} /> Discussion
               </h3>
-              <span>{comments.length} {comments.length === 1 ? "response" : "responses"}</span>
             </div>
-            {comments.length > 0 ? (
+            {previewComments.length > 0 ? (
               <ul>
-                {comments.slice(0, 2).map((comment) => (
+                {previewComments.map((comment) => (
                   <li key={comment.id}>
-                    <span className="avatar avatar--small" aria-hidden="true">{comment.author.avatarInitials}</span>
+                    <PublisherLink publisher={comment.author} size="sm" />
                     <span>
-                      <strong>{comment.author.displayName}</strong>
+                      <PublisherNameLink publisher={comment.author}>
+                        <strong>{comment.author.displayName}</strong>
+                      </PublisherNameLink>
                       <span>{comment.body}</span>
                     </span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No responses yet. Open the case to add your reasoning.</p>
+              <p>No responses yet.</p>
             )}
           </section>
 
           <footer className="feed-post__footer">
-            <span>{answers[scenario.id] ? "Your call is recorded" : "Decision and evidence are on the case page"}</span>
+            <span>{answers[scenario.id] ? "Call recorded" : null}</span>
             <Link className="feed-post__open" href={detailHref}>
               {answers[scenario.id] ? "Review your call" : "Make your call"}
               <ArrowUpRight aria-hidden="true" size={16} />

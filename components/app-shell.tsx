@@ -52,9 +52,31 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
   );
 }
 
+function profileLabel(userDisplayName: string | undefined, isDemoSession: boolean, isSignedIn: boolean) {
+  if (!isSignedIn) {
+    return { initials: "?", name: "Guest" };
+  }
+  if (isDemoSession) {
+    return { initials: "JL", name: "Jordan Lee" };
+  }
+  const name = userDisplayName?.trim() || "Referee learner";
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("") || "RL";
+  return { initials, name };
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, signOut } = useDemo();
+  const { user, isDemoSession, isSignedIn, signOut } = useDemo();
+  const displayName =
+    typeof user?.user_metadata?.display_name === "string"
+      ? user.user_metadata.display_name
+      : undefined;
+  const profile = profileLabel(displayName, isDemoSession, isSignedIn);
 
   return (
     <div className="app-shell">
@@ -74,18 +96,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
         <div className="sidebar-footer">
           <Link className="profile-control" href="/profile" aria-label="Open learner profile">
-            <span className="profile-avatar" aria-hidden="true">JL</span>
-            <span><strong>Jordan Lee</strong><small>Referee learner</small></span>
+            <span className="profile-avatar" aria-hidden="true">{profile.initials}</span>
+            <span><strong>{profile.name}</strong></span>
           </Link>
           <Link className="about-link" href="/about">
             <Info aria-hidden="true" size={16} /> <span>About & trust</span>
           </Link>
-          {user ? (
+          {isSignedIn ? (
             <button className="about-link" type="button" onClick={() => void signOut()}>
               <LogOut aria-hidden="true" size={16} /> <span>Sign out</span>
             </button>
           ) : (
-            <Link className="about-link" href="/auth">
+            <Link className="about-link" href="/auth" aria-current={pathname.startsWith("/auth") ? "page" : undefined}>
               <LogIn aria-hidden="true" size={16} /> <span>Sign in</span>
             </Link>
           )}

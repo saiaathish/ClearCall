@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   BrainCircuit,
-  CircleAlert,
   Gauge,
   RotateCcw,
   Settings,
@@ -16,6 +15,7 @@ import {
 } from "lucide-react";
 import { cases } from "@/data/cases";
 import { deriveLearnerProfile } from "@/lib/algorithms";
+import { getScoredAnswer } from "@/lib/decision-draft";
 import type { OfficiatingCase, UserAnswer } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
@@ -25,7 +25,10 @@ function answerMatches(answer: UserAnswer, scenario?: OfficiatingCase) {
 }
 
 function makeTrend(answers: readonly UserAnswer[]) {
-  const ordered = [...answers].sort((a, b) => a.answeredAt.localeCompare(b.answeredAt)).slice(-7);
+  const ordered = answers
+    .map(getScoredAnswer)
+    .sort((a, b) => a.answeredAt.localeCompare(b.answeredAt))
+    .slice(-7);
   let aligned = 0;
   return ordered.map((answer, index) => {
     const scenario = cases.find((item) => item.id === answer.caseId);
@@ -68,10 +71,6 @@ export function ProfileView() {
   );
   const trend = makeTrend(answerList);
   const recentActivity = [...answerList].sort((a, b) => b.answeredAt.localeCompare(a.answeredAt)).slice(0, 5);
-  const openReports = useMemo(
-    () => reports.filter((report) => report.status === "open"),
-    [reports],
-  );
   const moderationItems = useMemo(() => {
     const byCase = new Map<string, typeof reports>();
     for (const report of reports) {
@@ -118,9 +117,8 @@ export function ProfileView() {
       <header className="profile-banner">
         <span className="profile-avatar" aria-hidden="true">{profile.avatarInitials}</span>
         <div>
-          <p className="eyebrow">Learner profile</p>
           <h1>{profile.displayName}</h1>
-          <p>Referee learner · {profile.currentLevel} level · local demonstration profile</p>
+          <p>{profile.currentLevel} level</p>
         </div>
         <div className="profile-summary">
           <span className="profile-summary__item"><strong>{profile.currentStreak}</strong><span>Practice streak</span></span>
@@ -130,13 +128,13 @@ export function ProfileView() {
       </header>
 
       <section className="metric-grid" aria-label="Primary learning metrics">
-        <MetricCard label="Demo alignment" value={`${profile.overallAccuracy}%`} detail="Matches with authored recommendations" icon={Target} accent />
+        <MetricCard label="Alignment" value={`${profile.overallAccuracy}%`} detail="First-attempt matches" icon={Target} accent />
         <MetricCard label="Calibration" value={`${profile.calibrationScore}%`} detail={profile.calibrationLabel} icon={Gauge} />
-        <MetricCard label="High-confidence errors" value={String(profile.highConfidenceErrors)} detail="Mismatches submitted at 80%+" icon={TriangleAlert} />
+        <MetricCard label="High-confidence errors" value={String(profile.highConfidenceErrors)} detail="Mismatches at 80%+" icon={TriangleAlert} />
         <MetricCard
           label="Recent improvement"
           value={profile.recentImprovement === null ? "—" : `${profile.recentImprovement >= 0 ? "+" : ""}${profile.recentImprovement}pt`}
-          detail={profile.recentImprovement === null ? "Complete more cases for a trend" : "Recent vs previous answer window"}
+          detail={profile.recentImprovement === null ? "Complete more cases for a trend" : "Recent vs previous window"}
           icon={TrendingUp}
         />
       </section>
@@ -145,7 +143,7 @@ export function ProfileView() {
         <div className="profile-column">
           <section className="content-section" aria-labelledby="category-performance-heading">
             <div className="content-section__header">
-              <div><h2 className="section-title" id="category-performance-heading">Category performance</h2><p className="section-description">Recommendation alignment by incident family; “—” means no evidence yet.</p></div>
+              <div><h2 className="section-title" id="category-performance-heading">Category performance</h2></div>
             </div>
             <div className="category-bars">
               {profile.categoryAccuracy.map((category) => (
@@ -160,7 +158,7 @@ export function ProfileView() {
 
           <section className="content-section" aria-labelledby="difficulty-performance-heading">
             <div className="content-section__header">
-              <div><h2 className="section-title" id="difficulty-performance-heading">Difficulty alignment</h2><p className="section-description">Authored-demo recommendation alignment by case difficulty; “—” means no evidence yet.</p></div>
+              <div><h2 className="section-title" id="difficulty-performance-heading">Difficulty alignment</h2></div>
             </div>
             <div className="category-bars">
               {profile.difficultyAccuracy.map((difficulty) => (
@@ -182,12 +180,11 @@ export function ProfileView() {
           <section className="insight-card">
             <span className="insight-card__label"><BrainCircuit aria-hidden="true" size={14} /> Reasoning pattern</span>
             <h3>{profile.mostCommonReasoningMistake}</h3>
-            <p>Use the next recommendation to isolate that factor against a similar-looking scenario.</p>
           </section>
 
           <section className="content-section">
             <div className="content-section__header">
-              <div><h2 className="section-title">Learning edges</h2><p className="section-description">Areas inferred from locally stored answers.</p></div>
+              <div><h2 className="section-title">Learning edges</h2></div>
             </div>
             <div className="summary-stat" style={{ marginBottom: 9 }}><span>Weakest category</span><strong>{profile.weakestCategory ?? "Not enough data"}</strong></div>
             <div className="summary-stat"><span>Strongest category</span><strong>{profile.strongestCategory ?? "Not enough data"}</strong></div>
@@ -197,7 +194,6 @@ export function ProfileView() {
             <section className="content-section">
               <span className="pinned-label"><Sparkles aria-hidden="true" size={13} /> Recommended next</span>
               <h2 className="section-title" style={{ marginTop: 14 }}>{recommended.title}</h2>
-              <p className="section-description">Selected from your weakest observed category and current difficulty fit.</p>
               <div className="meta-row" style={{ marginTop: 12 }}><span className="meta-chip">{recommended.category}</span><span className="meta-chip">{recommended.difficulty}</span></div>
               <Link className="button button--wide" href={`/case/${recommended.id}`} style={{ marginTop: 15 }}>Train this case <ArrowRight size={15} /></Link>
             </section>
@@ -223,14 +219,11 @@ export function ProfileView() {
           <section className="content-section" aria-labelledby="moderation-heading">
             <div className="content-section__header">
               <div>
-                <h2 className="section-title" id="moderation-heading">Local moderation queue</h2>
-                <p className="section-description">
-                  Report cases from the feed, then remove flagged content from this browser-only demo.
-                </p>
+                <h2 className="section-title" id="moderation-heading">Reported cases</h2>
               </div>
             </div>
             {moderationItems.length === 0 ? (
-              <p className="muted">No reports yet. Use Report on a case to flag copyright or other concerns.</p>
+              <p className="muted">No reports yet.</p>
             ) : (
               <ul className="moderation-list">
                 {moderationItems.map((item) => (
@@ -275,21 +268,12 @@ export function ProfileView() {
                 ))}
               </ul>
             )}
-            {openReports.length > 0 && (
-              <div className="permission-notice" style={{ marginTop: 14 }} role="note">
-                <CircleAlert aria-hidden="true" size={15} />
-                <span>
-                  Copyright and rights reports are local prototypes only. Removing content hides the
-                  case from this browser&apos;s feed; it does not contact a rights holder or platform team.
-                </span>
-              </div>
-            )}
           </section>
 
           <details className="settings-panel">
             <summary><Settings aria-hidden="true" size={16} /> Profile settings</summary>
             <div className="settings-panel__body">
-              <p>Reset all browser-local answers, saves, comments, reports, and drafts to Jordan Lee’s seeded demonstration baseline.</p>
+              <p>Reset answers, saves, and local drafts on this device.</p>
               <button className="button button--danger button--wide" type="button" onClick={reset}><RotateCcw aria-hidden="true" size={15} /> Reset demo data</button>
             </div>
           </details>
@@ -322,9 +306,10 @@ function MetricCard({
 }
 
 function CalibrationPlot({ answers }: { answers: readonly UserAnswer[] }) {
+  const scoredAnswers = answers.map(getScoredAnswer);
   const buckets = [50, 60, 70, 80, 90, 100].map((floor, index) => {
     const ceiling = index === 5 ? 101 : floor + 10;
-    const matching = answers.filter((answer) => answer.confidence >= floor && answer.confidence < ceiling);
+    const matching = scoredAnswers.filter((answer) => answer.confidence >= floor && answer.confidence < ceiling);
     const aligned = matching.filter((answer) => answerMatches(answer, cases.find((item) => item.id === answer.caseId))).length;
     return { floor, accuracy: matching.length ? Math.round((aligned / matching.length) * 100) : 0, count: matching.length };
   });

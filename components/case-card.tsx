@@ -11,19 +11,30 @@ import {
   CircleAlert,
   Clock3,
   GitCompareArrows,
-  LockKeyhole,
+  LoaderCircle,
+  PencilLine,
+  RotateCcw,
   ShieldQuestion,
   Sparkles,
   X,
   XCircle,
 } from "lucide-react";
 import { cases } from "@/data/cases";
-import { findTeachingContrast, rankPersonalizedCases } from "@/lib/algorithms";
+import { rankPersonalizedCases } from "@/lib/algorithms";
+import {
+  createDecisionDraft,
+  createUserAnswer,
+  getInitialAttempt,
+  hasDecisionDraftChanged,
+  isDecisionDraftComplete,
+  type DecisionDraft,
+} from "@/lib/decision-draft";
 import type { OfficiatingCase, UserAnswer } from "@/lib/types";
-import { useDemo } from "@/context/demo-context";
+import { useDemo, type SubmitAnswerResult } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
 import { CaseVideo } from "@/components/case-video";
 import { DistributionBars } from "@/components/distribution-bars";
+import { PublisherLink, PublisherNameLink } from "@/components/publisher-link";
 import { SaveButton, ShareButton } from "@/components/case-actions";
 import { StatusBadge } from "@/components/status-badge";
 
@@ -51,19 +62,9 @@ export function CaseCard({
 }) {
   const { answers, submitAnswer } = useDemo();
   const { showToast } = useToast();
-  const submitted = answers[scenario.id];
-  const [selectedOptionId, setSelectedOptionId] = useState("");
-  const [confidence, setConfidence] = useState(70);
-  const [selectedFactorKeys, setSelectedFactorKeys] = useState<string[]>([]);
-  const [attempted, setAttempted] = useState(false);
-  const firstDecisionRef = useRef<HTMLInputElement>(null);
-  const firstFactorRef = useRef<HTMLInputElement>(null);
+  const savedAnswer = answers[scenario.id];
   const resultRef = useRef<HTMLElement>(null);
 
-  const contrast = useMemo(
-    () => findTeachingContrast(scenario, cases.filter((item) => item.id !== scenario.id)),
-    [scenario],
-  );
   const nextRanked = useMemo(
     () =>
       rankPersonalizedCases(cases, Object.values(answers), {
@@ -72,40 +73,38 @@ export function CaseCard({
     [answers, scenario.id],
   );
 
-  const handleFactor = (key: string, checked: boolean) => {
-    setSelectedFactorKeys((current) =>
-      checked ? [...new Set([...current, key])] : current.filter((item) => item !== key),
+  const saveDecision = async (draft: DecisionDraft): Promise<SubmitAnswerResult> => {
+    const wasRevision = Boolean(savedAnswer);
+    const answer = createUserAnswer(
+      scenario.id,
+      draft,
+      new Date().toISOString(),
+      savedAnswer,
     );
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (submitted) return;
-    setAttempted(true);
-    if (!selectedOptionId || selectedFactorKeys.length === 0) {
-      requestAnimationFrame(() => {
-        if (!selectedOptionId) firstDecisionRef.current?.focus();
-        else firstFactorRef.current?.focus();
-      });
-      return;
+    const result = await submitAnswer(answer);
+    if (result === "error") {
+      showToast("We couldn't save your call. Your changes are still here.", "info");
+      return result;
     }
+    if (result !== "saved") return result;
 
-    const answer: UserAnswer = {
-      caseId: scenario.id,
-      selectedOptionId,
-      confidence,
-      selectedFactorKeys,
-      answeredAt: new Date().toISOString(),
-    };
-    onSubmitted?.(scenario.id);
-    submitAnswer(answer);
-    showToast("Call submitted. The evidence is now revealed.", "success");
+    if (!wasRevision) onSubmitted?.(scenario.id);
+    showToast(
+      wasRevision ? "Your call was updated." : "Call submitted. The evidence is now revealed.",
+      "success",
+    );
     window.requestAnimationFrame(() => resultRef.current?.focus());
+    return result;
   };
 
-  const lockedOption = submitted?.selectedOptionId ?? selectedOptionId;
-  const lockedConfidence = submitted?.confidence ?? confidence;
-  const lockedFactors = submitted?.selectedFactorKeys ?? selectedFactorKeys;
+  const answerVersion = savedAnswer
+    ? [
+        savedAnswer.answeredAt,
+        savedAnswer.selectedOptionId,
+        savedAnswer.confidence,
+        [...savedAnswer.selectedFactorKeys].sort().join(","),
+      ].join(":")
+    : "unanswered";
 
   return (
     <article
@@ -114,18 +113,18 @@ export function CaseCard({
       aria-labelledby={`case-${scenario.id}-title`}
     >
       <header className="case-card__header">
-        <span className="avatar" aria-hidden="true">
-          {scenario.publisher.avatarInitials}
-        </span>
-        <div className="publisher">
-          <div className="publisher__name">
-            {scenario.publisher.displayName}
-            {scenario.publisher.isVerified && (
-              <BadgeCheck className="verified-icon" aria-label="Verified referee" size={15} />
-            )}
-          </div>
-          <div className="publisher__meta">
-            {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+        <div className="publisher-row">
+          <PublisherLink publisher={scenario.publisher} />
+          <div className="publisher">
+            <PublisherNameLink className="publisher__name" publisher={scenario.publisher}>
+              {scenario.publisher.displayName}
+              {scenario.publisher.isVerified && (
+                <BadgeCheck className="verified-icon" aria-label="Verified referee" size={15} />
+              )}
+            </PublisherNameLink>
+            <div className="publisher__meta">
+              {scenario.publisher.organization ?? "Independent contributor"} · {formatPublishedAt(scenario.publishedAt)}
+            </div>
           </div>
         </div>
         <div className="case-card__actions">
@@ -155,126 +154,18 @@ export function CaseCard({
           </div>
         </div>
 
-        <form className="decision-form" onSubmit={handleSubmit} noValidate>
-          <fieldset
-            aria-describedby={attempted && !selectedOptionId && !submitted ? `decision-${scenario.id}-error` : undefined}
-            aria-invalid={attempted && !selectedOptionId && !submitted ? true : undefined}
-            className="choice-group"
-          >
-            <legend>1 · Make your decision</legend>
-            <div className="choice-grid">
-              {scenario.answerOptions.map((option, index) => (
-                <label className="choice-option" key={option.id} title={option.description}>
-                  <input
-                    aria-describedby={attempted && !selectedOptionId && !submitted ? `decision-${scenario.id}-error` : undefined}
-                    aria-invalid={attempted && !selectedOptionId && !submitted ? true : undefined}
-                    className="sr-only"
-                    type="radio"
-                    name={`decision-${scenario.id}`}
-                    value={option.id}
-                    checked={lockedOption === option.id}
-                    disabled={Boolean(submitted)}
-                    onChange={() => setSelectedOptionId(option.id)}
-                    ref={index === 0 ? firstDecisionRef : undefined}
-                  />
-                  <span className="choice-option__control" aria-hidden="true" />
-                  <span>{option.label}</span>
-                </label>
-              ))}
-            </div>
-            {attempted && !selectedOptionId && !submitted && (
-              <p className="field-error" id={`decision-${scenario.id}-error`} role="alert">
-                <CircleAlert aria-hidden="true" size={14} /> Choose one decision before revealing the evidence.
-              </p>
-            )}
-          </fieldset>
-
-          <div className="confidence-row">
-            <label htmlFor={`confidence-${scenario.id}`}>2 · Your confidence</label>
-            <output className="confidence-value" htmlFor={`confidence-${scenario.id}`}>
-              {lockedConfidence}%
-            </output>
-            <input
-              className="range-input"
-              id={`confidence-${scenario.id}`}
-              type="range"
-              min="50"
-              max="100"
-              step="1"
-              value={lockedConfidence}
-              disabled={Boolean(submitted)}
-              onChange={(event) => setConfidence(Number(event.target.value))}
-              style={{ "--range-progress": `${(lockedConfidence - 50) * 2}%` } as CSSProperties}
-            />
-            <div className="range-labels" aria-hidden="true">
-              <span>50% unsure</span>
-              <span>100% certain</span>
-            </div>
-          </div>
-
-          <fieldset
-            aria-describedby={attempted && selectedFactorKeys.length === 0 && !submitted ? `factors-${scenario.id}-error` : undefined}
-            aria-invalid={attempted && selectedFactorKeys.length === 0 && !submitted ? true : undefined}
-            className="factor-group"
-          >
-            <legend>3 · What influenced your call?</legend>
-            <div className="factor-grid">
-              {scenario.factors.map((factor, index) => (
-                <label className="factor-option" key={factor.key} title={factor.explanation}>
-                  <input
-                    aria-describedby={attempted && selectedFactorKeys.length === 0 && !submitted ? `factors-${scenario.id}-error` : undefined}
-                    aria-invalid={attempted && selectedFactorKeys.length === 0 && !submitted ? true : undefined}
-                    className="sr-only"
-                    type="checkbox"
-                    name={`factor-${scenario.id}`}
-                    value={factor.key}
-                    checked={lockedFactors.includes(factor.key)}
-                    disabled={Boolean(submitted)}
-                    onChange={(event) => handleFactor(factor.key, event.target.checked)}
-                    ref={index === 0 ? firstFactorRef : undefined}
-                  />
-                  <span className="factor-check" aria-hidden="true">
-                    <Check size={10} />
-                  </span>
-                  <span>{factor.label}</span>
-                </label>
-              ))}
-            </div>
-            {attempted && selectedFactorKeys.length === 0 && !submitted && (
-              <p className="field-error" id={`factors-${scenario.id}-error`} role="alert">
-                <CircleAlert aria-hidden="true" size={14} /> Select at least one reasoning factor.
-              </p>
-            )}
-          </fieldset>
-
-          <div className="decision-actions">
-            <p className="decision-privacy">
-              <LockKeyhole aria-hidden="true" size={13} />{
-                submitted ? "Submitted response is locked." : "Results stay hidden until you submit."
-              }
-            </p>
-            <button className="button" type="submit" disabled={Boolean(submitted)}>
-              {submitted ? (
-                <><CheckCircle2 aria-hidden="true" size={16} /> Response locked</>
-              ) : (
-                <>Reveal the evidence <ArrowRight aria-hidden="true" size={16} /></>
-              )}
-            </button>
-          </div>
-        </form>
-
-        {!submitted && (
-          <Link className="text-link" href={`/case/${scenario.id}`}>
-            Open full case context <ArrowRight aria-hidden="true" size={14} />
-          </Link>
-        )}
+        <DecisionForm
+          key={`${scenario.id}:${answerVersion}`}
+          scenario={scenario}
+          savedAnswer={savedAnswer}
+          onSave={saveDecision}
+        />
       </div>
 
-      {submitted && (
+      {savedAnswer && (
         <ResultPanel
           scenario={scenario}
-          answer={submitted}
-          contrast={contrast}
+          answer={savedAnswer}
           nextCase={nextRanked?.case}
           nextReason={nextRanked?.reason}
           resultRef={resultRef}
@@ -284,22 +175,224 @@ export function CaseCard({
   );
 }
 
+function DecisionForm({
+  scenario,
+  savedAnswer,
+  onSave,
+}: {
+  scenario: OfficiatingCase;
+  savedAnswer?: UserAnswer;
+  onSave: (draft: DecisionDraft) => Promise<SubmitAnswerResult>;
+}) {
+  const initialDraft = createDecisionDraft(savedAnswer);
+  const [selectedOptionId, setSelectedOptionId] = useState(initialDraft.selectedOptionId);
+  const [confidence, setConfidence] = useState(initialDraft.confidence);
+  const [selectedFactorKeys, setSelectedFactorKeys] = useState<string[]>([
+    ...initialDraft.selectedFactorKeys,
+  ]);
+  const [attempted, setAttempted] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const firstDecisionRef = useRef<HTMLInputElement>(null);
+  const firstFactorRef = useRef<HTMLInputElement>(null);
+  const draft: DecisionDraft = { selectedOptionId, confidence, selectedFactorKeys };
+  const hasChanges = hasDecisionDraftChanged(savedAnswer, draft);
+  const decisionMissing = attempted && !selectedOptionId;
+  const factorsMissing = attempted && selectedFactorKeys.length === 0;
+
+  const handleFactor = (key: string, checked: boolean) => {
+    setSelectedFactorKeys((current) =>
+      checked ? [...new Set([...current, key])] : current.filter((item) => item !== key),
+    );
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAttempted(true);
+    if (!isDecisionDraftComplete(draft)) {
+      requestAnimationFrame(() => {
+        if (!selectedOptionId) firstDecisionRef.current?.focus();
+        else firstFactorRef.current?.focus();
+      });
+      return;
+    }
+    setIsSaving(true);
+    const result = await onSave(draft);
+    if (result !== "saved") setIsSaving(false);
+  };
+
+  const discardChanges = () => {
+    const current = createDecisionDraft(savedAnswer);
+    setSelectedOptionId(current.selectedOptionId);
+    setConfidence(current.confidence);
+    setSelectedFactorKeys([...current.selectedFactorKeys]);
+    setAttempted(false);
+    requestAnimationFrame(() =>
+      formRef.current
+        ?.querySelector<HTMLInputElement>('input[type="radio"]:checked')
+        ?.focus(),
+    );
+  };
+
+  return (
+    <form
+      className="decision-form"
+      onSubmit={handleSubmit}
+      noValidate
+      ref={formRef}
+      aria-busy={isSaving || undefined}
+    >
+      <fieldset
+        aria-describedby={decisionMissing ? `decision-${scenario.id}-error` : undefined}
+        aria-invalid={decisionMissing || undefined}
+        className="choice-group"
+      >
+        <legend>1 · Make your decision</legend>
+        <div className="choice-grid">
+          {scenario.answerOptions.map((option, index) => (
+            <label className="choice-option" key={option.id} title={option.description}>
+              <input
+                aria-describedby={decisionMissing ? `decision-${scenario.id}-error` : undefined}
+                className="sr-only"
+                type="radio"
+                name={`decision-${scenario.id}`}
+                value={option.id}
+                checked={selectedOptionId === option.id}
+                disabled={isSaving}
+                onChange={() => setSelectedOptionId(option.id)}
+                ref={index === 0 ? firstDecisionRef : undefined}
+              />
+              <span className="choice-option__control" aria-hidden="true" />
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </div>
+        {decisionMissing && (
+          <p className="field-error" id={`decision-${scenario.id}-error`} role="alert">
+            <CircleAlert aria-hidden="true" size={14} /> Choose one decision before revealing the evidence.
+          </p>
+        )}
+      </fieldset>
+
+      <div className="confidence-row">
+        <label htmlFor={`confidence-${scenario.id}`}>2 · Your confidence</label>
+        <output className="confidence-value" htmlFor={`confidence-${scenario.id}`}>
+          {confidence}%
+        </output>
+        <input
+          className="range-input"
+          id={`confidence-${scenario.id}`}
+          type="range"
+          min="50"
+          max="100"
+          step="1"
+          value={confidence}
+          disabled={isSaving}
+          onChange={(event) => setConfidence(Number(event.target.value))}
+          style={{ "--range-progress": `${(confidence - 50) * 2}%` } as CSSProperties}
+        />
+        <div className="range-labels" aria-hidden="true">
+          <span>50% unsure</span>
+          <span>100% certain</span>
+        </div>
+      </div>
+
+      <fieldset
+        aria-describedby={factorsMissing ? `factors-${scenario.id}-error` : undefined}
+        aria-invalid={factorsMissing || undefined}
+        className="factor-group"
+      >
+        <legend>3 · What influenced your call?</legend>
+        <div className="factor-grid">
+          {scenario.factors.map((factor, index) => (
+            <label className="factor-option" key={factor.key} title={factor.explanation}>
+              <input
+                aria-describedby={factorsMissing ? `factors-${scenario.id}-error` : undefined}
+                aria-invalid={factorsMissing || undefined}
+                className="sr-only"
+                type="checkbox"
+                name={`factor-${scenario.id}`}
+                value={factor.key}
+                checked={selectedFactorKeys.includes(factor.key)}
+                disabled={isSaving}
+                onChange={(event) => handleFactor(factor.key, event.target.checked)}
+                ref={index === 0 ? firstFactorRef : undefined}
+              />
+              <span className="factor-check" aria-hidden="true">
+                <Check size={10} />
+              </span>
+              <span>{factor.label}</span>
+            </label>
+          ))}
+        </div>
+        {factorsMissing && (
+          <p className="field-error" id={`factors-${scenario.id}-error`} role="alert">
+            <CircleAlert aria-hidden="true" size={14} /> Select at least one reasoning factor.
+          </p>
+        )}
+      </fieldset>
+
+      <div className="decision-actions">
+        <p className="decision-privacy" aria-live="polite">
+          <PencilLine aria-hidden="true" size={13} />
+          {isSaving
+            ? "Saving…"
+            : savedAnswer
+            ? hasChanges
+              ? "Unsaved changes"
+              : "You can revise anytime"
+            : "Submit to reveal the evidence"}
+        </p>
+        <div className="decision-action-buttons">
+          {savedAnswer && hasChanges && (
+            <button
+              className="button button--ghost"
+              type="button"
+              onClick={discardChanges}
+              disabled={isSaving}
+            >
+              <RotateCcw aria-hidden="true" size={15} /> Discard changes
+            </button>
+          )}
+          <button
+            className="button"
+            type="submit"
+            disabled={isSaving || (Boolean(savedAnswer) && !hasChanges)}
+          >
+            {isSaving ? (
+              <><LoaderCircle className="spin" aria-hidden="true" size={16} /> Saving…</>
+            ) : savedAnswer ? (
+              hasChanges ? (
+                <>Update your call <ArrowRight aria-hidden="true" size={16} /></>
+              ) : (
+                <><CheckCircle2 aria-hidden="true" size={16} /> Call is current</>
+              )
+            ) : (
+              <>Reveal the evidence <ArrowRight aria-hidden="true" size={16} /></>
+            )}
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
 function ResultPanel({
   scenario,
   answer,
-  contrast,
   nextCase,
   nextReason,
   resultRef,
 }: {
   scenario: OfficiatingCase;
   answer: UserAnswer;
-  contrast: ReturnType<typeof findTeachingContrast>;
   nextCase?: OfficiatingCase;
   nextReason?: string;
   resultRef: RefObject<HTMLElement | null>;
 }) {
   const aligned = answer.selectedOptionId === scenario.recommendedDecision;
+  const initialAttempt = getInitialAttempt(answer);
+  const wasRevised = (answer.revisionCount ?? 0) > 0;
   const openDiscussion = scenario.scenarioStatus === "OPEN_DISCUSSION";
   const expertSupported = scenario.factors.filter((factor) => factor.supportsRecommendation);
   const missed =
@@ -316,7 +409,6 @@ function ResultPanel({
   return (
     <section
       className="result-panel"
-      aria-live="polite"
       aria-labelledby={`result-${scenario.id}-title`}
       ref={resultRef}
       tabIndex={-1}
@@ -335,29 +427,39 @@ function ResultPanel({
           <h3 id={`result-${scenario.id}-title`}>
             {openDiscussion
               ? aligned
-                ? "Your call aligns with the demo recommendation"
-                : "Your call adds a different interpretation"
+                ? "Same call as the demo desk"
+                : "Different take from the demo desk"
               : aligned
-                ? "Your call matched the reviewed decision"
-                : "This case challenges your weighting"}
+                ? "You matched the reviewed call"
+                : "Worth another look at the factors"}
           </h3>
-          <p>
-            {openDiscussion
-              ? "This is authored open-discussion material, not an official correctness judgment."
-              : "Compare your confidence and factors with the qualified-review pattern."}
-          </p>
+          {wasRevised ? (
+            <p>Your first attempt remains the calibration record.</p>
+          ) : null}
         </div>
       </div>
 
       <div className="result-summary-grid">
         <div className="summary-stat">
-          <span>Your call</span>
+          <span>Current call</span>
           <strong>{getOptionLabel(scenario, answer.selectedOptionId)}</strong>
         </div>
         <div className="summary-stat">
-          <span>Your confidence</span>
+          <span>Current confidence</span>
           <strong className="tabular">{answer.confidence}%</strong>
         </div>
+        {wasRevised && (
+          <>
+            <div className="summary-stat">
+              <span>First attempt</span>
+              <strong>{getOptionLabel(scenario, initialAttempt.selectedOptionId)}</strong>
+            </div>
+            <div className="summary-stat">
+              <span>First confidence</span>
+              <strong className="tabular">{initialAttempt.confidence}%</strong>
+            </div>
+          </>
+        )}
         <div className="summary-stat">
           <span>Demo recommendation</span>
           <strong>{getOptionLabel(scenario, scenario.recommendedDecision)}</strong>
@@ -370,7 +472,7 @@ function ResultPanel({
 
       <div className="expert-explanation">
         <span className="expert-explanation__label">
-          <Sparkles aria-hidden="true" size={14} /> Authored teaching rationale
+          <Sparkles aria-hidden="true" size={14} /> Why the demo lands here
         </span>
         <p>{scenario.expertExplanation}</p>
         <div className="rule-citation">
@@ -410,10 +512,7 @@ function ResultPanel({
 
       <div className="distribution-section">
         <div>
-          <h3 className="section-title">How the seeded groups responded</h3>
-          <p className="section-description">
-            Public patterns are shown separately from reviewer patterns and never treated as authority.
-          </p>
+          <h3 className="section-title">How others responded</h3>
         </div>
         <div className="distribution-grid">
           <DistributionBars
@@ -430,17 +529,10 @@ function ResultPanel({
         </div>
       </div>
 
-      <div className="demo-notice">
-        <CircleAlert aria-hidden="true" size={15} />
-        <span>{scenario.reviewDisclaimer}</span>
-      </div>
-
       <div className="button-row">
-        {contrast && (
-          <Link className="button button--secondary" href={`/compare?a=${scenario.id}&b=${contrast.case.id}`}>
-            <GitCompareArrows aria-hidden="true" size={16} /> Compare a teaching contrast
-          </Link>
-        )}
+        <Link className="button button--secondary" href={`/compare?case=${scenario.id}`}>
+          <GitCompareArrows aria-hidden="true" size={16} /> Compare match vs expert
+        </Link>
         <Link className="button button--ghost" href={`/case/${scenario.id}`}>
           Open discussion <ArrowRight aria-hidden="true" size={16} />
         </Link>

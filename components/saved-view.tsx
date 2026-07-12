@@ -11,11 +11,12 @@ import {
   Search,
   SearchX,
 } from "lucide-react";
+import { CaseVideo } from "@/components/case-video";
 import { getStatusLabel, StatusBadge } from "@/components/status-badge";
 import { useToast } from "@/components/toast-provider";
 import { useDemo } from "@/context/demo-context";
 import { cases } from "@/data/cases";
-import type { Difficulty, OfficiatingCase, ScenarioStatus } from "@/lib/types";
+import type { Difficulty, MediaKind, OfficiatingCase, ScenarioStatus } from "@/lib/types";
 
 type ViewMode = "grid" | "list";
 
@@ -39,16 +40,19 @@ function titleCase(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+function getMediaKind(scenario: OfficiatingCase): MediaKind {
+  if (scenario.mediaKind) return scenario.mediaKind;
+  if (scenario.videoSrc) return "video";
+  if (scenario.imageSrc || scenario.posterSrc) return "image";
+  return "text";
+}
+
 function SavedSkeleton() {
   return (
     <div className="page-shell" aria-busy="true">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Your review queue</p>
           <h1 className="page-title">Saved cases</h1>
-          <p className="page-description">
-            Keep difficult decisions close, then return when you are ready to train.
-          </p>
         </div>
       </header>
 
@@ -85,9 +89,16 @@ function SavedCaseCard({
   item: OfficiatingCase;
   onRemove: (item: OfficiatingCase) => void;
 }) {
+  const mediaKind = getMediaKind(item);
+  const hasMedia = mediaKind !== "text";
+
   return (
-    <article className="saved-case-card">
-      <div className="saved-case-card__poster" aria-hidden="true" />
+    <article className="saved-case-card" data-media={mediaKind}>
+      {hasMedia && (
+        <div className="saved-case-card__poster">
+          <CaseVideo scenario={item} compact />
+        </div>
+      )}
       <div className="saved-case-card__body">
         <div className="meta-row">
           <StatusBadge status={item.scenarioStatus} />
@@ -99,8 +110,9 @@ function SavedCaseCard({
         </div>
 
         <div>
-          <h2>{item.title}</h2>
-          <p>{item.prompt}</p>
+          <p className="saved-case-card__title">{item.title}</p>
+          <h2>{item.prompt}</h2>
+          <p>{item.description}</p>
         </div>
 
         <footer className="saved-case-card__footer">
@@ -137,9 +149,15 @@ export function SavedView() {
   const [status, setStatus] = useState<"" | ScenarioStatus>("");
 
   const savedCases = useMemo(() => {
-    const savedIds = new Set(savedCaseIds);
     const removedIds = new Set(removedCaseIds);
-    return cases.filter((item) => savedIds.has(item.id) && !removedIds.has(item.id));
+    const byId = new Map(cases.map((item) => [item.id, item]));
+    // Resolve in save order (newest first) so a just-saved case is visible
+    // at the top of the Saved tab instead of catalog order.
+    return [...savedCaseIds]
+      .reverse()
+      .filter((id) => !removedIds.has(id))
+      .map((id) => byId.get(id))
+      .filter((item): item is (typeof cases)[number] => Boolean(item));
   }, [removedCaseIds, savedCaseIds]);
 
   const filteredCases = useMemo(() => {
@@ -197,16 +215,8 @@ export function SavedView() {
     <div className="page-shell">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Your review queue</p>
           <h1 className="page-title">Saved cases</h1>
-          <p className="page-description">
-            Search your saved decisions, narrow the queue, and continue training from the
-            exact case you left behind.
-          </p>
         </div>
-        <span className="meta-chip tabular">
-          {filteredCases.length} of {savedCases.length} shown
-        </span>
       </header>
 
       <section className="saved-toolbar" aria-label="Saved case controls">
@@ -318,8 +328,7 @@ export function SavedView() {
               No saved cases yet
             </h2>
             <p>
-              Save a case from the feed or its discussion page to build a focused review
-              queue. Your choices stay on this device in the demo.
+              Save a case from the feed to build a review queue.
             </p>
             <Link className="button" href="/">
               Browse training cases <ArrowRight aria-hidden="true" size={16} />

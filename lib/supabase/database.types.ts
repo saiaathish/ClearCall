@@ -325,6 +325,11 @@ export type Database = {
           case_id: string
           confidence: number
           id: string
+          initial_answered_at: string | null
+          initial_confidence: number | null
+          initial_selected_factor_keys: string[] | null
+          initial_selected_option_id: string | null
+          revision_count: number
           selected_factor_keys: string[]
           selected_option_id: string
           user_id: string
@@ -334,6 +339,11 @@ export type Database = {
           case_id: string
           confidence: number
           id?: string
+          initial_answered_at?: string | null
+          initial_confidence?: number | null
+          initial_selected_factor_keys?: string[] | null
+          initial_selected_option_id?: string | null
+          revision_count?: number
           selected_factor_keys?: string[]
           selected_option_id: string
           user_id: string
@@ -343,6 +353,11 @@ export type Database = {
           case_id?: string
           confidence?: number
           id?: string
+          initial_answered_at?: string | null
+          initial_confidence?: number | null
+          initial_selected_factor_keys?: string[] | null
+          initial_selected_option_id?: string | null
+          revision_count?: number
           selected_factor_keys?: string[]
           selected_option_id?: string
           user_id?: string

@@ -18,7 +18,6 @@ export function DistributionBars({
     >
       <div className="distribution-card__header">
         <h4>{distribution.label}</h4>
-        <span>{distribution.isSynthetic ? "Seeded demo" : "Live responses"}</span>
       </div>
       <ul className="distribution-list">
         {options.map((option) => {

@@ -22,20 +22,32 @@ import type {
 import { createClient } from "@/lib/supabase/client";
 import {
   addCommentRemote,
+  clearDemoState,
   completeOnboardingRemote,
+  emptyGuestState,
   fetchDemoState,
   initialDemoState,
   publishDraftRemote,
+  readDemoSessionPreference,
+  readDemoState,
   submitAnswerRemote,
   toggleSavedRemote,
+  writeDemoSessionPreference,
+  writeDemoState,
   type DemoState,
 } from "@/lib/storage";
 import { persistReputationScore } from "@/lib/reputation";
 
+export type SubmitAnswerResult = "saved" | "auth-required" | "error";
+
 interface DemoContextValue extends DemoState {
   hydrated: boolean;
   user: User | null;
-  submitAnswer: (answer: UserAnswer) => void;
+  /** Local Jordan Lee demo session (not a Supabase user). */
+  isDemoSession: boolean;
+  /** Real account or active local demo. */
+  isSignedIn: boolean;
+  submitAnswer: (answer: UserAnswer) => Promise<SubmitAnswerResult>;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
   publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
@@ -48,6 +60,7 @@ interface DemoContextValue extends DemoState {
   restoreFlaggedCase: (caseId: string) => void;
   completeOnboarding: () => void;
   resetDemo: () => void;
+  enterDemo: () => void;
   signOut: () => Promise<void>;
 }
 
@@ -57,29 +70,63 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [state, setState] = useState<DemoState>(initialDemoState);
+  const [isDemoSession, setIsDemoSession] = useState(() =>
+    typeof window === "undefined" ? true : readDemoSessionPreference(),
+  );
+  const [state, setState] = useState<DemoState>(() => {
+    if (typeof window === "undefined") return initialDemoState;
+    return readDemoSessionPreference() ? readDemoState() : emptyGuestState;
+  });
   const [hydrated, setHydrated] = useState(false);
-  // Keep a ref in sync with state so imperative handlers (toggleSaved) can
-  // compute the next value without depending on stale closures.
+  // Keep refs in sync so imperative handlers can read the latest values
+  // without depending on stale closures.
   const stateRef = useRef(state);
+  const userRef = useRef(user);
+  /** Saves toggled while a remote fetch is in flight, keyed by case id. */
+  const pendingSavedRef = useRef<Map<string, boolean>>(new Map());
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  /** Persist local demo/guest progress. Signed-in users use Supabase instead. */
+  const commitLocalState = useCallback((producer: (current: DemoState) => DemoState) => {
+    setState((current) => {
+      const next = producer(current);
+      if (!userRef.current) writeDemoState(next);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     let active = true;
 
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
-      setUser(data.session?.user ?? null);
-      if (!data.session?.user) setHydrated(true);
+      const nextUser = data.session?.user ?? null;
+      setUser(nextUser);
+      if (nextUser) {
+        setIsDemoSession(false);
+        writeDemoSessionPreference(false);
+      } else {
+        setHydrated(true);
+      }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (!session?.user) {
-        setState(initialDemoState);
+      const nextUser = session?.user ?? null;
+      setUser(nextUser);
+      if (!nextUser) {
+        const preferDemo = readDemoSessionPreference();
+        setIsDemoSession(preferDemo);
+        // Restore persisted demo progress instead of wiping saves/answers.
+        setState(preferDemo ? readDemoState() : emptyGuestState);
         setHydrated(true);
+      } else {
+        setIsDemoSession(false);
+        writeDemoSessionPreference(false);
       }
     });
 
@@ -94,7 +141,24 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     let active = true;
     fetchDemoState(supabase, user.id).then((next) => {
       if (!active) return;
-      setState(next);
+      setState((current) => {
+        let savedCaseIds = [...next.savedCaseIds];
+        for (const [caseId, willSave] of pendingSavedRef.current) {
+          if (willSave) {
+            if (!savedCaseIds.includes(caseId)) savedCaseIds.push(caseId);
+          } else {
+            savedCaseIds = savedCaseIds.filter((id) => id !== caseId);
+          }
+        }
+        pendingSavedRef.current.clear();
+        return {
+          ...next,
+          savedCaseIds,
+          // Reports / removals stay browser-local in this prototype.
+          reports: current.reports,
+          removedCaseIds: current.removedCaseIds,
+        };
+      });
       setHydrated(true);
     });
     return () => {
@@ -102,71 +166,111 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     };
   }, [supabase, user]);
 
+  const isSignedIn = Boolean(user) || isDemoSession;
+
   const requireAuth = useCallback(() => {
-    if (user) return true;
+    if (user || isDemoSession) return true;
     router.push("/auth");
     return false;
-  }, [router, user]);
+  }, [isDemoSession, router, user]);
 
   const submitAnswer = useCallback(
-    (answer: UserAnswer) => {
-      if (!requireAuth() || !user) return;
+    async (answer: UserAnswer): Promise<SubmitAnswerResult> => {
+      if (!requireAuth()) return "auth-required";
       const isNewAnswer = !stateRef.current.answers[answer.caseId];
-      setState((current) => ({
+      const submittedUserId = user?.id;
+      if (user) {
+        try {
+          await submitAnswerRemote(supabase, user.id, answer, isNewAnswer);
+        } catch {
+          return "error";
+        }
+      }
+      if (submittedUserId && userRef.current?.id !== submittedUserId) return "error";
+      commitLocalState((current) => ({
         ...current,
         answers: { ...current.answers, [answer.caseId]: answer },
         currentStreak: isNewAnswer ? current.currentStreak + 1 : current.currentStreak,
       }));
-      void submitAnswerRemote(supabase, user.id, answer, isNewAnswer).then(() =>
-        persistReputationScore(supabase),
-      );
+      if (user) void persistReputationScore(supabase);
+      return "saved";
     },
-    [requireAuth, supabase, user],
+    [commitLocalState, requireAuth, supabase, user],
   );
 
   const toggleSaved = useCallback(
     (caseId: string) => {
-      if (!requireAuth() || !user) return false;
+      if (!requireAuth()) return false;
       const willSave = !stateRef.current.savedCaseIds.includes(caseId);
-      setState((current) => ({
+      if (userRef.current) pendingSavedRef.current.set(caseId, willSave);
+      commitLocalState((current) => ({
         ...current,
         savedCaseIds: willSave
           ? [...current.savedCaseIds, caseId]
           : current.savedCaseIds.filter((id) => id !== caseId),
       }));
-      void toggleSavedRemote(supabase, user.id, caseId, willSave);
+      if (user) {
+        const signedInUserId = user.id;
+        void toggleSavedRemote(supabase, signedInUserId, caseId, willSave).catch(() => {
+          if (userRef.current?.id !== signedInUserId) return;
+          pendingSavedRef.current.delete(caseId);
+          commitLocalState((current) => ({
+            ...current,
+            savedCaseIds: willSave
+              ? current.savedCaseIds.filter((id) => id !== caseId)
+              : current.savedCaseIds.includes(caseId)
+                ? current.savedCaseIds
+                : [...current.savedCaseIds, caseId],
+          }));
+        });
+      }
       return willSave;
     },
-    [requireAuth, supabase, user],
+    [commitLocalState, requireAuth, supabase, user],
   );
 
   const addComment = useCallback(
     (caseId: string, comment: DiscussionResponse) => {
-      if (!requireAuth() || !user) return;
-      setState((current) => ({
+      if (!requireAuth()) return;
+      commitLocalState((current) => ({
         ...current,
         temporaryComments: {
           ...current.temporaryComments,
           [caseId]: [...(current.temporaryComments[caseId] ?? []), comment],
         },
       }));
+      if (!user) return;
       void addCommentRemote(supabase, user.id, caseId, comment).then((saved) => {
-        if (saved) setState((current) => ({ ...current, temporaryComments: {
-          ...current.temporaryComments,
-          [caseId]: (current.temporaryComments[caseId] ?? []).map((item) => item.id === comment.id ? saved : item),
-        }}));
+        if (saved) {
+          commitLocalState((current) => ({
+            ...current,
+            temporaryComments: {
+              ...current.temporaryComments,
+              [caseId]: (current.temporaryComments[caseId] ?? []).map((item) =>
+                item.id === comment.id ? saved : item,
+              ),
+            },
+          }));
+        }
         return persistReputationScore(supabase);
       });
     },
-    [requireAuth, supabase, user],
+    [commitLocalState, requireAuth, supabase, user],
   );
 
   const publishDraft = useCallback(
     async (draft: PublishedCaseDraft, file?: File | null) => {
-      if (!requireAuth() || !user) return false;
+      if (!requireAuth()) return false;
+      if (!user) {
+        commitLocalState((current) => ({
+          ...current,
+          publishedDrafts: [draft, ...current.publishedDrafts],
+        }));
+        return true;
+      }
       try {
         const saved = await publishDraftRemote(supabase, user.id, draft, file ?? null);
-        setState((current) => ({
+        commitLocalState((current) => ({
           ...current,
           publishedDrafts: [saved, ...current.publishedDrafts],
         }));
@@ -175,14 +279,14 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         return false;
       }
     },
-    [requireAuth, supabase, user],
+    [commitLocalState, requireAuth, supabase, user],
   );
 
   const completeOnboarding = useCallback(() => {
-    if (!requireAuth() || !user) return;
-    setState((current) => ({ ...current, onboardingComplete: true }));
-    void completeOnboardingRemote(supabase, user.id);
-  }, [requireAuth, supabase, user]);
+    if (!requireAuth()) return;
+    commitLocalState((current) => ({ ...current, onboardingComplete: true }));
+    if (user) void completeOnboardingRemote(supabase, user.id);
+  }, [commitLocalState, requireAuth, supabase, user]);
 
   const reportCase = useCallback(
     (input: { caseId: string; reason: ReportReason; details?: string }) => {
@@ -201,42 +305,66 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         status: "open",
       };
 
-      setState((current) => ({
+      commitLocalState((current) => ({
         ...current,
         reports: [report, ...current.reports],
       }));
       return report;
     },
-    [],
+    [commitLocalState],
   );
 
-  const removeFlaggedCase = useCallback((caseId: string) => {
-    setState((current) => ({
-      ...current,
-      removedCaseIds: current.removedCaseIds.includes(caseId)
-        ? current.removedCaseIds
-        : [...current.removedCaseIds, caseId],
-      reports: current.reports.map((report) =>
-        report.caseId === caseId && report.status === "open"
-          ? { ...report, status: "removed" as const }
-          : report,
-      ),
-      savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
-    }));
-  }, []);
+  const removeFlaggedCase = useCallback(
+    (caseId: string) => {
+      commitLocalState((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.includes(caseId)
+          ? current.removedCaseIds
+          : [...current.removedCaseIds, caseId],
+        reports: current.reports.map((report) =>
+          report.caseId === caseId && report.status === "open"
+            ? { ...report, status: "removed" as const }
+            : report,
+        ),
+        savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [commitLocalState],
+  );
 
-  const restoreFlaggedCase = useCallback((caseId: string) => {
-    setState((current) => ({
-      ...current,
-      removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
-    }));
-  }, []);
+  const restoreFlaggedCase = useCallback(
+    (caseId: string) => {
+      commitLocalState((current) => ({
+        ...current,
+        removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
+      }));
+    },
+    [commitLocalState],
+  );
+
+  const enterDemo = useCallback(() => {
+    writeDemoSessionPreference(true);
+    setIsDemoSession(true);
+    setState(readDemoState());
+    setHydrated(true);
+    router.push("/");
+  }, [router]);
 
   const resetDemo = useCallback(() => {
     void supabase.auth.signOut();
+    writeDemoSessionPreference(true);
+    clearDemoState();
+    writeDemoState(initialDemoState);
+    setIsDemoSession(true);
+    setState(initialDemoState);
+    setHydrated(true);
   }, [supabase]);
 
   const signOut = useCallback(async () => {
+    writeDemoSessionPreference(false);
+    setIsDemoSession(false);
+    setState(emptyGuestState);
+    setHydrated(true);
     await supabase.auth.signOut();
     router.push("/");
   }, [router, supabase]);
@@ -246,6 +374,8 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       ...state,
       hydrated,
       user,
+      isDemoSession,
+      isSignedIn,
       submitAnswer,
       toggleSaved,
       addComment,
@@ -255,12 +385,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
+      enterDemo,
       signOut,
     }),
     [
       state,
       hydrated,
       user,
+      isDemoSession,
+      isSignedIn,
       submitAnswer,
       toggleSaved,
       addComment,
@@ -270,6 +403,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
+      enterDemo,
       signOut,
     ],
   );

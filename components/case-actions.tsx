@@ -20,7 +20,12 @@ export function SaveButton({ caseId, showLabel = false }: { caseId: string; show
   const saved = savedCaseIds.includes(caseId);
 
   const handleSave = () => {
+    const wasSaved = saved;
     const didSave = toggleSaved(caseId);
+    if (didSave === wasSaved) {
+      // Auth gate blocked the toggle (guest redirected to /auth).
+      return;
+    }
     showToast(didSave ? "Case saved for later review." : "Case removed from saved.", "success");
   };
 
@@ -171,17 +176,14 @@ export function ReportButton({ caseId, showLabel = false }: { caseId: string; sh
           <header className="report-dialog__header">
             <h2 id={titleId}>Report this case</h2>
             <p id={descriptionId}>
-              Reports stay in this browser only. This prototype does not notify a live moderation team.
+              Tell us what’s wrong with this case.
             </p>
           </header>
 
           <div className="permission-notice" role="note">
             <ShieldAlert aria-hidden="true" size={16} />
             <div>
-              <strong>Copyright warning.</strong> ClearCall is for team-recorded, openly licensed, or
-              otherwise authorized footage only. Do not upload, rehost, or keep professional broadcast
-              clips without rights clearance. Flag suspected unauthorized media here so it can be
-              removed from the local demo feed.
+              <strong>Copyright.</strong> Only flag unauthorized or rights-restricted footage here.
             </div>
           </div>
 
