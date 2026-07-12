@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { cases } from "@/data/cases";
 import { referencesMedia } from "@/data/align-case-copy";
-import { VIDEO_ASSETS, scoreTagOverlap, tagsForCategory } from "@/data/media-assets";
+import {
+  VIDEO_ASSETS,
+  matchesCategory,
+  primaryTagsForCategory,
+  scoreTagOverlap,
+  tagsForCategory,
+} from "@/data/media-assets";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
@@ -12,8 +18,8 @@ describe("media relevance", () => {
     for (const item of videos) {
       expect(item.videoSrc).toMatch(/^\/media\/demo\/pitch\/pitch-\d+\.mp4$/);
       expect(item.posterSrc).toMatch(/^\/media\/demo\/pitch\/pitch-\d+\.jpg$/);
-      const clipNum = item.videoSrc!.match(/clip-(\d+)/)?.[1];
-      const posterNum = item.posterSrc!.match(/poster-(\d+)/)?.[1];
+      const clipNum = item.videoSrc!.match(/pitch-(\d+)/)?.[1];
+      const posterNum = item.posterSrc!.match(/pitch-(\d+)/)?.[1];
       expect(posterNum).toBe(clipNum);
       expect(existsSync(path.join(process.cwd(), "public", item.videoSrc!))).toBe(true);
       expect(existsSync(path.join(process.cwd(), "public", item.posterSrc!))).toBe(true);
@@ -83,6 +89,20 @@ describe("media relevance", () => {
       const video = VIDEO_ASSETS.find((asset) => asset.videoSrc === item.videoSrc);
       expect(video).toBeTruthy();
       expect(scoreTagOverlap(video!.tags, tagsForCategory(item.category))).toBeGreaterThanOrEqual(1);
+      expect(matchesCategory(video!.tags, item.category, 1)).toBe(true);
+      const primary = primaryTagsForCategory(item.category);
+      if (primary) {
+        expect(primary.some((tag) => video!.tags.includes(tag))).toBe(true);
+      }
     }
+  });
+
+  it("keeps the Celine Martin handball shot-blocker on authored still media", () => {
+    const item = cases.find((entry) => entry.id === "handball-shot-blocker");
+    expect(item).toBeTruthy();
+    expect(item!.mediaKind).toBe("image");
+    expect(item!.imageSrc).toBe("/media/cases/handball-raised-arm.png");
+    expect(item!.videoSrc).toBeNull();
+    expect(item!.prompt).toContain("outstretched arm");
   });
 });

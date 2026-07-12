@@ -19,6 +19,14 @@ function imageAt(index: number) {
   return photoAt(index);
 }
 
+function caseStill(src: string) {
+  const known = PHOTO_ASSETS.find((item) => item.src === src);
+  if (!known) {
+    throw new Error(`Missing case still: ${src}`);
+  }
+  return known;
+}
+
 /**
  * Additional catalog entries so the infinite feed has ~50 unique posts
  * across text, image, and video shapes.
@@ -292,10 +300,10 @@ export const extraCases: readonly OfficiatingCase[] = [
     freshnessScore: 0.93,
     publishedAt: "2026-07-09T08:00:00.000Z",
     mediaKind: "image",
-    imageSrc: imageAt(1).src,
-    mediaWidth: imageAt(1).width,
-    mediaHeight: imageAt(1).height,
-    mediaAlt: "Portrait still of a tucked-arm deflection contact.",
+    imageSrc: caseStill("/media/cases/handball-portrait.png").src,
+    mediaWidth: caseStill("/media/cases/handball-portrait.png").width,
+    mediaHeight: caseStill("/media/cases/handball-portrait.png").height,
+    mediaAlt: "Sliding challenge where a defender's arm is near a contested ball.",
     similarCaseIds: ["handball-supporting-arm"],
     educatorBody: "Start with reaction time. If the arm never leaves a natural position, ball-to-hand after a deflection is usually play on.",
     refereeBody: "I stay big and sell play on immediately so both benches know I saw the contact.",
@@ -340,8 +348,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     disagreementScore: 0.39,
     freshnessScore: 0.85,
     publishedAt: "2026-07-01T16:00:00.000Z",
-    mediaKind: "video",
-    mediaAlt: "Demo clip placeholder of a defender batting a shot outside the area.",
+    mediaKind: "text",
+    mediaAlt: "Text-only teaching prompt: Deliberate hand to stop a shot",
     educatorBody: "Deliberateness is obvious. The harder teaching point is whether a card is required once the free kick is awarded.",
     refereeBody: "Free kick first, then decide the card with the DOGSO checklist, don't invent a penalty outside the area.",
     ruleCitation: "Law 12 concept: handling the ball",
@@ -430,10 +438,10 @@ export const extraCases: readonly OfficiatingCase[] = [
     freshnessScore: 0.8,
     publishedAt: "2026-06-26T19:15:00.000Z",
     mediaKind: "image",
-    imageSrc: imageAt(2).src,
-    mediaWidth: imageAt(2).width,
-    mediaHeight: imageAt(2).height,
-    mediaAlt: "Still of a defensive wall jump with arms protecting the torso.",
+    imageSrc: caseStill("/media/cases/handball-raised-arm.png").src,
+    mediaWidth: caseStill("/media/cases/handball-raised-arm.png").width,
+    mediaHeight: caseStill("/media/cases/handball-raised-arm.png").height,
+    mediaAlt: "Goal-line still used for a wall-jump handball teaching sequence.",
     educatorBody: "Protective position isn't a free pass if the arms are clearly making a barrier wider than the body, judge the silhouette honestly.",
     refereeBody: "I look at whether the arms stayed in front of the torso or flared wide. That single detail decides my call.",
     ruleCitation: "Law 12 concept: handling the ball",
@@ -478,10 +486,10 @@ export const extraCases: readonly OfficiatingCase[] = [
     freshnessScore: 0.84,
     publishedAt: "2026-06-25T10:05:00.000Z",
     mediaKind: "image",
-    imageSrc: imageAt(6).src,
-    mediaWidth: imageAt(6).width,
-    mediaHeight: imageAt(6).height,
-    mediaAlt: "Tall still of a goalkeeper gathering the ball outside the area.",
+    imageSrc: caseStill("/media/cases/goalkeeper-tall.png").src,
+    mediaWidth: caseStill("/media/cases/goalkeeper-tall.png").width,
+    mediaHeight: caseStill("/media/cases/goalkeeper-tall.png").height,
+    mediaAlt: "Tall still of a goalkeeper handling near the area.",
     educatorBody: "Location first. Once you're sure the hands were outside, the offence is ordinary handling, not a keeper privilege.",
     refereeBody: "I check my AR for the line, then award the free kick without inventing a card unless DOGSO applies.",
     ruleCitation: "Law 12 concept: handling the ball",
@@ -1548,10 +1556,10 @@ export const extraCases: readonly OfficiatingCase[] = [
     freshnessScore: 0.92,
     publishedAt: "2026-07-09T19:00:00.000Z",
     mediaKind: "image",
-    imageSrc: imageAt(2).src,
-    mediaWidth: imageAt(2).width,
-    mediaHeight: imageAt(2).height,
-    mediaAlt: "Still of an outstretched arm blocking a shot inside the area.",
+    imageSrc: caseStill("/media/cases/handball-raised-arm.png").src,
+    mediaWidth: caseStill("/media/cases/handball-raised-arm.png").width,
+    mediaHeight: caseStill("/media/cases/handball-raised-arm.png").height,
+    mediaAlt: "Goal-line still paired with an outstretched-arm shot-block handball debate.",
     similarCaseIds: ["handball-raised-arm"],
     educatorBody: "Enlarging the silhouette to block a shot is the core handball idea, point to the spot.",
     refereeBody: "Penalty. I am less worried about a card unless the action was also DOGSO-handling specific.",
@@ -1871,11 +1879,8 @@ export const extraCases: readonly OfficiatingCase[] = [
     disagreementScore: 0.67,
     freshnessScore: 0.91,
     publishedAt: "2026-07-12T03:00:00.000Z",
-    mediaKind: "image",
-    imageSrc: imageAt(1).src,
-    mediaWidth: imageAt(1).width,
-    mediaHeight: imageAt(1).height,
-    mediaAlt: "Portrait still used for an accidental spin-onto-arm handball debate.",
+    mediaKind: "text",
+    mediaAlt: "Text-only teaching prompt: Ball spins up onto a natural arm",
     educatorBody: "Natural position plus zero reaction time after a self-block is usually play on, don't invent a penalty from bad luck.",
     refereeBody: "I sell play on immediately. The arm never left a natural path.",
     ruleCitation: "Law 12 concept: handling the ball",
