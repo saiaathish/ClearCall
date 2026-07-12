@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { KeyboardEvent, MouseEvent } from "react";
 import { ArrowUpRight, BookOpen, Clock3, MessageCircle } from "lucide-react";
 import type { MediaKind, OfficiatingCase } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
@@ -28,11 +26,6 @@ function getMediaKind(scenario: OfficiatingCase): MediaKind {
   return "text";
 }
 
-function isNestedInteractive(target: EventTarget | null) {
-  if (!(target instanceof Element)) return false;
-  return Boolean(target.closest("a, button, input, textarea, select, label, [role='button']"));
-}
-
 export function FeedPostCard({
   scenario,
   priority = false,
@@ -43,7 +36,6 @@ export function FeedPostCard({
   /** Unique per feed appearance so reshuffled repeats stay accessible. */
   appearanceKey?: string;
 }) {
-  const router = useRouter();
   const { answers, temporaryComments } = useDemo();
   const mediaKind = getMediaKind(scenario);
   const comments = [...scenario.seededDiscussion, ...(temporaryComments[scenario.id] ?? [])];
@@ -53,30 +45,11 @@ export function FeedPostCard({
   const discussionId = `feed-post-${domId}-discussion`;
   const previewComments = comments.slice(0, 3);
 
-  const openCase = () => {
-    router.push(detailHref);
-  };
-
-  const handleCardClick = (event: MouseEvent<HTMLElement>) => {
-    if (isNestedInteractive(event.target)) return;
-    openCase();
-  };
-
-  const handleCardKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    if (isNestedInteractive(event.target)) return;
-    event.preventDefault();
-    openCase();
-  };
-
   return (
     <article
       className="feed-post"
       data-media={mediaKind}
       aria-labelledby={titleId}
-      tabIndex={0}
-      onClick={handleCardClick}
-      onKeyDown={handleCardKeyDown}
     >
       <header className="feed-post__header">
         <PublisherLink publisher={scenario.publisher}>
@@ -110,7 +83,9 @@ export function FeedPostCard({
               <span className="meta-chip meta-chip--media">{mediaKind}</span>
             </div>
             <h2 id={titleId}>
-              <Link href={detailHref}>{scenario.prompt}</Link>
+              <Link className="feed-post__hit" href={detailHref}>
+                {scenario.prompt}
+              </Link>
             </h2>
             <p>{scenario.description}</p>
             <div className="feed-post__context">
