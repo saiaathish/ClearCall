@@ -54,10 +54,10 @@ function NavLink({ item, pathname }: { item: NavItem; pathname: string }) {
 
 function profileLabel(userDisplayName: string | undefined, isDemoSession: boolean, isSignedIn: boolean) {
   if (!isSignedIn) {
-    return { initials: "?", name: "Guest", detail: "Not signed in" };
+    return { initials: "?", name: "Guest" };
   }
   if (isDemoSession) {
-    return { initials: "JL", name: "Jordan Lee", detail: "Demo account" };
+    return { initials: "JL", name: "Jordan Lee" };
   }
   const name = userDisplayName?.trim() || "Referee learner";
   const initials = name
@@ -66,7 +66,7 @@ function profileLabel(userDisplayName: string | undefined, isDemoSession: boolea
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("") || "RL";
-  return { initials, name, detail: "Signed in" };
+  return { initials, name };
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -97,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="sidebar-footer">
           <Link className="profile-control" href="/profile" aria-label="Open learner profile">
             <span className="profile-avatar" aria-hidden="true">{profile.initials}</span>
-            <span><strong>{profile.name}</strong><small>{profile.detail}</small></span>
+            <span><strong>{profile.name}</strong></span>
           </Link>
           <Link className="about-link" href="/about">
             <Info aria-hidden="true" size={16} /> <span>About & trust</span>

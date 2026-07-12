@@ -44,11 +44,7 @@ function SavedSkeleton() {
     <div className="page-shell" aria-busy="true">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Your review queue</p>
           <h1 className="page-title">Saved cases</h1>
-          <p className="page-description">
-            Keep difficult decisions close, then return when you are ready to train.
-          </p>
         </div>
       </header>
 
@@ -203,16 +199,11 @@ export function SavedView() {
     <div className="page-shell">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Your review queue</p>
           <h1 className="page-title">Saved cases</h1>
           <p className="page-description">
-            Search your saved decisions, narrow the queue, and continue training from the
-            exact case you left behind.
+            Cases you want to revisit.
           </p>
         </div>
-        <span className="meta-chip tabular">
-          {filteredCases.length} of {savedCases.length} shown
-        </span>
       </header>
 
       <section className="saved-toolbar" aria-label="Saved case controls">
@@ -324,8 +315,7 @@ export function SavedView() {
               No saved cases yet
             </h2>
             <p>
-              Save a case from the feed or its discussion page to build a focused review
-              queue. Your choices stay on this device in the demo.
+              Save a case from the feed to build a review queue.
             </p>
             <Link className="button" href="/">
               Browse training cases <ArrowRight aria-hidden="true" size={16} />

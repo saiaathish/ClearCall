@@ -169,7 +169,6 @@ export function FeedView() {
       <header className="feed-toolbar">
         <div className="feed-toolbar__title">
           <h1>Feed</h1>
-          <p>Keeps scrolling forever — cases reshuffle from the mix as you go.</p>
         </div>
         <div className="feed-toolbar__actions">
           <label className="feed-filter" htmlFor="foul-type-filter">
@@ -191,16 +190,9 @@ export function FeedView() {
         <span className="profile-avatar" aria-hidden="true">JL</span>
         <span>
           <strong>Publish a case</strong>
-          <small>Start with text, an image, or a video.</small>
         </span>
         <SquarePlus aria-hidden="true" size={20} />
       </Link>
-
-      <div className="feed-result-line">
-        <span>{filteredCases.length} {filteredCases.length === 1 ? "case" : "cases"} in mix</span>
-        <span>{feedItems.length} loaded</span>
-        <span>{answerList.length}/{cases.length} reviewed</span>
-      </div>
 
       {feedItems.length > 0 ? (
         <ol className="feed-stream" aria-label="Officiating case feed">

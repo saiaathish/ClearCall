@@ -724,7 +724,7 @@ export function PublisherForm() {
             <legend className="field-label">
               Answer choices <span aria-hidden="true">*</span>
             </legend>
-            <span className="field-hint">At least two options. Experts can refine later.</span>
+            <span className="field-hint">At least two options.</span>
             <div className="answer-builder">
               {form.answers.map((answer, index) => (
                 <div className="answer-builder__row" key={answer.uid}>

@@ -14,7 +14,7 @@ import {
   findTeachingContrast,
   getComparablePeers,
 } from "@/lib/algorithms";
-import type { ComparisonValue, OfficiatingCase } from "@/lib/types";
+import type { OfficiatingCase } from "@/lib/types";
 import { useToast } from "@/components/toast-provider";
 import { CaseVideo } from "@/components/case-video";
 import { StatusBadge } from "@/components/status-badge";
@@ -69,13 +69,6 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
   const differenceLabels = factorKeys
     .filter((key) => mapA.get(key)?.value !== mapB.get(key)?.value)
     .map((key) => mapA.get(key)?.label ?? mapB.get(key)?.label ?? key);
-  const decisionsDiffer = caseA.recommendedDecision !== caseB.recommendedDecision;
-  const comparisonValue: ComparisonValue =
-    decisionsDiffer && similarity.score >= 60
-      ? "High teaching contrast"
-      : decisionsDiffer
-        ? "Useful teaching contrast"
-        : "Similar outcome review";
   const reason =
     automaticContrast?.case.id === caseB.id
       ? automaticContrast.reason
@@ -96,10 +89,9 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
     <div className="page-shell">
       <header className="page-header">
         <div className="page-header__copy">
-          <p className="eyebrow">Teaching contrast</p>
           <h1 className="page-title">Similar picture. Different weight.</h1>
           <p className="page-description">
-            Compare only authored teaching pairs side by side to see why visually similar incidents can support different calls.
+            Compare teaching pairs side by side.
           </p>
         </div>
       </header>
@@ -136,11 +128,7 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
 
       <section className="comparison-insight" aria-labelledby="comparison-insight-heading">
         <div>
-          <p className="eyebrow">{comparisonValue}</p>
           <h2 id="comparison-insight-heading">{reason}</h2>
-          <p>
-            The similarity score uses factor overlap, rule-path overlap, competition context, difficulty proximity, and disagreement similarity. A differing-outcome bonus affects selection—not the displayed similarity.
-          </p>
         </div>
         <div className="similarity-score" aria-label={`${similarity.score} percent structural similarity`}>
           <span><strong>{similarity.score}%</strong><span>Similarity</span></span>
@@ -151,7 +139,6 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
         <div className="content-section__header">
           <div>
             <h2 className="section-title" id="factor-comparison-heading">Factor comparison</h2>
-            <p className="section-description">Critical rows are the strongest teaching distinctions in the authored data.</p>
           </div>
         </div>
         <div className="factor-table-wrap">
@@ -181,11 +168,6 @@ export function CompareView({ initialA, initialB }: { initialA?: string; initial
           <strong>Critical distinction</strong>
           <p>{makeDifferenceReason(caseA, caseB, differenceLabels)}</p>
         </div>
-      </div>
-
-      <div className="demo-notice" style={{ marginTop: 16 }}>
-        <CircleAlert aria-hidden="true" size={15} />
-        <span>Comparison explanations and recommended decisions are authored demonstration material requiring qualified soccer-officiating review.</span>
       </div>
     </div>
   );

@@ -149,7 +149,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
       selectedFactorKeys: answer?.selectedFactorKeys ?? [scenario.criticalFactor],
       helpfulCount: 0,
       factorReactions: {},
-      postedAtLabel: "Just now · local only",
+      postedAtLabel: "Just now",
       isPinned: false,
       isVerifiedExplanation: false,
       isSynthetic: false,
@@ -186,21 +186,16 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             <>
               <section className="pinned-explanation" aria-labelledby="pinned-explanation-title">
                 <div className="pinned-explanation__topline">
-                  <span className="pinned-label"><Pin aria-hidden="true" size={13} /> Pinned authored explanation</span>
+                  <span className="pinned-label"><Pin aria-hidden="true" size={13} /> Pinned explanation</span>
                   <StatusBadge status={scenario.scenarioStatus} />
                 </div>
                 <blockquote id="pinned-explanation-title">“{scenario.expertExplanation}”</blockquote>
-                <footer>
-                  <span className="avatar" aria-hidden="true">CD</span>
-                  ClearCall demo desk · requires qualified expert review
-                </footer>
               </section>
 
               <section className="content-section" aria-labelledby="distribution-heading">
                 <div className="content-section__header">
                   <div>
-                    <h2 className="section-title" id="distribution-heading">Three lenses, kept separate</h2>
-                    <p className="section-description">These are illustrative authored patterns—not collected votes or official reviewer data.</p>
+                    <h2 className="section-title" id="distribution-heading">How others called it</h2>
                   </div>
                 </div>
                 <div className="distribution-grid">
@@ -215,10 +210,8 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           <section className="content-section" aria-labelledby="discussion-heading">
                 <div className="content-section__header">
                   <div>
-                    <h2 className="section-title" id="discussion-heading">Structured discussion</h2>
-                    <p className="section-description">Responses are ordered for learning value; popularity does not define the ruling.</p>
+                    <h2 className="section-title" id="discussion-heading">Discussion</h2>
                   </div>
-                  <span className="meta-chip">{comments.length} responses</span>
                 </div>
                 <ul className="discussion-list">
                   {comments.map((response) => (
@@ -228,11 +221,10 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                 <form className="comment-form" onSubmit={submitComment} noValidate>
                   <div>
                     <label className="field-label" htmlFor="local-comment">Add your reasoning</label>
-                    <span className="field-hint" id="local-comment-hint">This response stays in your browser; there is no comment backend.</span>
                   </div>
                   <div className="comment-form__row">
                     <textarea
-                      aria-describedby={`local-comment-hint${commentError ? " local-comment-error" : ""}`}
+                      aria-describedby={commentError ? "local-comment-error" : undefined}
                       aria-invalid={commentError && !comment.trim() ? true : undefined}
                       className="textarea"
                       id="local-comment"
@@ -274,7 +266,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             <div className="content-section__header">
               <div>
                 <h2 className="section-title">Case context</h2>
-                <p className="section-description">The inputs that frame the decision.</p>
               </div>
             </div>
             <div className="detail-context-grid">
@@ -294,7 +285,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           {similarCases.length > 0 && (
             <section className="content-section">
               <div className="content-section__header">
-                <div><h2 className="section-title">Similar cases</h2><p className="section-description">Compare the factor pattern, not only the outcome.</p></div>
+                <div><h2 className="section-title">Similar cases</h2></div>
               </div>
               <div className="similar-list">
                 {similarCases.map((item) => (
@@ -310,11 +301,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
               </Link>
             </section>
           )}
-
-          <div className="demo-notice">
-            <CircleAlert aria-hidden="true" size={15} />
-            <span>{scenario.reviewDisclaimer}</span>
-          </div>
         </aside>
       </div>
     </div>
@@ -446,9 +432,6 @@ function LocalDraftView({ draft }: { draft: PublishedCaseDraft }) {
           <span className="status-badge status-badge--pending">Pending expert review</span>
           <span className="meta-chip">{draft.category}</span>
           <span className="meta-chip">{draft.difficulty}</span>
-        </div>
-        <div className="demo-notice" style={{ marginTop: 18 }}>
-          <CircleAlert size={15} /> This draft exists only in this browser. It has not been publicly published, moderated, or expert reviewed.
         </div>
       </section>
     </div>

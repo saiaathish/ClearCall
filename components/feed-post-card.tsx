@@ -99,7 +99,6 @@ export function FeedPostCard({
               <h3 id={discussionId}>
                 <MessageCircle aria-hidden="true" size={15} /> Discussion
               </h3>
-              <span>{comments.length} {comments.length === 1 ? "response" : "responses"}</span>
             </div>
             {previewComments.length > 0 ? (
               <ul>
@@ -118,12 +117,12 @@ export function FeedPostCard({
                 ))}
               </ul>
             ) : (
-              <p>No responses yet. Open the case to add your reasoning.</p>
+              <p>No responses yet.</p>
             )}
           </section>
 
           <footer className="feed-post__footer">
-            <span>{answers[scenario.id] ? "Your call is recorded" : "Decision and evidence are on the case page"}</span>
+            <span>{answers[scenario.id] ? "Call recorded" : null}</span>
             <Link className="feed-post__open" href={detailHref}>
               {answers[scenario.id] ? "Review your call" : "Make your call"}
               <ArrowUpRight aria-hidden="true" size={16} />
