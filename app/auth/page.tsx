@@ -1,19 +1,26 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useDemo } from "@/context/demo-context";
 
 type Mode = "sign-in" | "sign-up";
 
 export default function AuthPage() {
   const router = useRouter();
+  const { user, isDemoSession, enterDemo, signOut, hydrated } = useDemo();
   const [mode, setMode] = useState<Mode>("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (user) router.replace("/");
+  }, [hydrated, router, user]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,6 +47,12 @@ export default function AuthPage() {
             .update({ display_name: displayName || email.split("@")[0] })
             .eq("id", data.user.id);
         }
+
+        if (!data.session) {
+          setError("Check your email to confirm your account, then sign in.");
+          setMode("sign-in");
+          return;
+        }
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
@@ -57,8 +70,44 @@ export default function AuthPage() {
     }
   }
 
+  if (hydrated && user) {
+    return (
+      <div className="page-shell auth-shell">
+        <p className="page-description">Signed in — taking you back to the feed…</p>
+      </div>
+    );
+  }
+
+  if (hydrated && isDemoSession) {
+    return (
+      <div className="page-shell auth-shell">
+        <header className="page-header">
+          <div className="page-header__copy">
+            <p className="eyebrow">ClearCall account</p>
+            <h1 className="page-title">You&apos;re in the demo</h1>
+            <p className="page-description">
+              Jordan Lee is the local demo account. Sign out to use a real email account, or keep training in the demo.
+            </p>
+          </div>
+        </header>
+        <div className="auth-actions">
+          <button className="button button--wide" type="button" onClick={() => router.push("/")}>
+            Back to feed
+          </button>
+          <button
+            className="button button--ghost button--wide"
+            type="button"
+            onClick={() => void signOut().then(() => router.push("/auth"))}
+          >
+            Sign out of demo
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="page-shell" style={{ maxWidth: 440 }}>
+    <div className="page-shell auth-shell">
       <header className="page-header">
         <div className="page-header__copy">
           <p className="eyebrow">ClearCall account</p>
@@ -71,7 +120,36 @@ export default function AuthPage() {
         </div>
       </header>
 
-      <form className="publisher-form" noValidate onSubmit={handleSubmit}>
+      <div className="auth-tabs" role="tablist" aria-label="Account mode">
+        <button
+          className="auth-tab"
+          type="button"
+          role="tab"
+          aria-selected={mode === "sign-in"}
+          data-active={mode === "sign-in" || undefined}
+          onClick={() => {
+            setMode("sign-in");
+            setError(null);
+          }}
+        >
+          Sign in
+        </button>
+        <button
+          className="auth-tab"
+          type="button"
+          role="tab"
+          aria-selected={mode === "sign-up"}
+          data-active={mode === "sign-up" || undefined}
+          onClick={() => {
+            setMode("sign-up");
+            setError(null);
+          }}
+        >
+          Sign up
+        </button>
+      </div>
+
+      <form className="publisher-form auth-form" noValidate onSubmit={handleSubmit}>
         {mode === "sign-up" && (
           <div className="form-field">
             <label htmlFor="displayName">Display name</label>
@@ -81,6 +159,7 @@ export default function AuthPage() {
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
               placeholder="Jordan Lee"
+              autoComplete="nickname"
             />
           </div>
         )}
@@ -119,18 +198,13 @@ export default function AuthPage() {
         <button className="button button--wide" type="submit" disabled={submitting}>
           {submitting ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
         </button>
-
-        <button
-          className="button button--ghost button--wide"
-          type="button"
-          onClick={() => {
-            setMode(mode === "sign-in" ? "sign-up" : "sign-in");
-            setError(null);
-          }}
-        >
-          {mode === "sign-in" ? "Need an account? Sign up" : "Already have an account? Sign in"}
-        </button>
       </form>
+
+      <div className="auth-actions">
+        <button className="button button--ghost button--wide" type="button" onClick={enterDemo}>
+          Continue with Jordan Lee demo
+        </button>
+      </div>
     </div>
   );
 }

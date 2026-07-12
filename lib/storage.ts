@@ -20,9 +20,23 @@ export interface DemoState {
 }
 
 /**
- * Seeded baseline shown to signed-out visitors so the feed, profile, and
- * saved views have something meaningful to render before sign-in. Signed-in
- * users' real state comes from Supabase via {@link fetchDemoState}.
+ * Empty guest baseline after signing out of the Jordan Lee demo (or a real
+ * account). Feed and profile still render, but with no personal progress.
+ */
+export const emptyGuestState: DemoState = {
+  answers: {},
+  savedCaseIds: [],
+  currentStreak: 0,
+  temporaryComments: {},
+  publishedDrafts: [],
+  reports: [],
+  removedCaseIds: [],
+  onboardingComplete: false,
+};
+
+/**
+ * Seeded baseline for the local Jordan Lee demo session. Real signed-in users
+ * load their state from Supabase via {@link fetchDemoState}.
  */
 export const initialDemoState: DemoState = {
   answers: {
@@ -70,6 +84,28 @@ export const initialDemoState: DemoState = {
   removedCaseIds: [],
   onboardingComplete: false,
 };
+
+export const DEMO_SESSION_KEY = "clearcall-demo-session";
+
+export function readDemoSessionPreference(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const stored = window.localStorage.getItem(DEMO_SESSION_KEY);
+    if (stored === null) return true;
+    return stored === "1";
+  } catch {
+    return true;
+  }
+}
+
+export function writeDemoSessionPreference(active: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(DEMO_SESSION_KEY, active ? "1" : "0");
+  } catch {
+    // Ignore quota / private-mode failures; in-memory state still works.
+  }
+}
 
 type TypedClient = SupabaseClient<Database>;
 
