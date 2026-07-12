@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,13 +17,30 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import { cases } from "@/data/cases";
-import type { DiscussionResponse, OfficiatingCase, PublishedCaseDraft } from "@/lib/types";
+import type { DiscussionResponse, Distribution, OfficiatingCase, PublishedCaseDraft } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
 import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
 import { StatusBadge } from "@/components/status-badge";
 import { SaveButton, ShareButton } from "@/components/case-actions";
+import { createClient } from "@/lib/supabase/client";
+import { fetchLiveDistribution } from "@/lib/voting";
+import { toggleHelpfulVote } from "@/lib/reputation";
+
+/** Overrides a static demo distribution with live vote data when votes exist. */
+function withLiveOverride(
+  base: Distribution,
+  live: { percentages: Readonly<Record<string, number>>; totalVotes: number } | null,
+): Distribution {
+  if (!live) return base;
+  return {
+    ...base,
+    percentages: live.percentages,
+    isSynthetic: false,
+    basis: base.basis === "verified_reviewers" ? "verified_reviewers" : "live_community",
+  };
+}
 
 function optionLabel(scenario: OfficiatingCase, id: string) {
   return scenario.answerOptions.find((option) => option.id === id)?.shortLabel ?? id;
@@ -37,11 +55,16 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     addComment,
   } = useDemo();
   const { showToast } = useToast();
+  const supabase = useMemo(() => createClient(), []);
   const [comment, setComment] = useState("");
   const [commentDecision, setCommentDecision] = useState("");
   const [commentError, setCommentError] = useState(false);
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const commentDecisionRef = useRef<HTMLSelectElement>(null);
+  const [liveDistribution, setLiveDistribution] = useState<{
+    community: { percentages: Readonly<Record<string, number>>; totalVotes: number } | null;
+    verified: { percentages: Readonly<Record<string, number>>; totalVotes: number } | null;
+  } | null>(null);
 
   const scenario = useMemo(
     () => cases.find((item) => item.id === caseId || item.slug === caseId),
@@ -51,6 +74,21 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     () => publishedDrafts.find((item) => item.id === caseId),
     [caseId, publishedDrafts],
   );
+
+  useEffect(() => {
+    if (!scenario) return;
+    let active = true;
+    fetchLiveDistribution(
+      supabase,
+      scenario.id,
+      scenario.answerOptions.map((option) => option.id),
+    ).then((result) => {
+      if (active) setLiveDistribution(result);
+    });
+    return () => {
+      active = false;
+    };
+  }, [scenario, supabase]);
 
   if (!hydrated) {
     return (
@@ -125,19 +163,19 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
 
   return (
     <div className="page-shell">
-      <div className="page-header">
-        <div className="page-header__copy">
-          <p className="eyebrow">Case review</p>
-          <h1 className="page-title">Read the call. Then read the reasoning.</h1>
-          <p className="page-description">
-            Structured factors make disagreement useful. Authored demo evidence remains separate from public opinion.
-          </p>
+      <header className="thread-header">
+        <Link className="thread-back" href="/">
+          <ArrowLeft aria-hidden="true" size={18} /> Back to feed
+        </Link>
+        <div className="thread-header__title">
+          <span>Case</span>
+          <h1>{scenario.title}</h1>
         </div>
         <div className="button-row">
           <SaveButton caseId={scenario.id} showLabel />
           <ShareButton caseId={scenario.id} showLabel />
         </div>
-      </div>
+      </header>
 
       <div className="case-detail-layout">
         <div className="detail-main">
@@ -165,13 +203,15 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </div>
                 </div>
                 <div className="distribution-grid">
-                  <DistributionBars distribution={scenario.communityDistribution} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} />
-                  <DistributionBars distribution={scenario.verifiedDistribution} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} tone="verified" />
+                  <DistributionBars distribution={withLiveOverride(scenario.communityDistribution, liveDistribution?.community ?? null)} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} />
+                  <DistributionBars distribution={withLiveOverride(scenario.verifiedDistribution, liveDistribution?.verified ?? null)} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} tone="verified" />
                   <DistributionBars distribution={scenario.learnerDistribution} options={scenario.answerOptions} recommendedDecision={scenario.recommendedDecision} tone="learner" />
                 </div>
               </section>
+            </>
+          )}
 
-              <section className="content-section" aria-labelledby="discussion-heading">
+          <section className="content-section" aria-labelledby="discussion-heading">
                 <div className="content-section__header">
                   <div>
                     <h2 className="section-title" id="discussion-heading">Structured discussion</h2>
@@ -225,9 +265,7 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
                   </div>
                   {commentError && <p className="field-error" id="local-comment-error" role="alert"><CircleAlert aria-hidden="true" size={14} /> Add reasoning and choose a decision.</p>}
                 </form>
-              </section>
-            </>
-          )}
+          </section>
         </div>
 
         <aside className="detail-aside" aria-label="Case context and similar cases">
@@ -283,8 +321,30 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
 }
 
 function DiscussionCard({ response, scenario }: { response: DiscussionResponse; scenario: OfficiatingCase }) {
+  const { user } = useDemo();
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
   const [helpful, setHelpful] = useState(false);
+  const [helpfulCount, setHelpfulCount] = useState(response.helpfulCount);
+  const [helpfulPending, setHelpfulPending] = useState(false);
   const [factorVotes, setFactorVotes] = useState<Record<string, "agree" | "disagree">>({});
+
+  const isPersistedComment = !response.id.startsWith("local-");
+
+  const handleHelpfulClick = async () => {
+    if (!user) {
+      router.push("/auth");
+      return;
+    }
+    if (!isPersistedComment || helpfulPending) return;
+    setHelpfulPending(true);
+    const result = await toggleHelpfulVote(supabase, response.id);
+    if (result) {
+      setHelpful(result.isActive);
+      setHelpfulCount(result.helpfulCount);
+    }
+    setHelpfulPending(false);
+  };
 
   const toggleFactorVote = (key: string, nextVote: "agree" | "disagree") => {
     setFactorVotes((current) => {
@@ -322,8 +382,17 @@ function DiscussionCard({ response, scenario }: { response: DiscussionResponse; 
         <div className="rule-citation"><BookOpen aria-hidden="true" size={14} /><span><strong>Rule citation</strong>{response.ruleCitation}</span></div>
       )}
       <div className="discussion-card__footer">
-        <button className="helpful-button" data-active={helpful || undefined} type="button" onClick={() => setHelpful((value) => !value)} aria-pressed={helpful}>
-          <ThumbsUp aria-hidden="true" size={13} /> Helpful {response.helpfulCount + (helpful ? 1 : 0)}
+        <button
+          className="helpful-button"
+          data-active={helpful || undefined}
+          data-disabled={!user || undefined}
+          disabled={helpfulPending}
+          type="button"
+          onClick={handleHelpfulClick}
+          aria-pressed={helpful}
+          aria-label={user ? undefined : "Sign in to mark this response as helpful"}
+        >
+          <ThumbsUp aria-hidden="true" size={13} /> Helpful {helpfulCount}
         </button>
         <div className="factor-votes" aria-label="React to reasoning factors">
           {response.selectedFactorKeys.slice(0, 2).map((key) => {

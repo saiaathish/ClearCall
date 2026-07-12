@@ -6,121 +6,205 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 import type { DiscussionResponse, PublishedCaseDraft, UserAnswer } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
 import {
-  clearDemoState,
+  addCommentRemote,
+  completeOnboardingRemote,
+  fetchDemoState,
   initialDemoState,
-  readDemoState,
-  writeDemoState,
+  publishDraftRemote,
+  submitAnswerRemote,
+  toggleSavedRemote,
   type DemoState,
 } from "@/lib/storage";
+import { persistReputationScore } from "@/lib/reputation";
 
 interface DemoContextValue extends DemoState {
   hydrated: boolean;
+  user: User | null;
   submitAnswer: (answer: UserAnswer) => void;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
-  publishDraft: (draft: PublishedCaseDraft) => void;
+  publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
   completeOnboarding: () => void;
   resetDemo: () => void;
+  signOut: () => Promise<void>;
 }
 
 const DemoContext = createContext<DemoContextValue | null>(null);
 
 export function DemoProvider({ children }: { children: ReactNode }) {
+  const supabase = useMemo(() => createClient(), []);
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
   const [state, setState] = useState<DemoState>(initialDemoState);
   const [hydrated, setHydrated] = useState(false);
+  // Keep a ref in sync with state so imperative handlers (toggleSaved) can
+  // compute the next value without depending on stale closures.
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      setState(readDemoState());
+    let active = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      setUser(data.session?.user ?? null);
+      if (!data.session?.user) setHydrated(true);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (!session?.user) {
+        setState(initialDemoState);
+        setHydrated(true);
+      }
+    });
+
+    return () => {
+      active = false;
+      listener.subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (!user) return;
+    let active = true;
+    fetchDemoState(supabase, user.id).then((next) => {
+      if (!active) return;
+      setState(next);
       setHydrated(true);
     });
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [supabase, user]);
 
-  const update = useCallback((producer: (current: DemoState) => DemoState) => {
-    setState((current) => {
-      const next = producer(current);
-      writeDemoState(next);
-      return next;
-    });
-  }, []);
+  const requireAuth = useCallback(() => {
+    if (user) return true;
+    router.push("/auth");
+    return false;
+  }, [router, user]);
 
   const submitAnswer = useCallback(
     (answer: UserAnswer) => {
-      update((current) => ({
+      if (!requireAuth() || !user) return;
+      const isNewAnswer = !stateRef.current.answers[answer.caseId];
+      setState((current) => ({
         ...current,
         answers: { ...current.answers, [answer.caseId]: answer },
-        currentStreak: current.answers[answer.caseId]
-          ? current.currentStreak
-          : current.currentStreak + 1,
+        currentStreak: isNewAnswer ? current.currentStreak + 1 : current.currentStreak,
       }));
+      void submitAnswerRemote(supabase, user.id, answer, isNewAnswer).then(() =>
+        persistReputationScore(supabase),
+      );
     },
-    [update],
+    [requireAuth, supabase, user],
   );
 
   const toggleSaved = useCallback(
     (caseId: string) => {
-      const willSave = !state.savedCaseIds.includes(caseId);
-      update((current) => ({
+      if (!requireAuth() || !user) return false;
+      const willSave = !stateRef.current.savedCaseIds.includes(caseId);
+      setState((current) => ({
         ...current,
         savedCaseIds: willSave
           ? [...current.savedCaseIds, caseId]
           : current.savedCaseIds.filter((id) => id !== caseId),
       }));
+      void toggleSavedRemote(supabase, user.id, caseId, willSave);
       return willSave;
     },
-    [state.savedCaseIds, update],
+    [requireAuth, supabase, user],
   );
 
   const addComment = useCallback(
     (caseId: string, comment: DiscussionResponse) => {
-      update((current) => ({
+      if (!requireAuth() || !user) return;
+      setState((current) => ({
         ...current,
         temporaryComments: {
           ...current.temporaryComments,
           [caseId]: [...(current.temporaryComments[caseId] ?? []), comment],
         },
       }));
+      void addCommentRemote(supabase, user.id, caseId, comment).then((saved) => {
+        if (saved) setState((current) => ({ ...current, temporaryComments: {
+          ...current.temporaryComments,
+          [caseId]: (current.temporaryComments[caseId] ?? []).map((item) => item.id === comment.id ? saved : item),
+        }}));
+        return persistReputationScore(supabase);
+      });
     },
-    [update],
+    [requireAuth, supabase, user],
   );
 
   const publishDraft = useCallback(
-    (draft: PublishedCaseDraft) => {
-      update((current) => ({
-        ...current,
-        publishedDrafts: [draft, ...current.publishedDrafts],
-      }));
+    async (draft: PublishedCaseDraft, file?: File | null) => {
+      if (!requireAuth() || !user) return false;
+      try {
+        const saved = await publishDraftRemote(supabase, user.id, draft, file ?? null);
+        setState((current) => ({
+          ...current,
+          publishedDrafts: [saved, ...current.publishedDrafts],
+        }));
+        return true;
+      } catch {
+        return false;
+      }
     },
-    [update],
+    [requireAuth, supabase, user],
   );
 
-  const resetDemo = useCallback(() => {
-    clearDemoState();
-    setState(initialDemoState);
-  }, []);
-
   const completeOnboarding = useCallback(() => {
-    update((current) => ({ ...current, onboardingComplete: true }));
-  }, [update]);
+    if (!requireAuth() || !user) return;
+    setState((current) => ({ ...current, onboardingComplete: true }));
+    void completeOnboardingRemote(supabase, user.id);
+  }, [requireAuth, supabase, user]);
+
+  const resetDemo = useCallback(() => {
+    void supabase.auth.signOut();
+  }, [supabase]);
+
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  }, [router, supabase]);
 
   const value = useMemo(
     () => ({
       ...state,
       hydrated,
+      user,
       submitAnswer,
       toggleSaved,
       addComment,
       publishDraft,
       completeOnboarding,
       resetDemo,
+      signOut,
     }),
-    [state, hydrated, submitAnswer, toggleSaved, addComment, publishDraft, completeOnboarding, resetDemo],
+    [
+      state,
+      hydrated,
+      user,
+      submitAnswer,
+      toggleSaved,
+      addComment,
+      publishDraft,
+      completeOnboarding,
+      resetDemo,
+      signOut,
+    ],
   );
 
   return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;

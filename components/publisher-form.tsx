@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
   useRef,
@@ -13,6 +14,8 @@ import {
   AlertCircle,
   Check,
   CheckCircle2,
+  FileImage,
+  FileText,
   FileVideo,
   Film,
   Plus,
@@ -27,6 +30,7 @@ import { useDemo } from "@/context/demo-context";
 import type {
   CaseCategory,
   Difficulty,
+  MediaKind,
   PublishedCaseDraft,
   ScenarioStatus,
   SourceType,
@@ -47,6 +51,8 @@ interface FactorDraft {
 }
 
 interface PublisherFormState {
+  mediaKind: MediaKind;
+  mediaAlt: string;
   clipStartTime: string;
   clipEndTime: string;
   posterFrameLabel: string;
@@ -76,6 +82,8 @@ interface PublisherFormState {
 type ValidationErrors = Record<string, string>;
 
 interface PreviewModel {
+  mediaKind: MediaKind;
+  mediaAlt: string;
   title: string;
   prompt: string;
   description: string;
@@ -134,6 +142,8 @@ const STATUS_CLASSES: Record<ScenarioStatus, string> = {
 
 function createInitialForm(): PublisherFormState {
   return {
+    mediaKind: "video",
+    mediaAlt: "",
     clipStartTime: "0",
     clipEndTime: "",
     posterFrameLabel: "Poster frame selected during expert review",
@@ -185,6 +195,11 @@ function isSupportedVideo(file: File): boolean {
   return /\.(mp4|m4v|mov|ogv|webm)$/i.test(file.name);
 }
 
+function isSupportedImage(file: File): boolean {
+  if (file.type.startsWith("image/")) return true;
+  return /\.(avif|gif|jpe?g|png|svg|webp)$/i.test(file.name);
+}
+
 function validateForm(
   form: PublisherFormState,
   selectedFile: File | null,
@@ -196,32 +211,41 @@ function validateForm(
     if (!errors[id]) errors[id] = message;
   };
 
-  if (fileError) add("clip-file", fileError);
-  else if (!selectedFile) add("clip-file", "Choose a local video clip to preview.");
+  if (form.mediaKind !== "text") {
+    if (fileError) add("clip-file", fileError);
+    else if (!selectedFile) {
+      add("clip-file", `Choose a local ${form.mediaKind} file to preview.`);
+    }
+    if (!form.mediaAlt.trim()) {
+      add("media-alt", `Describe what the ${form.mediaKind} shows.`);
+    }
+  }
 
-  const start = Number(form.clipStartTime);
-  const end = Number(form.clipEndTime);
-  if (form.clipStartTime.trim() === "" || !Number.isFinite(start) || start < 0) {
-    add("clip-start-time", "Enter a start time of 0 seconds or later.");
-  }
-  if (form.clipEndTime.trim() === "" || !Number.isFinite(end) || end <= 0) {
-    add("clip-end-time", "Enter an end time greater than 0 seconds.");
-  } else if (Number.isFinite(start) && end <= start) {
-    add("clip-end-time", "End time must be later than start time.");
-  } else if (clipDuration !== null && end > clipDuration + 0.05) {
-    add("clip-end-time", `End time must be within the ${clipDuration.toFixed(1)} second clip.`);
-  }
-  if (clipDuration !== null && Number.isFinite(start) && start >= clipDuration) {
-    add("clip-start-time", `Start time must be before the ${clipDuration.toFixed(1)} second clip ends.`);
-  }
-  if (!form.posterFrameLabel.trim()) {
-    add("poster-frame-label", "Describe the poster-frame placeholder.");
+  if (form.mediaKind === "video") {
+    const start = Number(form.clipStartTime);
+    const end = Number(form.clipEndTime);
+    if (form.clipStartTime.trim() === "" || !Number.isFinite(start) || start < 0) {
+      add("clip-start-time", "Enter a start time of 0 seconds or later.");
+    }
+    if (form.clipEndTime.trim() === "" || !Number.isFinite(end) || end <= 0) {
+      add("clip-end-time", "Enter an end time greater than 0 seconds.");
+    } else if (Number.isFinite(start) && end <= start) {
+      add("clip-end-time", "End time must be later than start time.");
+    } else if (clipDuration !== null && end > clipDuration + 0.05) {
+      add("clip-end-time", `End time must be within the ${clipDuration.toFixed(1)} second clip.`);
+    }
+    if (clipDuration !== null && Number.isFinite(start) && start >= clipDuration) {
+      add("clip-start-time", `Start time must be before the ${clipDuration.toFixed(1)} second clip ends.`);
+    }
+    if (!form.posterFrameLabel.trim()) {
+      add("poster-frame-label", "Describe the poster-frame placeholder.");
+    }
   }
   if (!form.sourceAttribution.trim()) {
     add("source-attribution", "Add a source or rights-holder attribution.");
   }
   if (!form.permissionConfirmed) {
-    add("permission-confirmed", "Confirm that ClearCall may use this clip in the demo.");
+    add("permission-confirmed", "Confirm that ClearCall may use this post material in the demo.");
   }
 
   if (!form.title.trim()) add("case-title", "Add a concise case title.");
@@ -358,21 +382,23 @@ function CasePreview({ model, id = "case-live-preview" }: { model: PreviewModel;
         </p>
       </div>
 
-      <article className="preview-card">
-        <div className="preview-card__stage">
-          <div className="case-media__field" aria-hidden="true" />
-          <div className="case-media__topline">
-            <span className="meta-chip">Soccer</span>
-            <span className="meta-chip">{model.clipLabel}</span>
+      <article className="preview-card" data-media={model.mediaKind}>
+        {model.mediaKind !== "text" ? (
+          <div className="preview-card__stage">
+            <div className="case-media__field" aria-hidden="true" />
+            <div className="case-media__topline">
+              <span className="meta-chip">Soccer</span>
+              <span className="meta-chip">{model.clipLabel}</span>
+            </div>
+            <div className="case-media__placeholder">
+              <span className="case-media__placeholder-icon" aria-hidden="true">
+                {model.mediaKind === "image" ? <FileImage size={22} /> : <Film size={22} />}
+              </span>
+              <strong>{model.posterFrameLabel || `${model.mediaKind} preview`}</strong>
+              <span>{model.mediaAlt || `Accessible ${model.mediaKind} description not added yet.`}</span>
+            </div>
           </div>
-          <div className="case-media__placeholder">
-            <span className="case-media__placeholder-icon" aria-hidden="true">
-              <Film size={22} />
-            </span>
-            <strong>{model.posterFrameLabel || "Poster-frame placeholder"}</strong>
-            <span>Local clip content is never stored in this preview record.</span>
-          </div>
-        </div>
+        ) : null}
 
         <div className="preview-card__body">
           <div className="meta-row">
@@ -430,7 +456,7 @@ function CasePreview({ model, id = "case-live-preview" }: { model: PreviewModel;
         <ShieldAlert aria-hidden="true" size={17} />
         <span>
           Preview only. It is not an official ruling and does not indicate that creator credentials,
-          clip rights, or expert review have been verified.
+          media rights, or expert review have been verified.
         </span>
       </div>
     </aside>
@@ -441,6 +467,8 @@ function livePreviewModel(form: PublisherFormState, selectedFile: File | null): 
   const recommended = form.answers.find((answer) => answer.uid === form.recommendedAnswerUid)?.label ?? "";
   const critical = form.factors.find((factor) => factor.uid === form.criticalFactorUid);
   return {
+    mediaKind: form.mediaKind,
+    mediaAlt: form.mediaKind === "text" ? form.description : form.mediaAlt,
     title: form.title,
     prompt: form.prompt,
     description: form.description,
@@ -457,7 +485,7 @@ function livePreviewModel(form: PublisherFormState, selectedFile: File | null): 
     ruleReference: form.ruleReference,
     expertExplanation: form.expertExplanation,
     criticalFactor: critical ? critical.label || critical.key : "",
-    clipLabel: selectedFile ? selectedFile.name : "No local clip",
+    clipLabel: selectedFile ? selectedFile.name : form.mediaKind === "text" ? "Text post" : `No local ${form.mediaKind}`,
     posterFrameLabel: form.posterFrameLabel,
     isPending: false,
   };
@@ -467,6 +495,8 @@ function submittedPreviewModel(draft: PublishedCaseDraft): PreviewModel {
   const recommended = draft.answerOptions.find((answer) => answer.id === draft.recommendedDecision)?.label ?? "";
   const critical = draft.factors.find((factor) => factor.key === draft.criticalFactor);
   return {
+    mediaKind: draft.mediaKind,
+    mediaAlt: draft.mediaAlt,
     title: draft.title,
     prompt: draft.prompt,
     description: draft.description,
@@ -483,8 +513,8 @@ function submittedPreviewModel(draft: PublishedCaseDraft): PreviewModel {
     ruleReference: draft.ruleReference,
     expertExplanation: draft.expertExplanation,
     criticalFactor: critical?.label ?? draft.criticalFactor,
-    clipLabel: draft.clipFileName ?? "Local clip metadata",
-    posterFrameLabel: draft.posterFrameLabel,
+    clipLabel: draft.mediaFileName ?? draft.clipFileName ?? `${draft.mediaKind} post`,
+    posterFrameLabel: draft.posterFrameLabel ?? "",
     isPending: true,
   };
 }
@@ -503,6 +533,7 @@ export function PublisherForm() {
   const [submittedDraft, setSubmittedDraft] = useState<PublishedCaseDraft | null>(null);
   const answerSequence = useRef(4);
   const factorSequence = useRef(2);
+  const draftSequence = useRef(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const previewUrlRef = useRef<string | null>(null);
   const validationSummaryRef = useRef<HTMLDivElement>(null);
@@ -549,9 +580,14 @@ export function PublisherForm() {
   }
 
   function chooseFile(file: File) {
-    if (!isSupportedVideo(file)) {
+    const supported = form.mediaKind === "image"
+      ? isSupportedImage(file)
+      : form.mediaKind === "video" && isSupportedVideo(file);
+    if (!supported) {
       clearSelectedFile(false);
-      const message = "Choose a video file such as MP4, WebM, MOV, M4V, or OGV.";
+      const message = form.mediaKind === "image"
+        ? "Choose an image file such as AVIF, GIF, JPEG, PNG, SVG, or WebP."
+        : "Choose a video file such as MP4, WebM, MOV, M4V, or OGV.";
       setFileError(message);
       if (submissionAttempted) setErrors(validateForm(form, null, null, message));
       return;
@@ -590,6 +626,20 @@ export function PublisherForm() {
     } else if (submissionAttempted) {
       setErrors(validateForm(form, selectedFile, duration, fileError));
     }
+  }
+
+  function selectMediaKind(mediaKind: MediaKind) {
+    clearSelectedFile(false);
+    const next = {
+      ...form,
+      mediaKind,
+      clipEndTime: mediaKind === "video" ? form.clipEndTime : "",
+      posterFrameLabel: mediaKind === "video"
+        ? form.posterFrameLabel || "Poster frame selected during expert review"
+        : "",
+    };
+    setForm(next);
+    if (submissionAttempted) setErrors(validateForm(next, null, null, ""));
   }
 
   function updateAnswer(uid: string, label: string) {
@@ -675,13 +725,13 @@ export function PublisherForm() {
     target?.focus({ preventScroll: true });
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmissionAttempted(true);
     const nextErrors = validateForm(form, selectedFile, clipDuration, fileError);
     setErrors(nextErrors);
 
-    if (Object.keys(nextErrors).length > 0 || !selectedFile) {
+    if (Object.keys(nextErrors).length > 0 || (form.mediaKind !== "text" && !selectedFile)) {
       window.requestAnimationFrame(() => validationSummaryRef.current?.focus());
       return;
     }
@@ -703,13 +753,18 @@ export function PublisherForm() {
     );
 
     const draft: PublishedCaseDraft = {
-      id: `draft-${Date.now()}`,
-      clipFileName: selectedFile.name,
-      clipFileSize: selectedFile.size,
-      clipFileType: selectedFile.type || "video/unknown",
-      clipStartTime: form.clipStartTime.trim(),
-      clipEndTime: form.clipEndTime.trim(),
-      posterFrameLabel: form.posterFrameLabel.trim(),
+      id: `draft-local-${draftSequence.current++}`,
+      mediaKind: form.mediaKind,
+      mediaFileName: selectedFile?.name,
+      mediaFileSize: selectedFile?.size,
+      mediaFileType: selectedFile?.type || undefined,
+      mediaAlt: form.mediaKind === "text" ? form.description.trim() : form.mediaAlt.trim(),
+      clipFileName: form.mediaKind === "video" ? selectedFile?.name : undefined,
+      clipFileSize: form.mediaKind === "video" ? selectedFile?.size : undefined,
+      clipFileType: form.mediaKind === "video" ? selectedFile?.type || "video/unknown" : undefined,
+      clipStartTime: form.mediaKind === "video" ? form.clipStartTime.trim() : undefined,
+      clipEndTime: form.mediaKind === "video" ? form.clipEndTime.trim() : undefined,
+      posterFrameLabel: form.mediaKind === "video" ? form.posterFrameLabel.trim() : undefined,
       title: form.title.trim(),
       prompt: form.prompt.trim(),
       description: form.description.trim(),
@@ -742,10 +797,14 @@ export function PublisherForm() {
       reviewStatus: "PENDING_EXPERT_REVIEW",
     };
 
-    publishDraft(draft);
+    const published = await publishDraft(draft, selectedFile);
+    if (!published) {
+      showToast("Sign in to publish a case for expert review.");
+      return;
+    }
     setSubmittedDraft(draft);
     clearSelectedFile(false);
-    showToast("Case added to this demo session for expert review.", "success");
+    showToast("Case submitted for expert review.", "success");
     window.setTimeout(() => successRef.current?.focus(), 0);
   }
 
@@ -775,8 +834,8 @@ export function PublisherForm() {
           <span className="status-badge status-badge--pending">Pending expert review</span>
           <h2 id="publish-success-title">Draft submitted to the demo review queue</h2>
           <p>
-            The structured case and clip metadata are stored in this browser&apos;s ClearCall demo
-            state. The video file and its temporary preview URL were discarded and were not
+            The structured case and media metadata are stored in this browser&apos;s ClearCall demo
+            state. Any selected file and its temporary preview URL were discarded and were not
             uploaded.
           </p>
           <div className="permission-notice">
@@ -788,7 +847,7 @@ export function PublisherForm() {
           </div>
           <div className="button-row">
             <a className="button" href="#submitted-case-preview">
-              <FileVideo aria-hidden="true" size={17} />
+              <FileText aria-hidden="true" size={17} />
               View submitted case
             </a>
             <button className="button button--secondary" type="button" onClick={startAnotherDraft}>
@@ -807,11 +866,34 @@ export function PublisherForm() {
       <form className="publisher-form" noValidate onSubmit={handleSubmit}>
         <FormSection
           number="01"
-          title="Clip and rights"
-          description="Preview a local clip, trim the teaching moment, and document its source."
+          title="Post format and rights"
+          description="Choose text, image, or video, then document any source material."
         >
+          <fieldset className="media-kind-picker">
+            <legend className="field-label">Post format</legend>
+            <div>
+              {(["text", "image", "video"] as const).map((kind) => (
+                <label key={kind}>
+                  <input
+                    checked={form.mediaKind === kind}
+                    name="media-kind"
+                    onChange={() => selectMediaKind(kind)}
+                    type="radio"
+                    value={kind}
+                  />
+                  <span>
+                    {kind === "text" ? <FileText aria-hidden="true" size={17} /> : kind === "image" ? <FileImage aria-hidden="true" size={17} /> : <FileVideo aria-hidden="true" size={17} />}
+                    {kind[0].toUpperCase() + kind.slice(1)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {form.mediaKind !== "text" ? (
+            <>
           <label className="field-label" htmlFor="clip-file">
-            Local video <span aria-hidden="true">*</span>
+            Local {form.mediaKind} <span aria-hidden="true">*</span>
           </label>
           <div
             className="upload-zone"
@@ -831,12 +913,14 @@ export function PublisherForm() {
               <span className="upload-zone__icon" aria-hidden="true">
                 <Upload size={22} />
               </span>
-              <strong>Drop one video here or choose it below</strong>
+              <strong>Drop one {form.mediaKind} here or choose it below</strong>
               <p id="clip-file-hint">
-                MP4, WebM, MOV, M4V, or OGV. The file stays in this tab and is not persisted.
+                {form.mediaKind === "image"
+                  ? "AVIF, GIF, JPEG, PNG, SVG, or WebP."
+                  : "MP4, WebM, MOV, M4V, or OGV."} The file stays in this tab and is not persisted.
               </p>
               <input
-                accept="video/*,.mov,.m4v,.ogv"
+                accept={form.mediaKind === "image" ? "image/*,.svg" : "video/*,.mov,.m4v,.ogv"}
                 aria-describedby={describedBy("clip-file", errors, "clip-file-hint")}
                 aria-invalid={Boolean(errors["clip-file"])}
                 className="input"
@@ -857,7 +941,11 @@ export function PublisherForm() {
                   <strong>{selectedFile.name}</strong>
                   <span>
                     {formatBytes(selectedFile.size)}
-                    {clipDuration !== null ? ` · ${clipDuration.toFixed(1)} seconds` : " · Reading duration…"}
+                    {form.mediaKind === "video"
+                      ? clipDuration !== null
+                        ? ` · ${clipDuration.toFixed(1)} seconds`
+                        : " · Reading duration…"
+                      : ` · ${selectedFile.type || "image file"}`}
                   </span>
                 </span>
                 <button
@@ -869,7 +957,7 @@ export function PublisherForm() {
                   <Trash2 aria-hidden="true" size={16} />
                 </button>
               </div>
-              {previewUrl ? (
+              {previewUrl && form.mediaKind === "video" ? (
                 <div className="case-media">
                   <video
                     aria-describedby="local-preview-note"
@@ -889,6 +977,16 @@ export function PublisherForm() {
                     />
                   </video>
                 </div>
+              ) : previewUrl && form.mediaKind === "image" ? (
+                <div className="case-media case-media--image">
+                  <Image
+                    alt={form.mediaAlt || `Local preview of ${selectedFile.name}`}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                    src={previewUrl}
+                    unoptimized
+                  />
+                </div>
               ) : null}
               <p className="field-hint" id="local-preview-note">
                 Browser-only preview. Captions and an accessible incident description must be added
@@ -897,7 +995,33 @@ export function PublisherForm() {
             </>
           ) : null}
 
+          <div>
+            <label className="field-label" htmlFor="media-alt">
+              Accessible media description <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              aria-describedby={describedBy("media-alt", errors, "media-alt-hint")}
+              aria-invalid={Boolean(errors["media-alt"])}
+              className="textarea"
+              id="media-alt"
+              onChange={(event) => updateField("mediaAlt", event.target.value)}
+              placeholder={`Describe the incident details visible in the ${form.mediaKind}.`}
+              required
+              value={form.mediaAlt}
+            />
+            <span className="field-hint" id="media-alt-hint">Describe decision-relevant evidence without adding a verdict.</span>
+            <FieldError fieldId="media-alt" message={errors["media-alt"]} />
+          </div>
+          </>
+          ) : (
+            <p className="permission-notice">
+              <FileText aria-hidden="true" size={17} /> Text posts use the incident context below and do not require a file.
+            </p>
+          )}
+
           <div className="form-grid">
+            {form.mediaKind === "video" ? (
+              <>
             <div>
               <label className="field-label" htmlFor="clip-start-time">
                 Start time (seconds) <span aria-hidden="true">*</span>
@@ -953,6 +1077,8 @@ export function PublisherForm() {
               </span>
               <FieldError fieldId="poster-frame-label" message={errors["poster-frame-label"]} />
             </div>
+              </>
+            ) : null}
             <div>
               <label className="field-label" htmlFor="source-type">
                 Source type <span aria-hidden="true">*</span>
@@ -1003,7 +1129,7 @@ export function PublisherForm() {
                   type="checkbox"
                 />
                 <span>
-                  I confirm that I have permission to use this clip in the ClearCall demo and can
+                  I confirm that I have permission to use this post material in the ClearCall demo and can
                   provide supporting rights information if requested.
                 </span>
               </label>
@@ -1048,7 +1174,7 @@ export function PublisherForm() {
                 className="textarea"
                 id="case-description"
                 onChange={(event) => updateField("description", event.target.value)}
-                placeholder="Describe player positions, phase of play, and details visible in the clip."
+                placeholder="Describe player positions, phase of play, and decision-relevant details."
                 required
                 value={form.description}
               />
@@ -1578,7 +1704,7 @@ export function PublisherForm() {
             <ShieldAlert aria-hidden="true" size={18} />
             <span>
               Submit for review stores structured text and file metadata locally. It does not upload
-              the clip, publish a public case, verify credentials or rights, or create an official
+              media, publish a public case, verify credentials or rights, or create an official
               ruling.
             </span>
           </div>

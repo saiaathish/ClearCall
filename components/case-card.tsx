@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { useMemo, useRef, useState, type CSSProperties, type FormEvent, type RefObject } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -58,6 +58,7 @@ export function CaseCard({
   const [attempted, setAttempted] = useState(false);
   const firstDecisionRef = useRef<HTMLInputElement>(null);
   const firstFactorRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
 
   const contrast = useMemo(
     () => findTeachingContrast(scenario, cases.filter((item) => item.id !== scenario.id)),
@@ -99,6 +100,7 @@ export function CaseCard({
     onSubmitted?.(scenario.id);
     submitAnswer(answer);
     showToast("Call submitted. The evidence is now revealed.", "success");
+    window.requestAnimationFrame(() => resultRef.current?.focus());
   };
 
   const lockedOption = submitted?.selectedOptionId ?? selectedOptionId;
@@ -106,7 +108,11 @@ export function CaseCard({
   const lockedFactors = submitted?.selectedFactorKeys ?? selectedFactorKeys;
 
   return (
-    <article className="case-card" aria-labelledby={`case-${scenario.id}-title`}>
+    <article
+      className="case-card"
+      data-media={scenario.mediaKind ?? (scenario.videoSrc ? "video" : scenario.imageSrc || scenario.posterSrc ? "image" : "text")}
+      aria-labelledby={`case-${scenario.id}-title`}
+    >
       <header className="case-card__header">
         <span className="avatar" aria-hidden="true">
           {scenario.publisher.avatarInitials}
@@ -271,6 +277,7 @@ export function CaseCard({
           contrast={contrast}
           nextCase={nextRanked?.case}
           nextReason={nextRanked?.reason}
+          resultRef={resultRef}
         />
       )}
     </article>
@@ -283,12 +290,14 @@ function ResultPanel({
   contrast,
   nextCase,
   nextReason,
+  resultRef,
 }: {
   scenario: OfficiatingCase;
   answer: UserAnswer;
   contrast: ReturnType<typeof findTeachingContrast>;
   nextCase?: OfficiatingCase;
   nextReason?: string;
+  resultRef: RefObject<HTMLElement | null>;
 }) {
   const aligned = answer.selectedOptionId === scenario.recommendedDecision;
   const openDiscussion = scenario.scenarioStatus === "OPEN_DISCUSSION";
@@ -305,7 +314,13 @@ function ResultPanel({
       : "result-verdict--incorrect";
 
   return (
-    <section className="result-panel" aria-live="polite" aria-labelledby={`result-${scenario.id}-title`}>
+    <section
+      className="result-panel"
+      aria-live="polite"
+      aria-labelledby={`result-${scenario.id}-title`}
+      ref={resultRef}
+      tabIndex={-1}
+    >
       <div className={`result-verdict ${verdictClass}`}>
         <span className="result-verdict__icon" aria-hidden="true">
           {openDiscussion ? (

@@ -5,6 +5,8 @@ export type ScenarioStatus =
 
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
+export type MediaKind = "text" | "image" | "video";
+
 export type UserRole =
   | "learner"
   | "referee"
@@ -127,6 +129,16 @@ export interface OfficiatingCase {
   disagreementScore: number;
   freshnessScore: number;
   publishedAt: string;
+  /**
+   * Legacy seeded cases may omit this field. Consumers should infer `video`
+   * when `videoSrc` is present and `text` otherwise.
+   */
+  mediaKind?: MediaKind;
+  /** Optional image source retained alongside the existing video fields. */
+  imageSrc?: string | null;
+  /** Intrinsic source dimensions, when the media asset provides them. */
+  mediaWidth?: number | null;
+  mediaHeight?: number | null;
   videoSrc: string | null;
   posterSrc: string | null;
   mediaAlt: string;
@@ -191,12 +203,21 @@ export interface LearnerProfile {
 
 export interface PublishedCaseDraft {
   id: string;
+  mediaKind: MediaKind;
+  /** Serializable metadata only. Local file contents and object URLs are never persisted. */
+  mediaFileName?: string;
+  mediaFileSize?: number;
+  mediaFileType?: string;
+  mediaWidth?: number;
+  mediaHeight?: number;
+  mediaAlt: string;
+  /** Legacy video metadata retained for existing browser-local drafts. */
   clipFileName?: string;
   clipFileSize?: number;
   clipFileType?: string;
-  clipStartTime: string;
-  clipEndTime: string;
-  posterFrameLabel: string;
+  clipStartTime?: string;
+  clipEndTime?: string;
+  posterFrameLabel?: string;
   title: string;
   prompt: string;
   description: string;

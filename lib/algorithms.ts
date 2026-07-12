@@ -22,6 +22,11 @@ const DIFFICULTY_ORDER: readonly Difficulty[] = [
 
 const HIGH_CONFIDENCE_THRESHOLD = 80;
 const TEACHING_CONTRAST_BONUS = 20;
+export const WEAKNESS_WEIGHT = 0.35;
+export const INTEREST_WEIGHT = 0.20;
+export const DISAGREEMENT_WEIGHT = 0.20;
+export const DIFFICULTY_WEIGHT = 0.15;
+export const FRESHNESS_WEIGHT = 0.10;
 
 interface ResolvedAnswer {
   answer: UserAnswer;
@@ -603,11 +608,11 @@ export function rankPersonalizedCases(
           freshnessScore: clamp(item.freshnessScore),
         };
         const score =
-          0.35 * breakdown.categoryWeakness +
-          0.25 * breakdown.highConfidenceErrorNeed +
-          0.2 * breakdown.difficultyFit +
-          0.1 * breakdown.diversityValue +
-          0.1 * breakdown.freshnessScore;
+          WEAKNESS_WEIGHT * breakdown.categoryWeakness +
+          INTEREST_WEIGHT * breakdown.highConfidenceErrorNeed +
+          DIFFICULTY_WEIGHT * breakdown.difficultyFit +
+          DISAGREEMENT_WEIGHT * breakdown.diversityValue +
+          FRESHNESS_WEIGHT * breakdown.freshnessScore;
 
         return {
           case: item,

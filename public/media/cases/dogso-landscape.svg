@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Breakaway denial diagram</title>
+  <desc id="desc">Diagram of a central attacker being pulled back while moving toward goal.</desc>
+  <rect width="1200" height="800" fill="#153f32"/>
+  <path d="M70 70h1060v660H70zM910 230h220v340H910" fill="none" stroke="#f2eee3" stroke-opacity=".52" stroke-width="8"/>
+  <path d="M170 610C410 550 620 430 905 397" fill="none" stroke="#f2c94c" stroke-opacity=".8" stroke-width="12" stroke-dasharray="28 20"/>
+  <circle cx="610" cy="385" r="52" fill="#f2c94c" stroke="#101713" stroke-width="9"/>
+  <path d="M610 447l95 122M610 448l-86 126M596 478l-142 35" fill="none" stroke="#f2c94c" stroke-width="32" stroke-linecap="round"/>
+  <circle cx="458" cy="328" r="50" fill="#fffdf7" stroke="#101713" stroke-width="9"/>
+  <path d="M458 390l62 130M458 394l-106 108M492 446l112 27" fill="none" stroke="#fffdf7" stroke-width="32" stroke-linecap="round"/>
+  <circle cx="934" cy="398" r="28" fill="#fffdf7" stroke="#101713" stroke-width="8"/>
+  <circle cx="528" cy="474" r="48" fill="none" stroke="#c94737" stroke-width="12"/>
+</svg>
