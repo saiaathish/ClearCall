@@ -31,9 +31,6 @@ import {
   type DemoState,
 } from "@/lib/storage";
 import { persistReputationScore } from "@/lib/reputation";
-import type { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 interface DemoContextValue extends DemoState {
   hydrated: boolean;

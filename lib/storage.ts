@@ -363,34 +363,27 @@ export async function publishDraftRemote(
 ): Promise<PublishedCaseDraft> {
   if (typeof window !== "undefined") {
     const form = new FormData();
-    form.set("sport", "soccer"); form.set("incident", draft.description);
-    form.set("rule category", draft.category); form.set("original decision", draft.originalDecision);
-    form.set("description", draft.description); form.set("options", JSON.stringify(draft.answerOptions));
-    form.set("difficulty", draft.difficulty === "beginner" ? "0.25" : draft.difficulty === "advanced" ? "0.75" : "0.5");
+    form.set("sport", "soccer");
+    form.set("incident", draft.description);
+    form.set("rule category", draft.category);
+    form.set("original decision", draft.originalDecision);
+    form.set("description", draft.description);
+    form.set("options", JSON.stringify(draft.answerOptions));
+    form.set(
+      "difficulty",
+      draft.difficulty === "beginner"
+        ? "0.25"
+        : draft.difficulty === "advanced"
+          ? "0.75"
+          : "0.5",
+    );
     if (file) form.set("clip", file);
     const response = await fetch("/api/cases", { method: "POST", body: form });
     if (!response.ok) throw new Error("Case creation failed");
     const result = await response.json() as { case?: { id?: string } };
     return { ...draft, id: result.case?.id ?? draft.id, status: "locally-published" };
   }
-}
 
-export async function completeOnboardingRemote(
-  supabase: TypedClient,
-  userId: string,
-): Promise<void> {
-  await supabase
-    .from("profiles")
-    .update({ onboarding_complete: true })
-    .eq("id", userId);
-}
-
-export async function publishDraftRemote(
-  supabase: SupabaseClient,
-  userId: string,
-  draft: PublishedCaseDraft,
-  file: File | null,
-): Promise<PublishedCaseDraft> {
   let mediaPath: string | null = null;
 
   if (file) {
@@ -399,9 +392,7 @@ export async function publishDraftRemote(
     const { error: uploadError } = await supabase.storage
       .from("case-media")
       .upload(path, file, { upsert: false });
-    if (!uploadError) {
-      mediaPath = path;
-    }
+    if (!uploadError) mediaPath = path;
   }
 
   const { data, error } = await supabase
@@ -420,9 +411,5 @@ export async function publishDraftRemote(
     throw error ?? new Error("Failed to publish draft.");
   }
 
-  return {
-    ...draft,
-    id: data.id,
-    createdAt: data.created_at,
-  };
+  return { ...draft, id: data.id, createdAt: data.created_at };
 }
