@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cases } from "@/data/cases";
 import { deriveLearnerProfile } from "@/lib/algorithms";
+import { getScoredAnswer } from "@/lib/decision-draft";
 import type { OfficiatingCase, UserAnswer } from "@/lib/types";
 import { useDemo } from "@/context/demo-context";
 import { useToast } from "@/components/toast-provider";
@@ -25,7 +26,10 @@ function answerMatches(answer: UserAnswer, scenario?: OfficiatingCase) {
 }
 
 function makeTrend(answers: readonly UserAnswer[]) {
-  const ordered = [...answers].sort((a, b) => a.answeredAt.localeCompare(b.answeredAt)).slice(-7);
+  const ordered = answers
+    .map(getScoredAnswer)
+    .sort((a, b) => a.answeredAt.localeCompare(b.answeredAt))
+    .slice(-7);
   let aligned = 0;
   return ordered.map((answer, index) => {
     const scenario = cases.find((item) => item.id === answer.caseId);
@@ -130,13 +134,13 @@ export function ProfileView() {
       </header>
 
       <section className="metric-grid" aria-label="Primary learning metrics">
-        <MetricCard label="Demo alignment" value={`${profile.overallAccuracy}%`} detail="Matches with authored recommendations" icon={Target} accent />
+        <MetricCard label="Demo alignment" value={`${profile.overallAccuracy}%`} detail="First-attempt matches with authored recommendations" icon={Target} accent />
         <MetricCard label="Calibration" value={`${profile.calibrationScore}%`} detail={profile.calibrationLabel} icon={Gauge} />
-        <MetricCard label="High-confidence errors" value={String(profile.highConfidenceErrors)} detail="Mismatches submitted at 80%+" icon={TriangleAlert} />
+        <MetricCard label="High-confidence errors" value={String(profile.highConfidenceErrors)} detail="First-attempt mismatches at 80%+" icon={TriangleAlert} />
         <MetricCard
           label="Recent improvement"
           value={profile.recentImprovement === null ? "—" : `${profile.recentImprovement >= 0 ? "+" : ""}${profile.recentImprovement}pt`}
-          detail={profile.recentImprovement === null ? "Complete more cases for a trend" : "Recent vs previous answer window"}
+          detail={profile.recentImprovement === null ? "Complete more cases for a trend" : "Recent vs previous first-attempt window"}
           icon={TrendingUp}
         />
       </section>
@@ -145,7 +149,7 @@ export function ProfileView() {
         <div className="profile-column">
           <section className="content-section" aria-labelledby="category-performance-heading">
             <div className="content-section__header">
-              <div><h2 className="section-title" id="category-performance-heading">Category performance</h2><p className="section-description">Recommendation alignment by incident family; “—” means no evidence yet.</p></div>
+              <div><h2 className="section-title" id="category-performance-heading">Category performance</h2><p className="section-description">First-attempt recommendation alignment by incident family; “—” means no evidence yet.</p></div>
             </div>
             <div className="category-bars">
               {profile.categoryAccuracy.map((category) => (
@@ -160,7 +164,7 @@ export function ProfileView() {
 
           <section className="content-section" aria-labelledby="difficulty-performance-heading">
             <div className="content-section__header">
-              <div><h2 className="section-title" id="difficulty-performance-heading">Difficulty alignment</h2><p className="section-description">Authored-demo recommendation alignment by case difficulty; “—” means no evidence yet.</p></div>
+              <div><h2 className="section-title" id="difficulty-performance-heading">Difficulty alignment</h2><p className="section-description">First-attempt authored-demo alignment by case difficulty; “—” means no evidence yet.</p></div>
             </div>
             <div className="category-bars">
               {profile.difficultyAccuracy.map((difficulty) => (
@@ -175,12 +179,12 @@ export function ProfileView() {
 
           <section className="content-section" aria-labelledby="calibration-heading">
             <div className="content-section__header">
-              <div><h2 className="section-title" id="calibration-heading">Confidence vs. alignment</h2><p className="section-description">Lime shows observed recommendation alignment; amber markers represent the confidence band.</p></div>
+              <div><h2 className="section-title" id="calibration-heading">First-attempt confidence vs. alignment</h2><p className="section-description">Lime shows observed recommendation alignment; amber markers represent the original confidence band.</p></div>
             </div>
             <CalibrationPlot answers={answerList} />
             <div className="demo-notice" style={{ marginTop: 15 }}>
               <CircleAlert aria-hidden="true" size={15} />
-              <span>Calibration uses the brief’s Brier-loss formula. Because these are open-discussion demos, the score measures alignment with the authored recommendation—not official correctness.</span>
+              <span>Calibration keeps the first submitted call even when you revise later. Because these are open-discussion demos, the score measures alignment with the authored recommendation—not official correctness.</span>
             </div>
           </section>
 
@@ -344,9 +348,10 @@ function MetricCard({
 }
 
 function CalibrationPlot({ answers }: { answers: readonly UserAnswer[] }) {
+  const scoredAnswers = answers.map(getScoredAnswer);
   const buckets = [50, 60, 70, 80, 90, 100].map((floor, index) => {
     const ceiling = index === 5 ? 101 : floor + 10;
-    const matching = answers.filter((answer) => answer.confidence >= floor && answer.confidence < ceiling);
+    const matching = scoredAnswers.filter((answer) => answer.confidence >= floor && answer.confidence < ceiling);
     const aligned = matching.filter((answer) => answerMatches(answer, cases.find((item) => item.id === answer.caseId))).length;
     return { floor, accuracy: matching.length ? Math.round((aligned / matching.length) * 100) : 0, count: matching.length };
   });

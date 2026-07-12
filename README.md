@@ -65,7 +65,7 @@ The comparison and recommendation functions live in `lib/algorithms.ts`:
 - Similarity: factor overlap (35%), rule-path overlap (20%), competition context (15%), difficulty proximity (15%), disagreement similarity (15%).
 - Teaching contrast: adds a transparent selection bonus when recommendations differ; the displayed similarity remains the unmodified base score.
 - Feed priority: category weakness (35%), high-confidence error need (25%), difficulty fit (20%), diversity (10%), freshness (10%).
-- Calibration: the supplied Brier-loss formula, displayed as alignment with the authored demo recommendation rather than official correctness.
+- Calibration: the supplied Brier-loss formula, anchored to the first submitted attempt and displayed as alignment with the authored demo recommendation rather than official correctness. The current call can be revised without rewriting that history.
 
 ## Local persistence
 
@@ -84,6 +84,7 @@ When media is absent, the interface displays **Authorized demo clip placeholder*
 Working locally:
 
 - Decision, confidence, and factor submission
+- Revisable current calls with the first attempt preserved for calibration
 - Post-submit evidence reveal
 - Deterministic feed personalization and case comparison
 - Derived learner metrics and calibration

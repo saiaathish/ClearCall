@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   AnswerOption,
   CaseReport,
+  DecisionAttempt,
   DiscussionResponse,
   FactorReactionCounts,
   PublishedCaseDraft,
@@ -195,16 +196,25 @@ function isOneOf(value: unknown, allowed: ReadonlySet<string>): value is string 
   return typeof value === "string" && allowed.has(value);
 }
 
-function isUserAnswer(value: unknown): value is UserAnswer {
+function isDecisionAttempt(value: unknown): value is DecisionAttempt {
   return (
     isRecord(value) &&
-    typeof value.caseId === "string" &&
     typeof value.selectedOptionId === "string" &&
     isFiniteNumber(value.confidence) &&
     value.confidence >= 50 &&
     value.confidence <= 100 &&
     isStringArray(value.selectedFactorKeys) &&
     typeof value.answeredAt === "string"
+  );
+}
+
+function isUserAnswer(value: unknown): value is UserAnswer {
+  if (!isRecord(value) || !isDecisionAttempt(value)) return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.caseId === "string" &&
+    (candidate.initialAttempt === undefined || isDecisionAttempt(candidate.initialAttempt)) &&
+    (candidate.revisionCount === undefined || isNonNegativeInteger(candidate.revisionCount))
   );
 }
 
@@ -454,13 +464,26 @@ function rowToUserAnswer(row: {
   confidence: number;
   selected_factor_keys: string[];
   answered_at: string;
+  initial_selected_option_id: string | null;
+  initial_confidence: number | null;
+  initial_selected_factor_keys: string[] | null;
+  initial_answered_at: string | null;
+  revision_count: number;
 }): UserAnswer {
+  const initialAttempt: DecisionAttempt = {
+    selectedOptionId: row.initial_selected_option_id ?? row.selected_option_id,
+    confidence: row.initial_confidence ?? row.confidence,
+    selectedFactorKeys: row.initial_selected_factor_keys ?? row.selected_factor_keys ?? [],
+    answeredAt: row.initial_answered_at ?? row.answered_at,
+  };
   return {
     caseId: row.case_id,
     selectedOptionId: row.selected_option_id,
     confidence: row.confidence,
     selectedFactorKeys: row.selected_factor_keys ?? [],
     answeredAt: row.answered_at,
+    initialAttempt,
+    revisionCount: Math.max(0, row.revision_count ?? 0),
   };
 }
 
@@ -645,7 +668,8 @@ export async function submitAnswerRemote(
   answer: UserAnswer,
   isNewAnswer: boolean,
 ): Promise<void> {
-  await supabase.from("user_answers").upsert(
+  const initial = answer.initialAttempt ?? answer;
+  const { error } = await supabase.from("user_answers").upsert(
     {
       user_id: userId,
       case_id: answer.caseId,
@@ -653,9 +677,16 @@ export async function submitAnswerRemote(
       confidence: answer.confidence,
       selected_factor_keys: [...answer.selectedFactorKeys],
       answered_at: answer.answeredAt,
+      initial_selected_option_id: initial.selectedOptionId,
+      initial_confidence: initial.confidence,
+      initial_selected_factor_keys: [...initial.selectedFactorKeys],
+      initial_answered_at: initial.answeredAt,
+      revision_count: answer.revisionCount ?? 0,
     },
     { onConflict: "user_id,case_id" },
   );
+
+  if (error) throw error;
 
   if (isNewAnswer) {
     const meta = await fetchProfileMeta(supabase, userId);

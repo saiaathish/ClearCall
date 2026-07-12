@@ -38,6 +38,8 @@ import {
 } from "@/lib/storage";
 import { persistReputationScore } from "@/lib/reputation";
 
+export type SubmitAnswerResult = "saved" | "auth-required" | "error";
+
 interface DemoContextValue extends DemoState {
   hydrated: boolean;
   user: User | null;
@@ -45,7 +47,7 @@ interface DemoContextValue extends DemoState {
   isDemoSession: boolean;
   /** Real account or active local demo. */
   isSignedIn: boolean;
-  submitAnswer: (answer: UserAnswer) => void;
+  submitAnswer: (answer: UserAnswer) => Promise<SubmitAnswerResult>;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
   publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
@@ -173,18 +175,25 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   }, [isDemoSession, router, user]);
 
   const submitAnswer = useCallback(
-    (answer: UserAnswer) => {
-      if (!requireAuth()) return;
+    async (answer: UserAnswer): Promise<SubmitAnswerResult> => {
+      if (!requireAuth()) return "auth-required";
       const isNewAnswer = !stateRef.current.answers[answer.caseId];
+      const submittedUserId = user?.id;
+      if (user) {
+        try {
+          await submitAnswerRemote(supabase, user.id, answer, isNewAnswer);
+        } catch {
+          return "error";
+        }
+      }
+      if (submittedUserId && userRef.current?.id !== submittedUserId) return "error";
       commitLocalState((current) => ({
         ...current,
         answers: { ...current.answers, [answer.caseId]: answer },
         currentStreak: isNewAnswer ? current.currentStreak + 1 : current.currentStreak,
       }));
-      if (!user) return;
-      void submitAnswerRemote(supabase, user.id, answer, isNewAnswer).then(() =>
-        persistReputationScore(supabase),
-      );
+      if (user) void persistReputationScore(supabase);
+      return "saved";
     },
     [commitLocalState, requireAuth, supabase, user],
   );

@@ -1368,6 +1368,13 @@ svg {
   font-size: 11px;
 }
 
+.decision-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .result-panel {
   display: grid;
   gap: 20px;

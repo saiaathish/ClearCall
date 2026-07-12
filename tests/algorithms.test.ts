@@ -113,6 +113,31 @@ describe("calculateCalibrationScore", () => {
   it("returns zero honestly when there is no calibration evidence", () => {
     expect(calculateCalibrationScore([], cases)).toBe(0);
   });
+
+  it("keeps calibration anchored to the first attempt after a revision", () => {
+    const revised: UserAnswer = {
+      ...answer(
+        "sfp-high-contact-lunge",
+        "direct-free-kick-red",
+        70,
+        "2026-07-02T10:05:00.000Z",
+        ["studs", "force"],
+      ),
+      initialAttempt: {
+        selectedOptionId: "direct-free-kick-yellow",
+        confidence: 90,
+        selectedFactorKeys: ["speed"],
+        answeredAt: "2026-07-02T10:00:00.000Z",
+      },
+      revisionCount: 1,
+    };
+
+    expect(calculateCalibrationScore([revised], cases)).toBe(19);
+    expect(deriveLearnerProfile([revised], cases).overallAccuracy).toBe(0);
+    expect(rankPersonalizedCases(cases, [revised])[0]?.reason).toContain(
+      "high-confidence miss",
+    );
+  });
 });
 
 describe("rankPersonalizedCases", () => {
