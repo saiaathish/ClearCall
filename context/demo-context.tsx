@@ -10,6 +10,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 import type {
   CaseReport,
   DiscussionResponse,
@@ -17,6 +19,7 @@ import type {
   ReportReason,
   UserAnswer,
 } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
 import {
   addCommentRemote,
   completeOnboardingRemote,
@@ -35,7 +38,7 @@ interface DemoContextValue extends DemoState {
   submitAnswer: (answer: UserAnswer) => void;
   toggleSaved: (caseId: string) => boolean;
   addComment: (caseId: string, comment: DiscussionResponse) => void;
-  publishDraft: (draft: PublishedCaseDraft) => void;
+  publishDraft: (draft: PublishedCaseDraft, file?: File | null) => Promise<boolean>;
   reportCase: (input: {
     caseId: string;
     reason: ReportReason;
@@ -175,10 +178,16 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [requireAuth, supabase, user],
   );
 
+  const completeOnboarding = useCallback(() => {
+    if (!requireAuth() || !user) return;
+    setState((current) => ({ ...current, onboardingComplete: true }));
+    void completeOnboardingRemote(supabase, user.id);
+  }, [requireAuth, supabase, user]);
+
   const reportCase = useCallback(
     (input: { caseId: string; reason: ReportReason; details?: string }) => {
-      if (state.removedCaseIds.includes(input.caseId)) return null;
-      const alreadyOpen = state.reports.some(
+      if (stateRef.current.removedCaseIds.includes(input.caseId)) return null;
+      const alreadyOpen = stateRef.current.reports.some(
         (report) => report.caseId === input.caseId && report.status === "open",
       );
       if (alreadyOpen) return null;
@@ -192,42 +201,36 @@ export function DemoProvider({ children }: { children: ReactNode }) {
         status: "open",
       };
 
-      update((current) => ({
+      setState((current) => ({
         ...current,
         reports: [report, ...current.reports],
       }));
       return report;
     },
-    [state.removedCaseIds, state.reports, update],
+    [],
   );
 
-  const removeFlaggedCase = useCallback(
-    (caseId: string) => {
-      update((current) => ({
-        ...current,
-        removedCaseIds: current.removedCaseIds.includes(caseId)
-          ? current.removedCaseIds
-          : [...current.removedCaseIds, caseId],
-        reports: current.reports.map((report) =>
-          report.caseId === caseId && report.status === "open"
-            ? { ...report, status: "removed" as const }
-            : report,
-        ),
-        savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
-      }));
-    },
-    [update],
-  );
+  const removeFlaggedCase = useCallback((caseId: string) => {
+    setState((current) => ({
+      ...current,
+      removedCaseIds: current.removedCaseIds.includes(caseId)
+        ? current.removedCaseIds
+        : [...current.removedCaseIds, caseId],
+      reports: current.reports.map((report) =>
+        report.caseId === caseId && report.status === "open"
+          ? { ...report, status: "removed" as const }
+          : report,
+      ),
+      savedCaseIds: current.savedCaseIds.filter((id) => id !== caseId),
+    }));
+  }, []);
 
-  const restoreFlaggedCase = useCallback(
-    (caseId: string) => {
-      update((current) => ({
-        ...current,
-        removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
-      }));
-    },
-    [update],
-  );
+  const restoreFlaggedCase = useCallback((caseId: string) => {
+    setState((current) => ({
+      ...current,
+      removedCaseIds: current.removedCaseIds.filter((id) => id !== caseId),
+    }));
+  }, []);
 
   const resetDemo = useCallback(() => {
     void supabase.auth.signOut();
@@ -257,6 +260,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     [
       state,
       hydrated,
+      user,
       submitAnswer,
       toggleSaved,
       addComment,
@@ -266,6 +270,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       restoreFlaggedCase,
       completeOnboarding,
       resetDemo,
+      signOut,
     ],
   );
 

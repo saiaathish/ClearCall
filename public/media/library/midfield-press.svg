@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-label="Ambient midfield press">
+  <defs>
+    <radialGradient id="r" cx="50%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#2d6b48"/>
+      <stop offset="100%" stop-color="#123024"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#r)"/>
+  <g fill="none" stroke="#e9f4ec" stroke-opacity="0.4" stroke-width="4">
+    <circle cx="600" cy="600" r="220"/>
+    <line x1="600" y1="120" x2="600" y2="1080"/>
+    <line x1="120" y1="600" x2="1080" y2="600"/>
+  </g>
+  <g fill="#f7faf8" fill-opacity="0.88">
+    <circle cx="420" cy="480" r="20"/>
+    <circle cx="540" cy="560" r="20"/>
+    <circle cx="680" cy="520" r="20"/>
+    <circle cx="760" cy="680" r="20"/>
+  </g>
+  <circle cx="510" cy="640" r="18" fill="#f4d35e"/>
+</svg>

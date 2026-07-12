@@ -23,7 +23,24 @@ import { useToast } from "@/components/toast-provider";
 import { CaseCard } from "@/components/case-card";
 import { DistributionBars } from "@/components/distribution-bars";
 import { StatusBadge } from "@/components/status-badge";
-import { ReportButton, SaveButton, ShareButton } from "@/components/case-actions";
+import { SaveButton, ShareButton } from "@/components/case-actions";
+import { createClient } from "@/lib/supabase/client";
+import { fetchLiveDistribution } from "@/lib/voting";
+import { toggleHelpfulVote } from "@/lib/reputation";
+
+/** Overrides a static demo distribution with live vote data when votes exist. */
+function withLiveOverride(
+  base: Distribution,
+  live: { percentages: Readonly<Record<string, number>>; totalVotes: number } | null,
+): Distribution {
+  if (!live) return base;
+  return {
+    ...base,
+    percentages: live.percentages,
+    isSynthetic: false,
+    basis: base.basis === "verified_reviewers" ? "verified_reviewers" : "live_community",
+  };
+}
 
 function optionLabel(scenario: OfficiatingCase, id: string) {
   return scenario.answerOptions.find((option) => option.id === id)?.shortLabel ?? id;
@@ -35,8 +52,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
     hydrated,
     temporaryComments,
     publishedDrafts,
-    removedCaseIds,
-    restoreFlaggedCase,
     addComment,
   } = useDemo();
   const { showToast } = useToast();
@@ -58,9 +73,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
   const draft = useMemo(
     () => publishedDrafts.find((item) => item.id === caseId),
     [caseId, publishedDrafts],
-  );
-  const isRemoved = Boolean(
-    scenario && removedCaseIds.includes(scenario.id),
   );
 
   useEffect(() => {
@@ -96,38 +108,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
             <h1 className="section-title">Case not found</h1>
             <p>This case is not in the seeded catalog or your locally created drafts.</p>
             <Link className="button" href="/"><ArrowLeft size={16} /> Return to the feed</Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isRemoved) {
-    return (
-      <div className="page-shell not-found-state">
-        <div className="empty-state">
-          <div>
-            <span className="empty-state__icon" aria-hidden="true"><CircleAlert size={23} /></span>
-            <h1 className="section-title">Case removed locally</h1>
-            <p>
-              This case was flagged and removed from the local demo feed. Restoring it only affects
-              this browser—there is no live moderation backend.
-            </p>
-            <div className="button-row" style={{ justifyContent: "center" }}>
-              <Link className="button button--ghost" href="/">
-                <ArrowLeft size={16} /> Return to the feed
-              </Link>
-              <button
-                className="button"
-                type="button"
-                onClick={() => {
-                  restoreFlaggedCase(scenario.id);
-                  showToast("Case restored to the local feed.", "success");
-                }}
-              >
-                Restore case
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -194,7 +174,6 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
         <div className="button-row">
           <SaveButton caseId={scenario.id} showLabel />
           <ShareButton caseId={scenario.id} showLabel />
-          <ReportButton caseId={scenario.id} showLabel />
         </div>
       </header>
 
